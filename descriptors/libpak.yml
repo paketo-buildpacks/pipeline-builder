@@ -1,0 +1,16 @@
+---
+name: github.com/paketoio/libpak
+
+module_dependencies:
+- github.com/BurntSushi/toml
+- github.com/Masterminds/semver/v3
+- github.com/buildpacks/libcnb
+- github.com/creack/pty
+- github.com/heroku/color
+- github.com/imdario/mergo
+- github.com/mitchellh/mapstructure
+- github.com/onsi/gomega
+- github.com/sclevine/spec
+- github.com/spf13/pflag
+- github.com/stretchr/testify
+- github.com/xi2/xz

@@ -49,13 +49,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/git-resource",
 		},
 	},
-	// "github-release": {
-	// 	Name: "github-release",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "concourse/github-release-resource",
-	// 	},
-	// },
+	"github-release": {
+		Name: "github-release",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "concourse/github-release-resource",
+		},
+	},
 	// "gradle-resource": {
 	// 	Name: "gradle-resource",
 	// 	Type: "registry-image",
@@ -84,13 +84,13 @@ var KnownResourceTypes = map[string]ResourceType{
 	// 		"repository": "cfje/npm-resource",
 	// 	},
 	// },
-	// "registry-image": {
-	// 	Name: "registry-image",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "concourse/registry-image-resource",
-	// 	},
-	// },
+	"registry-image": {
+		Name: "registry-image",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "concourse/registry-image-resource",
+		},
+	},
 	// "repository-resource": {
 	// 	Name: "repository-resource",
 	// 	Type: "registry-image",

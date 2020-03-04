@@ -16,21 +16,21 @@
 
 package tube
 
-type ReleaseMajor struct {
+type ReleasePatchContributor struct {
 	Descriptor Descriptor
 	Salt       string
 }
 
-func (ReleaseMajor) Group() string {
+func (ReleasePatchContributor) Group() string {
 	return "main"
 }
 
-func (r ReleaseMajor) Job() Job {
+func (r ReleasePatchContributor) Job() Job {
 	s := NewSourceResource(r.Descriptor, r.Salt)
 	v := NewVersionResource(r.Descriptor)
 
 	return Job{
-		Name:   "release-major",
+		Name:   "release-patch",
 		Public: true,
 		Plan: []map[string]interface{}{
 			{
@@ -44,7 +44,7 @@ func (r ReleaseMajor) Job() Job {
 						"get":      "version",
 						"resource": v.Name,
 						"params": map[string]interface{}{
-							"bump": "major",
+							"bump": "patch",
 						},
 					},
 				},
@@ -63,7 +63,7 @@ func (r ReleaseMajor) Job() Job {
 					{
 						"put": v.Name,
 						"params": map[string]interface{}{
-							"bump": "major",
+							"bump": "patch",
 						},
 					},
 				},
@@ -72,7 +72,7 @@ func (r ReleaseMajor) Job() Job {
 	}
 }
 
-func (r ReleaseMajor) Resources() []Resource {
+func (r ReleasePatchContributor) Resources() []Resource {
 	return []Resource{
 		NewSourceResource(r.Descriptor, r.Salt),
 		NewVersionResource(r.Descriptor),

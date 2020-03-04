@@ -16,16 +16,16 @@
 
 package tube
 
-type Test struct {
+type TestContributor struct {
 	Descriptor Descriptor
 	Salt       string
 }
 
-func (Test) Group() string {
+func (TestContributor) Group() string {
 	return "main"
 }
 
-func (t Test) Job() Job {
+func (t TestContributor) Job() Job {
 	b := NewBuildCommonResource()
 	s := NewSourceResource(t.Descriptor, t.Salt)
 
@@ -54,7 +54,7 @@ func (t Test) Job() Job {
 	}
 }
 
-func (t Test) Resources() []Resource {
+func (t TestContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
 		NewSourceResource(t.Descriptor, t.Salt),

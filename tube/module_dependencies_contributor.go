@@ -25,14 +25,14 @@ import (
 	"strings"
 )
 
-type ModuleDependencies struct {
+type ModuleDependenciesContributor struct {
 	Descriptor Descriptor
 	Modules    []string
 	Salt       string
 }
 
-func NewModuleDependencies(descriptor Descriptor, salt string) (ModuleDependencies, error) {
-	m := ModuleDependencies{
+func NewModuleDependenciesContributor(descriptor Descriptor, salt string) (ModuleDependenciesContributor, error) {
+	m := ModuleDependenciesContributor{
 		Descriptor: descriptor,
 		Salt:       salt,
 	}
@@ -40,17 +40,17 @@ func NewModuleDependencies(descriptor Descriptor, salt string) (ModuleDependenci
 	uri := strings.ReplaceAll(fmt.Sprintf("https://%s/master/go.mod", descriptor.Name), "github.com", "raw.githubusercontent.com")
 	resp, err := http.Get(uri)
 	if err != nil {
-		return ModuleDependencies{}, fmt.Errorf("unable to read %s: %w", uri, err)
+		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s: %w", uri, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return ModuleDependencies{}, fmt.Errorf("could not download %s: %d", uri, resp.StatusCode)
+		return ModuleDependenciesContributor{}, fmt.Errorf("could not download %s: %d", uri, resp.StatusCode)
 	}
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ModuleDependencies{}, fmt.Errorf("unable to read %s: %w", uri, err)
+		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s: %w", uri, err)
 	}
 
 	re := regexp.MustCompile(`(?mU)^	([\S]+)(?:/v[\d]+)? v[^-\r\n\t\f\v ]+$`)
@@ -63,11 +63,11 @@ func NewModuleDependencies(descriptor Descriptor, salt string) (ModuleDependenci
 	return m, nil
 }
 
-func (m ModuleDependencies) Group() string {
+func (m ModuleDependenciesContributor) Group() string {
 	return "module-dependencies"
 }
 
-func (m ModuleDependencies) Job() Job {
+func (m ModuleDependenciesContributor) Job() Job {
 	b := NewBuildCommonResource()
 	s := NewSourceResource(m.Descriptor, m.Salt)
 
@@ -109,7 +109,7 @@ func (m ModuleDependencies) Job() Job {
 	}
 }
 
-func (m ModuleDependencies) Resources() []Resource {
+func (m ModuleDependenciesContributor) Resources() []Resource {
 	r := []Resource{
 		NewBuildCommonResource(),
 		NewSourceResource(m.Descriptor, m.Salt),

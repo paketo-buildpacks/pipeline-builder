@@ -1,0 +1,6 @@
+---
+name: github.com/paketoio/procfile
+package:
+  repository: docker.io/paketoio/procfile
+  username:   ((docker-username))
+  password:   ((docker-password))

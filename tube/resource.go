@@ -62,6 +62,49 @@ func NewModuleResource(name string) Resource {
 	}
 }
 
+func NewPackResource() Resource {
+	return Resource{
+		Name:       "pack",
+		Type:       "github-release",
+		Icon:       "package-variant-closed",
+		CheckEvery: "4h",
+		Source: map[string]interface{}{
+			"owner":        "buildpacks",
+			"repository":   "pack",
+			"access_token": "((github-access-token))",
+		},
+	}
+}
+
+func NewPackageResource(descriptor Descriptor) Resource {
+	return Resource{
+		Name: fmt.Sprintf("package:%s", descriptor.Package.Repository),
+		Type: "registry-image",
+		Icon: "docker",
+		Source: map[string]interface{}{
+			"repository": descriptor.Package.Repository,
+			"username":   descriptor.Package.Username,
+			"password":   descriptor.Package.Password,
+		},
+	}
+}
+
+func NewPackageSourceResource(descriptor Descriptor, salt string) Resource {
+	return Resource{
+		Name:       fmt.Sprintf("package-source:%s", descriptor.ShortName()),
+		Type:       "git",
+		Icon:       "github-circle",
+		CheckEvery: "4h",
+		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
+		Source: map[string]interface{}{
+			"uri":        descriptor.GitRepository(),
+			"tag_filter": "v*",
+			"username":   "((github-username))",
+			"password":   "((github-access-token))",
+		},
+	}
+}
+
 func NewSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("source:%s", descriptor.ShortName()),

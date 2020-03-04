@@ -58,16 +58,20 @@ func (t *Transformer) Transform() error {
 	log.Println(d.Name)
 
 	contributors := []PipelineContributor{
-		ReleaseMajor{Descriptor: d, Salt: t.WebHookSalt},
-		ReleaseMinor{Descriptor: d, Salt: t.WebHookSalt},
-		ReleasePatch{Descriptor: d, Salt: t.WebHookSalt},
-		Test{Descriptor: d, Salt: t.WebHookSalt},
+		ReleaseMajorContributor{Descriptor: d, Salt: t.WebHookSalt},
+		ReleaseMinorContributor{Descriptor: d, Salt: t.WebHookSalt},
+		ReleasePatchContributor{Descriptor: d, Salt: t.WebHookSalt},
+		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
-	if m, err := NewModuleDependencies(d, t.WebHookSalt); err != nil {
+	if m, err := NewModuleDependenciesContributor(d, t.WebHookSalt); err != nil {
 		return fmt.Errorf("unable to create new module dependencies job: %w", err)
 	} else {
 		contributors = append(contributors, m)
+	}
+
+	if !reflect.DeepEqual(Package{}, d.Package) {
+		contributors = append(contributors, PackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
 	p := NewPipeline(d.ShortName())

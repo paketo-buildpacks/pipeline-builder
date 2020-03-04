@@ -24,8 +24,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type Package struct {
+	Repository string `yaml:"repository"`
+	Username   string `yaml:"username"`
+	Password   string `yaml:"password"`
+}
+
 type Descriptor struct {
-	Name string `yaml:"name"`
+	Name    string  `yaml:"name"`
+	Package Package `yaml:"package"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {
@@ -64,35 +71,8 @@ func (d Descriptor) ShortName() string {
 
 /*
 type Descriptor struct {
-	Bucket             string       `yaml:"bucket"`
-	Builders           []Builder    `yaml:"builders"`
-	Name               string       `yaml:"name"`
 	Dependencies       []Dependency `yaml:"dependencies"`
 	Upstream           string       `yaml:"upstream"`
-}
-
-func (d Descriptor) HasBucket() bool {
-	return d.Bucket != ""
-}
-
-func (d Descriptor) HasBuilders() bool {
-	return len(d.Builders) != 0
-}
-
-func (d Descriptor) HasDependencies() bool {
-	return len(d.Dependencies) != 0
-}
-
-func (d Descriptor) HasModuleDependencies() bool {
-	return len(d.ModuleDependencies) != 0
-}
-
-func (d Descriptor) HasPackage() bool {
-	return d.HasBucket() || d.HasBuilders()
-}
-
-func (d Descriptor) HasUpstream() bool {
-	return d.Upstream != ""
 }
 
 func (d Descriptor) UpstreamDescriptor() Descriptor {

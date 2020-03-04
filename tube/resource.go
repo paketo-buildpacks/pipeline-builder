@@ -46,6 +46,22 @@ func NewBuildCommonResource() Resource {
 	}
 }
 
+func NewModuleResource(name string) Resource {
+	d := Descriptor{Name: name}
+
+	return Resource{
+		Name: fmt.Sprintf("module:%s", name),
+		Type: "git",
+		Icon: "github-circle",
+		Source: map[string]interface{}{
+			"uri":        d.GitRepository(),
+			"tag_filter": "v*",
+			"username":   "((github-username))",
+			"password":   "((github-access-token))",
+		},
+	}
+}
+
 func NewSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("source:%s", descriptor.ShortName()),

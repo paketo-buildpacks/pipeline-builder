@@ -64,6 +64,12 @@ func (t *Transformer) Transform() error {
 		Test{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
+	if m, err := NewModuleDependencies(d, t.WebHookSalt); err != nil {
+		return fmt.Errorf("unable to create new module dependencies job: %w", err)
+	} else {
+		contributors = append(contributors, m)
+	}
+
 	p := NewPipeline(d.ShortName())
 	for _, c := range contributors {
 		j := c.Job()

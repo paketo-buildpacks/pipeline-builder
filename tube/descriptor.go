@@ -68,7 +68,6 @@ type Descriptor struct {
 	Builders           []Builder    `yaml:"builders"`
 	Name               string       `yaml:"name"`
 	Dependencies       []Dependency `yaml:"dependencies"`
-	ModuleDependencies []string     `yaml:"module_dependencies"`
 	Upstream           string       `yaml:"upstream"`
 }
 

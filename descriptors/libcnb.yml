@@ -1,8 +1,2 @@
 ---
 name: github.com/buildpacks/libcnb
-
-module_dependencies:
--  github.com/BurntSushi/toml
--  github.com/onsi/gomega
--  github.com/sclevine/spec
--  github.com/stretchr/testify

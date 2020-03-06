@@ -21,27 +21,20 @@ import (
 )
 
 var KnownResourceTypes = map[string]ResourceType{
-	// "adoptopenjdk-resource": {
-	// 	Name: "adoptopenjdk-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/adoptopenjdk-resource",
-	// 	},
-	// },
-	// "corretto-resource": {
-	// 	Name: "corretto-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/corretto-resource",
-	// 	},
-	// },
-	// "gcs-resource": {
-	// 	Name: "gcs-resource",
-	// 	Type: "docker-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "frodenas/gcs-resource",
-	// 	},
-	// },
+	"adoptopenjdk-resource": {
+		Name: "adoptopenjdk-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/adoptopenjdk-resource",
+		},
+	},
+	"corretto-resource": {
+		Name: "corretto-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/corretto-resource",
+		},
+	},
 	"git": {
 		Name: "git",
 		Type: "registry-image",
@@ -56,34 +49,34 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/github-release-resource",
 		},
 	},
-	// "gradle-resource": {
-	// 	Name: "gradle-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/gradle-resource",
-	// 	},
-	// },
-	// "jprofiler-resource": {
-	// 	Name: "jprofiler-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/jprofiler-resource",
-	// 	},
-	// },
-	// "maven-resource": {
-	// 	Name: "maven-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/maven-resource",
-	// 	},
-	// },
-	// "npm-resource": {
-	// 	Name: "npm-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/npm-resource",
-	// 	},
-	// },
+	"gradle-resource": {
+		Name: "gradle-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/gradle-resource",
+		},
+	},
+	"jprofiler-resource": {
+		Name: "jprofiler-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/jprofiler-resource",
+		},
+	},
+	"maven-resource": {
+		Name: "maven-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/maven-resource",
+		},
+	},
+	"npm-resource": {
+		Name: "npm-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/npm-resource",
+		},
+	},
 	"registry-image": {
 		Name: "registry-image",
 		Type: "registry-image",
@@ -91,13 +84,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/registry-image-resource",
 		},
 	},
-	// "repository-resource": {
-	// 	Name: "repository-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/repository-resource",
-	// 	},
-	// },
+	"repository-resource": {
+		Name: "repository-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/repository-resource",
+		},
+	},
 	"semver": {
 		Name: "semver",
 		Type: "registry-image",
@@ -105,27 +98,27 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/semver-resource",
 		},
 	},
-	// "sky-walking-resource": {
-	// 	Name: "sky-walking-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/sky-walking-resource",
-	// 	},
-	// },
-	// "tomcat-resource": {
-	// 	Name: "tomcat-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/tomcat-resource",
-	// 	},
-	// },
-	// "zulu-resource": {
-	// 	Name: "zulu-resource",
-	// 	Type: "registry-image",
-	// 	Source: map[string]interface{}{
-	// 		"repository": "cfje/zulu-resource",
-	// 	},
-	// },
+	"sky-walking-resource": {
+		Name: "sky-walking-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/sky-walking-resource",
+		},
+	},
+	"tomcat-resource": {
+		Name: "tomcat-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/tomcat-resource",
+		},
+	},
+	"zulu-resource": {
+		Name: "zulu-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "cfje/zulu-resource",
+		},
+	},
 }
 
 type ResourceType struct {

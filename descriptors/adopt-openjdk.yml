@@ -1,0 +1,72 @@
+---
+name: github.com/paketoio/adopt-openjdk
+
+dependencies:
+  - name:            openjdk-jdk
+    resource:        hotspot-jdk-8
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[8,9)"
+      implementation: hotspot
+      type:           jdk
+  - name:            openjdk-jre
+    resource:        hotspot-jre-8
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[8,9)"
+      implementation: hotspot
+      type:           jre
+  - name:            openjdk-jdk
+    resource:        hotspot-jdk-11
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[11,12)"
+      implementation: hotspot
+      type:           jdk
+  - name:            openjdk-jre
+    resource:        hotspot-jre-11
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[11,12)"
+      implementation: hotspot
+      type:           jre
+  - name:            openjdk-jdk
+    resource:        hotspot-jdk-13
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[13,14)"
+      implementation: hotspot
+      type:           jdk
+  - name:            openjdk-jre
+    resource:        hotspot-jre-13
+    type:            adoptopenjdk-resource
+    icon:            language-java
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version:        "[13,14)"
+      implementation: hotspot
+      type:           jre
+  - name: jvmkill
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /jvmkill/bionic/x86_64
+  - name: memory-calculator
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /memory-calculator/bionic/x86_64

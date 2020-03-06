@@ -16,21 +16,23 @@
 
 package tube
 
-type TestContributor struct {
+type DependencyContributor struct {
 	Descriptor Descriptor
+	Dependency Dependency
 	Salt       string
 }
 
-func (TestContributor) Group() string {
-	return "build"
+func (d DependencyContributor) Group() string {
+	return "dependency"
 }
 
-func (t TestContributor) Job() Job {
+func (d DependencyContributor) Job() Job {
 	b := NewBuildCommonResource()
-	s := NewSourceResource(t.Descriptor, t.Salt)
+	e := NewDependencyResource(d.Dependency)
+	s := NewSourceResource(d.Descriptor, d.Salt)
 
 	return Job{
-		Name:   "test",
+		Name:   e.Name,
 		Public: true,
 		Plan: []map[string]interface{}{
 			{
@@ -40,23 +42,41 @@ func (t TestContributor) Job() Job {
 						"resource": b.Name,
 					},
 					{
+						"get":      "dependency",
+						"resource": e.Name,
+						"trigger":  true,
+						"params":   d.Dependency.Params,
+					},
+					{
 						"get":      "source",
 						"resource": s.Name,
-						"trigger":  true,
 					},
 				},
 			},
 			{
-				"task": "test",
-				"file": "build-common/test.yml",
+				"task": "update-dependency",
+				"file": "build-common/update-dependency.yml",
+				"params": map[string]interface{}{
+					"DEPENDENCY":      d.Dependency.Name,
+					"VERSION_PATTERN": d.Dependency.VersionPattern,
+				},
+			},
+			{
+				"put": s.Name,
+				"params": map[string]interface{}{
+					"repository": "source",
+					"rebase":     true,
+				},
 			},
 		},
 	}
+
 }
 
-func (t TestContributor) Resources() []Resource {
+func (d DependencyContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
-		NewSourceResource(t.Descriptor, t.Salt),
+		NewDependencyResource(d.Dependency),
+		NewSourceResource(d.Descriptor, d.Salt),
 	}
 }

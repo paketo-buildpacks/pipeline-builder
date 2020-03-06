@@ -24,6 +24,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type Dependency struct {
+	Name           string                 `yaml:"name"`
+	VersionPattern string                 `yaml:"version_pattern"`
+	Resource       string                 `yaml:"resource"`
+	Type           string                 `yaml:"type"`
+	Icon           string                 `yaml:"icon"`
+	Source         map[string]interface{} `yaml:"source"`
+	Params         map[string]interface{} `yaml:"params"`
+}
+
 type Package struct {
 	Repository string `yaml:"repository"`
 	Username   string `yaml:"username"`
@@ -31,8 +41,9 @@ type Package struct {
 }
 
 type Descriptor struct {
-	Name    string  `yaml:"name"`
-	Package Package `yaml:"package"`
+	Name         string       `yaml:"name"`
+	Package      Package      `yaml:"package"`
+	Dependencies []Dependency `yaml:"dependencies"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {
@@ -45,6 +56,16 @@ func NewDescriptor(path string) (Descriptor, error) {
 	var d Descriptor
 	if err := yaml.NewDecoder(in).Decode(&d); err != nil {
 		return Descriptor{}, fmt.Errorf("unable to decode descriptor from %s: %w", path, err)
+	}
+
+	for i, dep := range d.Dependencies {
+		if dep.Resource == "" {
+			d.Dependencies[i].Resource = dep.Name
+		}
+
+		if dep.VersionPattern == "" {
+			d.Dependencies[i].VersionPattern = "[\\d]+(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+		}
 	}
 
 	return d, nil
@@ -68,15 +89,3 @@ func (d Descriptor) ShortName() string {
 	s := strings.Split(d.Name, "/")
 	return s[len(s)-1]
 }
-
-/*
-type Descriptor struct {
-	Dependencies       []Dependency `yaml:"dependencies"`
-	Upstream           string       `yaml:"upstream"`
-}
-
-func (d Descriptor) UpstreamDescriptor() Descriptor {
-	return Descriptor{Name: d.Upstream}
-}
-
-*/

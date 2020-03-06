@@ -22,7 +22,7 @@ type PackageContributor struct {
 }
 
 func (p PackageContributor) Group() string {
-	return "main"
+	return "build"
 }
 
 func (p PackageContributor) Job() Job {

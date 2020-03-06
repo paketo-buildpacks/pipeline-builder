@@ -46,6 +46,15 @@ func NewBuildCommonResource() Resource {
 	}
 }
 
+func NewDependencyResource(dependency Dependency) Resource {
+	return Resource{
+		Name:   fmt.Sprintf("dependency:%s", dependency.Resource),
+		Type:   dependency.Type,
+		Icon:   dependency.Icon,
+		Source: dependency.Source,
+	}
+}
+
 func NewModuleResource(name string) Resource {
 	d := Descriptor{Name: name}
 

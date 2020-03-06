@@ -22,7 +22,7 @@ type ReleasePatchContributor struct {
 }
 
 func (ReleasePatchContributor) Group() string {
-	return "main"
+	return "build"
 }
 
 func (r ReleasePatchContributor) Job() Job {

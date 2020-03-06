@@ -74,6 +74,10 @@ func (t *Transformer) Transform() error {
 		contributors = append(contributors, PackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
+	for _, dep := range d.Dependencies {
+		contributors = append(contributors, DependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
+	}
+
 	p := NewPipeline(d.ShortName())
 	for _, c := range contributors {
 		j := c.Job()
@@ -100,9 +104,9 @@ func (t *Transformer) Transform() error {
 		return fmt.Errorf("unable to write pipeline: %w", err)
 	}
 
-	if err := t.CreateWebHooks(p); err != nil {
-		return fmt.Errorf("unable to create webhooks: %w", err)
-	}
+	// if err := t.CreateWebHooks(p); err != nil {
+	// 	return fmt.Errorf("unable to create webhooks: %w", err)
+	// }
 
 	return nil
 }

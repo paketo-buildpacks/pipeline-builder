@@ -104,9 +104,9 @@ func (t *Transformer) Transform() error {
 		return fmt.Errorf("unable to write pipeline: %w", err)
 	}
 
-	// if err := t.CreateWebHooks(p); err != nil {
-	// 	return fmt.Errorf("unable to create webhooks: %w", err)
-	// }
+	if err := t.CreateWebHooks(p); err != nil {
+		return fmt.Errorf("unable to create webhooks: %w", err)
+	}
 
 	return nil
 }

@@ -1,5 +1,9 @@
 ---
 name: github.com/paketoio/adopt-openjdk
+package:
+  repository: docker.io/paketoio/adopt-openjdk
+  username:   ((docker-username))
+  password:   ((docker-password))
 
 dependencies:
   - name:            openjdk-jdk

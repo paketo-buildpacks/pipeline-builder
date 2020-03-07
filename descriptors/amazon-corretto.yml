@@ -1,0 +1,42 @@
+---
+name: github.com/paketoio/amazon-corretto
+package:
+  repository: docker.io/paketoio/amazon-corretto
+  username:   ((docker-username))
+  password:   ((docker-password))
+
+dependencies:
+  - name:            jdk
+    resource:        corretto-jdk-8
+    type:            corretto-resource
+    icon:            language-java
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      username:   ((github-username))
+      password:   ((github-access-token))
+      owner:      corretto
+      repository: corretto-8
+  - name:            jdk
+    resource:        corretto-jdk-11
+    type:            corretto-resource
+    icon:            language-java
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      username:   ((github-username))
+      password:   ((github-access-token))
+      owner:      corretto
+      repository: corretto-11
+  - name: jvmkill
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /jvmkill/bionic/x86_64
+  - name: memory-calculator
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /memory-calculator/bionic/x86_64

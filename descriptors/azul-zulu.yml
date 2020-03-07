@@ -1,0 +1,70 @@
+---
+name: github.com/paketoio/azul-zulu
+package:
+  repository: docker.io/paketoio/azul-zulu
+  username:   ((docker-username))
+  password:   ((docker-password))
+
+dependencies:
+  - name:            jre
+    resource:        zulu-jre-8
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "8"
+      type:    headfull
+  - name:            jdk
+    resource:        zulu-jdk-8
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "8"
+      type:    jdk
+  - name:            jre
+    resource:        zulu-jre-11
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "11"
+      type:    headfull
+  - name:            jdk
+    resource:        zulu-jdk-11
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "11"
+      type:    jdk
+  - name:            jre
+    resource:        zulu-jre-13
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "13"
+      type:    headfull
+  - name:            jdk
+    resource:        zulu-jdk-13
+    type:            zulu-resource
+    icon:            language-java
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      version: "13"
+      type:    jdk
+  - name: jvmkill
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /jvmkill/bionic/x86_64
+  - name: memory-calculator
+    type: repository-resource
+    source:
+      access_key_id:     ((aws-access-key-id))
+      secret_access_key: ((aws-secret-access-key))
+      bucket:            download.pivotal.io
+      path:              /memory-calculator/bionic/x86_64

@@ -6,7 +6,7 @@ package:
   password:   ((docker-password))
 
 dependencies:
-  - name:            openjdk-jdk
+  - name:            jdk
     resource:        hotspot-jdk-8
     type:            adoptopenjdk-resource
     icon:            language-java
@@ -15,7 +15,7 @@ dependencies:
       version:        "[8,9)"
       implementation: hotspot
       type:           jdk
-  - name:            openjdk-jre
+  - name:            jre
     resource:        hotspot-jre-8
     type:            adoptopenjdk-resource
     icon:            language-java
@@ -24,7 +24,7 @@ dependencies:
       version:        "[8,9)"
       implementation: hotspot
       type:           jre
-  - name:            openjdk-jdk
+  - name:            jdk
     resource:        hotspot-jdk-11
     type:            adoptopenjdk-resource
     icon:            language-java
@@ -33,7 +33,7 @@ dependencies:
       version:        "[11,12)"
       implementation: hotspot
       type:           jdk
-  - name:            openjdk-jre
+  - name:            jre
     resource:        hotspot-jre-11
     type:            adoptopenjdk-resource
     icon:            language-java
@@ -42,7 +42,7 @@ dependencies:
       version:        "[11,12)"
       implementation: hotspot
       type:           jre
-  - name:            openjdk-jdk
+  - name:            jdk
     resource:        hotspot-jdk-13
     type:            adoptopenjdk-resource
     icon:            language-java
@@ -51,7 +51,7 @@ dependencies:
       version:        "[13,14)"
       implementation: hotspot
       type:           jdk
-  - name:            openjdk-jre
+  - name:            jre
     resource:        hotspot-jre-13
     type:            adoptopenjdk-resource
     icon:            language-java

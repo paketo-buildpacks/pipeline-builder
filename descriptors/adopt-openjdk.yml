@@ -8,7 +8,7 @@ package:
 dependencies:
   - name:            jdk
     resource:        hotspot-jdk-8
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -17,7 +17,7 @@ dependencies:
       type:           jdk
   - name:            jre
     resource:        hotspot-jre-8
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -26,7 +26,7 @@ dependencies:
       type:           jre
   - name:            jdk
     resource:        hotspot-jdk-11
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -35,7 +35,7 @@ dependencies:
       type:           jdk
   - name:            jre
     resource:        hotspot-jre-11
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -44,7 +44,7 @@ dependencies:
       type:           jre
   - name:            jdk
     resource:        hotspot-jdk-13
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -53,7 +53,7 @@ dependencies:
       type:           jdk
   - name:            jre
     resource:        hotspot-jre-13
-    type:            adoptopenjdk-resource
+    type:            adopt-openjdk-resource
     icon:            language-java
     version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:

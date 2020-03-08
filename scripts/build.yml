@@ -1,0 +1,33 @@
+---
+platform: linux
+
+image_resource:
+  type: registry-image
+  source:
+    repository: golang
+    tag: latest
+
+inputs:
+  - name: pipeline-builder
+
+outputs:
+  - name: adopt-openjdk-resource
+#  - name: artifactory-builder
+#  - name: corretto-builder
+#  - name: gradle-builder
+#  - name: http-builder
+#  - name: jprofiler-builder
+#  - name: maven-builder
+#  - name: npm-builder
+#  - name: repository-builder
+#  - name: sky-walking-builder
+#  - name: tomcat-builder
+#  - name: wildfly-builder
+#  - name: your-kit-builder
+#  - name: zulu-builder
+
+caches:
+  - path: go-cache
+
+run:
+  path: pipeline-builder/scripts/build.sh

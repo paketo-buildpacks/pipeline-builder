@@ -21,18 +21,18 @@ import (
 )
 
 var KnownResourceTypes = map[string]ResourceType{
-	"adoptopenjdk-resource": {
-		Name: "adoptopenjdk-resource",
+	"adopt-openjdk-resource": {
+		Name: "adopt-openjdk-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/adoptopenjdk-resource",
+			"repository": "paketoio/adopt-openjdk-resource",
 		},
 	},
 	"corretto-resource": {
 		Name: "corretto-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/corretto-resource",
+			"repository": "paketoio/amazon-corretto-resource",
 		},
 	},
 	"git": {
@@ -53,28 +53,28 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "gradle-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/gradle-resource",
+			"repository": "paketoio/gradle-resource",
 		},
 	},
 	"jprofiler-resource": {
 		Name: "jprofiler-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/jprofiler-resource",
+			"repository": "paketo/jprofiler-resource",
 		},
 	},
 	"maven-resource": {
 		Name: "maven-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/maven-resource",
+			"repository": "paketo/maven-resource",
 		},
 	},
 	"npm-resource": {
 		Name: "npm-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/npm-resource",
+			"repository": "paketo/npm-resource",
 		},
 	},
 	"registry-image": {
@@ -88,7 +88,7 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "repository-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/repository-resource",
+			"repository": "paketo/repository-resource",
 		},
 	},
 	"semver": {
@@ -102,21 +102,21 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "sky-walking-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/sky-walking-resource",
+			"repository": "paketo/sky-walking-resource",
 		},
 	},
 	"tomcat-resource": {
 		Name: "tomcat-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/tomcat-resource",
+			"repository": "paketo/tomcat-resource",
 		},
 	},
 	"zulu-resource": {
 		Name: "zulu-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "cfje/zulu-resource",
+			"repository": "paketo/azul-zulu-resource",
 		},
 	},
 }

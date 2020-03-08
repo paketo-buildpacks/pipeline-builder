@@ -11,7 +11,7 @@ fi
 
 cd "${ROOT}"/pipeline-builder
 
-for RESOURCE in $(find "${ROOT}"/pipeline-builder/resources/cmd -type d -depth 1 -exec basename {} \; | sort) ; do
+for RESOURCE in $(find "${ROOT}"/pipeline-builder/resources/cmd -maxdepth 1 -mindepth 1 -type d -exec basename {} \; | sort) ; do
   printf "Building %s\n" "$RESOURCE"
 
   cp "${ROOT}"/pipeline-builder/resources/Dockerfile "${ROOT}"/"${RESOURCE}"-resource

@@ -137,7 +137,7 @@ func NewVersionResource(descriptor Descriptor) Resource {
 		Icon: "tag",
 		Source: map[string]interface{}{
 			"driver":   "gcs",
-			"bucket":   "paketo-versions",
+			"bucket":   "repository-versions",
 			"key":      descriptor.Name,
 			"json_key": "((gcs-json-key))",
 		},

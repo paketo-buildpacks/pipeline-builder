@@ -3,12 +3,12 @@ name: github.com/paketo-buildpacks/azul-zulu
 package:
   repository: gcr.io/paketo-buildpacks/azul-zulu
   username: _json_key
-  password: ((gcs-json-key))
+  password: ((paketo-gcs-json-key))
 
 dependencies:
   - name:            jre
     resource:        zulu-jre-8
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -16,7 +16,7 @@ dependencies:
       type:    headfull
   - name:            jdk
     resource:        zulu-jdk-8
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -24,7 +24,7 @@ dependencies:
       type:    jdk
   - name:            jre
     resource:        zulu-jre-11
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -32,7 +32,7 @@ dependencies:
       type:    headfull
   - name:            jdk
     resource:        zulu-jdk-11
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -40,7 +40,7 @@ dependencies:
       type:    jdk
   - name:            jre
     resource:        zulu-jre-13
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
@@ -48,7 +48,7 @@ dependencies:
       type:    headfull
   - name:            jdk
     resource:        zulu-jdk-13
-    type:            zulu-resource
+    type:            azul-zulu-resource
     icon:            language-java
     version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:

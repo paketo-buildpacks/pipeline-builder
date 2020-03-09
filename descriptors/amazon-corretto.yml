@@ -3,7 +3,7 @@ name: github.com/paketo-buildpacks/amazon-corretto
 package:
   repository: gcr.io/paketo-buildpacks/amazon-corretto
   username: _json_key
-  password: ((gcs-json-key))
+  password: ((paketo-gcs-json-key))
 
 dependencies:
   - name:            jdk

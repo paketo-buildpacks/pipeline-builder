@@ -3,7 +3,7 @@ name: github.com/paketo-buildpacks/adopt-openjdk
 package:
   repository: gcr.io/paketo-buildpacks/adopt-openjdk
   username: _json_key
-  password: ((gcs-json-key))
+  password: ((paketo-gcs-json-key))
 
 dependencies:
   - name:            jdk

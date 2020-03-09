@@ -3,4 +3,4 @@ name: github.com/paketo-buildpacks/procfile
 package:
   repository: gcr.io/paketo-buildpacks/procfile
   username: _json_key
-  password: ((gcs-json-key))
+  password: ((paketo-gcs-json-key))

@@ -25,8 +25,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-
-	"github.com/cheggaaa/pb/v3"
 )
 
 func DownloadArtifact(uri string, version Version, destination string) (string, error) {
@@ -40,8 +38,6 @@ func DownloadArtifact(uri string, version Version, destination string) (string, 
 		return "", fmt.Errorf("unable to GET %s: %w", uri, err)
 	}
 	defer resp.Body.Close()
-
-	in := pb.Full.Start64(resp.ContentLength).NewProxyReader(resp.Body)
 
 	file := filepath.Join(destination, filepath.Base(uri))
 	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
@@ -58,7 +54,7 @@ func DownloadArtifact(uri string, version Version, destination string) (string, 
 	}
 	_, _ = fmt.Fprintf(os.Stderr, "Downloading %s\n", uri)
 
-	if _, err := io.Copy(out, in); err != nil {
+	if _, err := io.Copy(out, resp.Body); err != nil {
 		return "", fmt.Errorf("unable to copy data: %w", err)
 	}
 	hash := hex.EncodeToString(s.Sum(nil))

@@ -31,7 +31,7 @@ type Resource struct {
 }
 
 func NewBuildCommonResource() Resource {
-	d := Descriptor{Name: "github.com/paketoio/build-common"}
+	d := Descriptor{Name: "github.com/paketo-buildpacks/build-common"}
 
 	return Resource{
 		Name: d.ShortName(),

@@ -21,5 +21,5 @@ import (
 )
 
 func main() {
-	resources.In(resources.AdoptOpenJDK{})
+	resources.In(resources.AmazonCorretto{})
 }

@@ -1,9 +1,9 @@
 ---
-name: github.com/paketoio/azul-zulu
+name: github.com/paketo-buildpacks/azul-zulu
 package:
-  repository: docker.io/paketoio/azul-zulu
-  username:   ((docker-username))
-  password:   ((docker-password))
+  repository: gcr.io/paketo-buildpacks/azul-zulu
+  username: _json_key
+  password: ((gcs-json-key))
 
 dependencies:
   - name:            jre
@@ -57,14 +57,8 @@ dependencies:
   - name: jvmkill
     type: repository-resource
     source:
-      access_key_id:     ((aws-access-key-id))
-      secret_access_key: ((aws-secret-access-key))
-      bucket:            download.pivotal.io
-      path:              /jvmkill/bionic/x86_64
+      uri: https://java-buildpack.cloudfoundry.org/jvmkill/bionic/x86_64/index.yml
   - name: memory-calculator
     type: repository-resource
     source:
-      access_key_id:     ((aws-access-key-id))
-      secret_access_key: ((aws-secret-access-key))
-      bucket:            download.pivotal.io
-      path:              /memory-calculator/bionic/x86_64
+      uri: https://java-buildpack.cloudfoundry.org/memory-calculator/bionic/x86_64/index.yml

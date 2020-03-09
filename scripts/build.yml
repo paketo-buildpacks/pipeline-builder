@@ -12,19 +12,19 @@ inputs:
 
 outputs:
   - name: adopt-openjdk-resource
-#  - name: artifactory-builder
-#  - name: corretto-builder
-#  - name: gradle-builder
-#  - name: http-builder
-#  - name: jprofiler-builder
-#  - name: maven-builder
-#  - name: npm-builder
-#  - name: repository-builder
+  - name: amazon-corretto-resource
+  - name: azul-zulu-resource
+  #  - name: artifactory-builder
+  - name: gradle-resource
+  #  - name: http-builder
+  #  - name: jprofiler-builder
+  - name: maven-resource
+  #  - name: npm-builder
+  - name: repository-resource
 #  - name: sky-walking-builder
 #  - name: tomcat-builder
 #  - name: wildfly-builder
 #  - name: your-kit-builder
-#  - name: zulu-builder
 
 caches:
   - path: go-cache

@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
 	"sort"
 
 	"github.com/Masterminds/semver/v3"
@@ -29,7 +30,7 @@ import (
 type Version string
 
 type version struct {
-	Ref string `toml:"ref"`
+	Ref string `json:"ref"`
 }
 
 func (v Version) MarshalJSON() ([]byte, error) {
@@ -39,7 +40,7 @@ func (v Version) MarshalJSON() ([]byte, error) {
 }
 
 func (v *Version) UnmarshalJSON(data []byte) error {
-	var r struct{ Ref string `toml:"ref"` }
+	var r version
 	if err := json.Unmarshal(data, &r); err != nil {
 		return fmt.Errorf("cannot unmarshal check source: %w", err)
 	}
@@ -51,8 +52,8 @@ func (v *Version) UnmarshalJSON(data []byte) error {
 type Metadata map[string]string
 
 type metadata struct {
-	Name  string `toml:"name"`
-	Value string `toml:"value"`
+	Name  string `json:"name"`
+	Value string `json:"value"`
 }
 
 func (m Metadata) MarshalJSON() ([]byte, error) {
@@ -72,37 +73,36 @@ func (m Metadata) MarshalJSON() ([]byte, error) {
 }
 
 type CheckRequest struct {
-	Source  map[string]interface{} `toml:"source"`
-	Version Version                `toml:"version"`
+	Source  map[string]interface{} `json:"source"`
+	Version Version                `json:"version"`
 }
 
 type CheckResult []Version
 
 type InRequest struct {
-	Source  map[string]interface{} `toml:"source"`
-	Version Version                `toml:"version"`
-	Params  map[string]interface{} `toml:"params"`
+	Source  map[string]interface{} `json:"source"`
+	Version Version                `json:"version"`
+	Params  map[string]interface{} `json:"params"`
 }
 
 type InResult struct {
-	Version  Version  `toml:"version"`
-	Metadata Metadata `toml:"metadata"`
+	Version  Version  `json:"version"`
+	Metadata Metadata `json:"metadata"`
 }
 
 type OutRequest struct {
-	Source map[string]interface{} `toml:"source"`
-	Params map[string]interface{} `toml:"params"`
+	Source map[string]interface{} `json:"source"`
+	Params map[string]interface{} `json:"params"`
 }
 
 type OutResult struct {
-	Version  Version    `toml:"version"`
-	Metadata []Metadata `toml:"metadata"`
+	Version  Version    `json:"version"`
+	Metadata []Metadata `json:"metadata"`
 }
 
 type Resource interface {
-	Check(request CheckRequest) (CheckResult, error)
-	In(request InRequest, destination string) (InResult, error)
 	Out(request OutRequest, destination string) (OutResult, error)
+	Versions(source map[string]interface{}) (map[Version]string, error)
 }
 
 func Check(resource Resource) {
@@ -111,9 +111,24 @@ func Check(resource Resource) {
 		log.Fatal(err)
 	}
 
-	result, err := resource.Check(request)
+	versions, err := resource.Versions(request.Source)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	var vp *regexp.Regexp
+	if s, ok := request.Source["version_pattern"].(string); ok {
+		vp, err = regexp.Compile(s)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	result := CheckResult{}
+	for k, _ := range versions {
+		if vp == nil || vp.MatchString(string(k)) {
+			result = append(result, k)
+		}
 	}
 
 	sort.Slice(result, func(i, j int) bool {
@@ -162,9 +177,24 @@ func In(resource Resource) {
 		log.Fatal(err)
 	}
 
-	result, err := resource.In(request, os.Args[1])
+	versions, err := resource.Versions(request.Source)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	uri := versions[request.Version]
+
+	sha256, err := DownloadArtifact(uri, request.Version, os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	result := InResult{
+		Version: request.Version,
+		Metadata: Metadata{
+			"uri":    uri,
+			"sha256": sha256,
+		},
 	}
 
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {

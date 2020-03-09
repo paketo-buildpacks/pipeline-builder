@@ -20,40 +20,33 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 )
 
-type AdoptOpenJDK struct{}
+type AzulZulu struct{}
 
-func (AdoptOpenJDK) Out(request OutRequest, destination string) (OutResult, error) {
+func (AzulZulu) Out(request OutRequest, destination string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (a AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]string, error) {
-	v, ok := source["version"].(string)
-	if !ok {
-		return nil, fmt.Errorf("version must be specified")
-	}
-
-	i, ok := source["implementation"].(string)
-	if !ok {
-		return nil, fmt.Errorf("implementation must be specified")
-	}
-
+func (a AzulZulu) Versions(source map[string]interface{}) (map[Version]string, error) {
 	t, ok := source["type"].(string)
 	if !ok {
 		return nil, fmt.Errorf("type must be specified")
 	}
 
-	uri := fmt.Sprintf("https://api.adoptopenjdk.net/v3/assets/version/%s"+
-		"?architecture=x64"+
-		"&heap_size=normal"+
-		"&image_type=%s"+
-		"&jvm_impl=%s"+
-		"&os=linux"+
-		"&release_type=ga"+
-		"&vendor=adoptopenjdk",
-		url.PathEscape(v), t, i)
+	v, ok := source["version"].(string)
+	if !ok {
+		return nil, fmt.Errorf("version must be specified")
+	}
+
+	uri := fmt.Sprintf("https://api.azul.com/zulu/download/azure-only/v1.0/bundles/latest/"+
+		"?arch=x86"+
+		"&ext=tar.gz"+
+		"&features=%s"+
+		"&hw_bitness=64"+
+		"&jdk_version=%s"+
+		"&os=linux",
+		t, v)
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -65,23 +58,16 @@ func (a AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]strin
 		return nil, fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode)
 	}
 
-	raw := make([]struct {
-		Binaries []struct {
-			Package struct {
-				Link string `json:"link"`
-			} `json:"package"`
-		} `json:"binaries"`
-		VersionData struct {
-			SemVer string `json:"semver"`
-		} `json:"version_data"`
-	}, 1)
+	raw := struct {
+		JDKVersion []int  `json:"jdk_version"`
+		URL        string `json:"url"`
+	}{}
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		return nil, fmt.Errorf("unable to decode payload: %w", err)
 	}
 
-	versions := make(map[Version]string, len(raw))
-	for _, r := range raw {
-		versions[Version(r.VersionData.SemVer)] = r.Binaries[0].Package.Link
+	versions := map[Version]string{
+		Version(fmt.Sprintf("%d.%d.%d", raw.JDKVersion[0], raw.JDKVersion[1], raw.JDKVersion[2])): raw.URL,
 	}
 
 	return versions, nil

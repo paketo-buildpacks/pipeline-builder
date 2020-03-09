@@ -1,9 +1,9 @@
 ---
-name: github.com/paketoio/adopt-openjdk
+name: github.com/paketo-buildpacks/adopt-openjdk
 package:
-  repository: docker.io/paketoio/adopt-openjdk
-  username:   ((docker-username))
-  password:   ((docker-password))
+  repository: gcr.io/paketo-buildpacks/adopt-openjdk
+  username: _json_key
+  password: ((gcs-json-key))
 
 dependencies:
   - name:            jdk
@@ -63,14 +63,8 @@ dependencies:
   - name: jvmkill
     type: repository-resource
     source:
-      access_key_id:     ((aws-access-key-id))
-      secret_access_key: ((aws-secret-access-key))
-      bucket:            download.pivotal.io
-      path:              /jvmkill/bionic/x86_64
+      uri: https://java-buildpack.cloudfoundry.org/jvmkill/bionic/x86_64/index.yml
   - name: memory-calculator
     type: repository-resource
     source:
-      access_key_id:     ((aws-access-key-id))
-      secret_access_key: ((aws-secret-access-key))
-      bucket:            download.pivotal.io
-      path:              /memory-calculator/bionic/x86_64
+      uri: https://java-buildpack.cloudfoundry.org/memory-calculator/bionic/x86_64/index.yml

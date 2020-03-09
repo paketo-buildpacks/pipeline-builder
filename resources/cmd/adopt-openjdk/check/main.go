@@ -17,7 +17,7 @@
 package main
 
 import (
-	"github.com/paketoio/pipeline-builder/resources"
+	"github.com/paketo-buildpacks/pipeline-builder/resources"
 )
 
 func main() {

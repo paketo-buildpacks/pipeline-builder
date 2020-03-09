@@ -1,6 +1,6 @@
 ---
-name: github.com/paketoio/procfile
+name: github.com/paketo-buildpacks/procfile
 package:
-  repository: docker.io/paketoio/procfile
-  username:   ((docker-username))
-  password:   ((docker-password))
+  repository: gcr.io/paketo-buildpacks/procfile
+  username: _json_key
+  password: ((gcs-json-key))

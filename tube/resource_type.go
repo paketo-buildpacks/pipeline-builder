@@ -25,14 +25,21 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "adopt-openjdk-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketoio/adopt-openjdk-resource",
+			"repository": "gcr.io/paketo-buildpacks/adopt-openjdk-resource",
 		},
 	},
-	"corretto-resource": {
-		Name: "corretto-resource",
+	"amazon-corretto-resource": {
+		Name: "amazon-corretto-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketoio/amazon-corretto-resource",
+			"repository": "gcr.io/paketo-buildpacks/amazon-corretto-resource",
+		},
+	},
+	"azul-zulu-resource": {
+		Name: "azul-zulu-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/azul-zulu-resource",
 		},
 	},
 	"git": {
@@ -53,28 +60,28 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "gradle-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketoio/gradle-resource",
+			"repository": "gcr.io/paketo-buildpacks/gradle-resource",
 		},
 	},
 	"jprofiler-resource": {
 		Name: "jprofiler-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/jprofiler-resource",
+			"repository": "gcr.io/paketo-buildpacks/jprofiler-resource",
 		},
 	},
 	"maven-resource": {
 		Name: "maven-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/maven-resource",
+			"repository": "gcr.io/paketo-buildpacks/maven-resource",
 		},
 	},
 	"npm-resource": {
 		Name: "npm-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/npm-resource",
+			"repository": "gcr.io/paketo-buildpacks/npm-resource",
 		},
 	},
 	"registry-image": {
@@ -88,7 +95,7 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "repository-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/repository-resource",
+			"repository": "gcr.io/paketo-buildpacks/repository-resource",
 		},
 	},
 	"semver": {
@@ -102,21 +109,14 @@ var KnownResourceTypes = map[string]ResourceType{
 		Name: "sky-walking-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/sky-walking-resource",
+			"repository": "gcr.io/paketo-buildpacks/sky-walking-resource",
 		},
 	},
 	"tomcat-resource": {
 		Name: "tomcat-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "paketo/tomcat-resource",
-		},
-	},
-	"zulu-resource": {
-		Name: "zulu-resource",
-		Type: "registry-image",
-		Source: map[string]interface{}{
-			"repository": "paketo/azul-zulu-resource",
+			"repository": "gcr.io/paketo-buildpacks/tomcat-resource",
 		},
 	},
 }

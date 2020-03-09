@@ -21,7 +21,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/paketoio/pipeline-builder/tube"
+	"github.com/paketo-buildpacks/pipeline-builder/tube"
 	"github.com/spf13/pflag"
 )
 

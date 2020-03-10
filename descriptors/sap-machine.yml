@@ -1,0 +1,72 @@
+---
+name: github.com/paketo-buildpacks/sap-machine
+package:
+  repository: gcr.io/paketo-buildpacks/sap-machine
+  username: _json_key
+  password: ((paketo-gcs-json-key))
+
+dependencies:
+  - name:            jre
+    resource:        sapmachine-jre-11
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(11.*)
+    params:
+      globs:
+        - sapmachine-jre-*_linux-x64_bin.tar.gz
+        - sapmachine-jre-*_linux-x64_bin.sha256.txt
+  - name:            jre
+    resource:        sapmachine-jre-13
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(13.*)
+    params:
+      globs:
+        - sapmachine-jre-*_linux-x64_bin.tar.gz
+        - sapmachine-jre-*_linux-x64_bin.sha256.txt
+  - name:            jdk
+    resource:        sapmachine-jdk-11
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(11.*)
+    params:
+      globs:
+        - sapmachine-jdk-*_linux-x64_bin.tar.gz
+        - sapmachine-jdk-*_linux-x64_bin.sha256.txt
+  - name:            jdk
+    resource:        sapmachine-jdk-13
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(13.*)
+    params:
+      globs:
+        - sapmachine-jdk-*_linux-x64_bin.tar.gz
+        - sapmachine-jdk-*_linux-x64_bin.sha256.txt
+  - name: jvmkill
+    type: repository-resource
+    source:
+      uri: https://java-buildpack.cloudfoundry.org/jvmkill/bionic/x86_64/index.yml
+  - name: memory-calculator
+    type: repository-resource
+    source:
+      uri: https://java-buildpack.cloudfoundry.org/memory-calculator/bionic/x86_64/index.yml

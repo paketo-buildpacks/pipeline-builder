@@ -1,0 +1,6 @@
+---
+name: github.com/paketo-buildpacks/executable-jar
+package:
+  repository: gcr.io/paketo-buildpacks/executable-jar
+  username: _json_key
+  password: ((paketo-gcs-json-key))

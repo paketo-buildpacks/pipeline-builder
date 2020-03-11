@@ -15,6 +15,7 @@ outputs:
   - name: amazon-corretto-resource
   - name: azul-zulu-resource
   #  - name: artifactory-builder
+  - name: bellsoft-liberica-resource
   - name: gradle-resource
   #  - name: http-builder
   #  - name: jprofiler-builder

@@ -42,6 +42,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/azul-zulu-resource",
 		},
 	},
+	"bellsoft-liberica-resource": {
+		Name: "bellsoft-liberica-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/bellsoft-liberica-resource",
+		},
+	},
 	"git": {
 		Name: "git",
 		Type: "registry-image",

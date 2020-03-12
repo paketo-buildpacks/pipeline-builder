@@ -1,0 +1,18 @@
+---
+name: github.com/paketo-buildpacks/build-system
+package:
+  repository: gcr.io/paketo-buildpacks/build-system
+  username: _json_key
+  password: ((paketo-gcs-json-key))
+
+dependencies:
+  - name:            gradle
+    type:            gradle-resource
+  - name: maven
+    type: maven-resource
+    source:
+      uri:         https://repo1.maven.org/maven2
+      group_id:    org.apache.maven
+      artifact_id: apache-maven
+      classifier:  bin
+      packaging:   tar.gz

@@ -1,0 +1,6 @@
+---
+name: github.com/paketo-buildpacks/debug
+package:
+  repository: gcr.io/paketo-buildpacks/debug
+  username: _json_key
+  password: ((paketo-gcs-json-key))

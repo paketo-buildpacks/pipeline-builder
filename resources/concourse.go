@@ -42,7 +42,7 @@ func (v Version) MarshalJSON() ([]byte, error) {
 func (v *Version) UnmarshalJSON(data []byte) error {
 	var r version
 	if err := json.Unmarshal(data, &r); err != nil {
-		return fmt.Errorf("cannot unmarshal check source: %w", err)
+		return fmt.Errorf("cannot unmarshal check source\n%w", err)
 	}
 
 	*v = Version(r.Ref)

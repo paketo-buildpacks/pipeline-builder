@@ -59,7 +59,7 @@ func (a AmazonCorretto) Versions(source map[string]interface{}) (map[Version]str
 	for {
 		s, r, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
 		if err != nil {
-			return nil, fmt.Errorf("unable to list existing releases for %s/%s: %w", o, r, err)
+			return nil, fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, r, err)
 		}
 
 		raw = append(raw, s...)

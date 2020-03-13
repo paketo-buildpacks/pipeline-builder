@@ -49,13 +49,13 @@ type Descriptor struct {
 func NewDescriptor(path string) (Descriptor, error) {
 	in, err := os.Open(path)
 	if err != nil {
-		return Descriptor{}, fmt.Errorf("unable to open %s: %w", path, err)
+		return Descriptor{}, fmt.Errorf("unable to open %s\n%w", path, err)
 	}
 	defer in.Close()
 
 	var d Descriptor
 	if err := yaml.NewDecoder(in).Decode(&d); err != nil {
-		return Descriptor{}, fmt.Errorf("unable to decode descriptor from %s: %w", path, err)
+		return Descriptor{}, fmt.Errorf("unable to decode descriptor from %s\n%w", path, err)
 	}
 
 	for i, dep := range d.Dependencies {

@@ -38,7 +38,7 @@ func (r Repository) Versions(source map[string]interface{}) (map[Version]string,
 
 	resp, err := http.Get(uri)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get %s: %w", uri, err)
+		return nil, fmt.Errorf("unable to get %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
@@ -48,7 +48,7 @@ func (r Repository) Versions(source map[string]interface{}) (map[Version]string,
 
 	var raw map[string]string
 	if err := yaml.NewDecoder(resp.Body).Decode(&raw); err != nil {
-		return nil, fmt.Errorf("unable to decode payload: %w", err)
+		return nil, fmt.Errorf("unable to decode payload\n%w", err)
 	}
 
 	cp := regexp.MustCompile("^([\\d]+)\\.([\\d]+)\\.([\\d]+)_?(.*)$")

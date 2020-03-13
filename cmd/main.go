@@ -40,7 +40,7 @@ func main() {
 	flagSet.StringVar(&t.ConcourseTeam, "concourse-team", "", "Concourse Team")
 
 	if err := flagSet.Parse(os.Args[1:]); err != nil {
-		log.Fatal(fmt.Errorf("unable to parse flags: %w", err))
+		log.Fatal(fmt.Errorf("unable to parse flags\n%w", err))
 	}
 
 	if t.DescriptorPath == "" {
@@ -68,6 +68,6 @@ func main() {
 	}
 
 	if err := t.Transform(); err != nil {
-		log.Fatal(fmt.Errorf("unable to transform: %w", err))
+		log.Fatal(fmt.Errorf("unable to transform\n%w", err))
 	}
 }

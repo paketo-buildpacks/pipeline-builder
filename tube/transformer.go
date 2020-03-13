@@ -52,7 +52,7 @@ func (t *Transformer) Transform() error {
 
 	d, err := NewDescriptor(t.DescriptorPath)
 	if err != nil {
-		return fmt.Errorf("unable to read descriptor: %w", err)
+		return fmt.Errorf("unable to read descriptor\n%w", err)
 	}
 
 	log.Println(d.Name)
@@ -65,7 +65,7 @@ func (t *Transformer) Transform() error {
 	}
 
 	if m, err := NewModuleDependenciesContributor(d, t.WebHookSalt); err != nil {
-		return fmt.Errorf("unable to create new module dependencies job: %w", err)
+		return fmt.Errorf("unable to create new module dependencies job\n%w", err)
 	} else {
 		contributors = append(contributors, m)
 	}
@@ -101,11 +101,11 @@ func (t *Transformer) Transform() error {
 	}
 
 	if err := t.WritePipeline(p); err != nil {
-		return fmt.Errorf("unable to write pipeline: %w", err)
+		return fmt.Errorf("unable to write pipeline\n%w", err)
 	}
 
 	if err := t.CreateWebHooks(p); err != nil {
-		return fmt.Errorf("unable to create webhooks: %w", err)
+		return fmt.Errorf("unable to create webhooks\n%w", err)
 	}
 
 	return nil
@@ -130,7 +130,7 @@ func (t *Transformer) CreateWebHooks(pipeline Pipeline) error {
 
 	for _, r := range r {
 		if err := t.CreateWebHook(pipeline, r, gh); err != nil {
-			return fmt.Errorf("unable to create webhook: %w", err)
+			return fmt.Errorf("unable to create webhook\n%w", err)
 		}
 	}
 
@@ -148,7 +148,7 @@ func (t *Transformer) CreateWebHook(pipeline Pipeline, resource Resource, gh *gi
 	for {
 		h, r, err := gh.Repositories.ListHooks(context.Background(), w.Owner, w.Repository, opt)
 		if err != nil {
-			return fmt.Errorf("unable to list existing webhooks for %s/%s: %w", w.Owner, w.Repository, err)
+			return fmt.Errorf("unable to list existing webhooks for %s/%s\n%w", w.Owner, w.Repository, err)
 		}
 
 		hooks = append(hooks, h...)
@@ -177,7 +177,7 @@ func (t *Transformer) CreateWebHook(pipeline Pipeline, resource Resource, gh *gi
 		}
 
 		if _, _, err := gh.Repositories.CreateHook(context.Background(), w.Owner, w.Repository, hook); err != nil {
-			return fmt.Errorf("unable to create webhook %s/%s: %w", w.Owner, w.Repository, err)
+			return fmt.Errorf("unable to create webhook %s/%s\n%w", w.Owner, w.Repository, err)
 		}
 	} else if existing.Config["url"].(string) != fmt.Sprintf("%s?webhook_token=%s", uri, w.Token) {
 		log.Printf("  update webhook: %s/%s ➜ %s/%s\n", w.Owner, w.Repository, pipeline.Name, resource.Name)
@@ -189,7 +189,7 @@ func (t *Transformer) CreateWebHook(pipeline Pipeline, resource Resource, gh *gi
 		}
 
 		if _, _, err := gh.Repositories.EditHook(context.Background(), w.Owner, w.Repository, existing.GetID(), hook); err != nil {
-			return fmt.Errorf("unable to update webhook %s/%s: %w", w.Owner, w.Repository, err)
+			return fmt.Errorf("unable to update webhook %s/%s\n%w", w.Owner, w.Repository, err)
 		}
 	} else {
 		log.Printf("  existing webhook: %s/%s ➜ %s/%s\n", w.Owner, w.Repository, pipeline.Name, resource.Name)
@@ -203,13 +203,13 @@ func (t *Transformer) WritePipeline(pipeline Pipeline) error {
 	if t.PipelinePath != "" {
 		out, err := os.OpenFile(t.PipelinePath, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 		if err != nil {
-			return fmt.Errorf("unable to open %s: %w", t.PipelinePath, err)
+			return fmt.Errorf("unable to open %s\n%w", t.PipelinePath, err)
 		}
 		defer out.Close()
 	}
 
 	if err := yaml.NewEncoder(out).Encode(pipeline); err != nil {
-		return fmt.Errorf("unable to encode pipeline: %w", err)
+		return fmt.Errorf("unable to encode pipeline\n%w", err)
 	}
 
 	return nil

@@ -29,20 +29,20 @@ import (
 
 func DownloadArtifact(uri string, version Version, destination string) (string, error) {
 	if err := os.MkdirAll(destination, 0755); err != nil {
-		return "", fmt.Errorf("unable to make directory %s: %w", destination, err)
+		return "", fmt.Errorf("unable to make directory %s\n%w", destination, err)
 
 	}
 
 	resp, err := http.Get(uri)
 	if err != nil {
-		return "", fmt.Errorf("unable to GET %s: %w", uri, err)
+		return "", fmt.Errorf("unable to GET %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
 	file := filepath.Join(destination, filepath.Base(uri))
 	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		return "", fmt.Errorf("unable to open file %s: %w", file, err)
+		return "", fmt.Errorf("unable to open file %s\n%w", file, err)
 	}
 	defer f.Close()
 
@@ -55,23 +55,23 @@ func DownloadArtifact(uri string, version Version, destination string) (string, 
 	_, _ = fmt.Fprintf(os.Stderr, "Downloading %s\n", uri)
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
-		return "", fmt.Errorf("unable to copy data: %w", err)
+		return "", fmt.Errorf("unable to copy data\n%w", err)
 	}
 	hash := hex.EncodeToString(s.Sum(nil))
 
 	file = filepath.Join(destination, "sha256")
 	if err := ioutil.WriteFile(file, []byte(hash), 0644); err != nil {
-		return "", fmt.Errorf("unable to write %s: %w", file, err)
+		return "", fmt.Errorf("unable to write %s\n%w", file, err)
 	}
 
 	file = filepath.Join(destination, "uri")
 	if err := ioutil.WriteFile(file, []byte(uri), 0644); err != nil {
-		return "", fmt.Errorf("unable to write %s: %w", file, err)
+		return "", fmt.Errorf("unable to write %s\n%w", file, err)
 	}
 
 	file = filepath.Join(destination, "version")
 	if err := ioutil.WriteFile(file, []byte(version), 0644); err != nil {
-		return "", fmt.Errorf("unable to write %s: %w", file, err)
+		return "", fmt.Errorf("unable to write %s\n%w", file, err)
 	}
 
 	return hash, nil

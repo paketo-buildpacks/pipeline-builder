@@ -57,7 +57,7 @@ func (a AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]strin
 
 	resp, err := http.Get(uri)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get %s: %w", uri, err)
+		return nil, fmt.Errorf("unable to get %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
@@ -76,7 +76,7 @@ func (a AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]strin
 		} `json:"version_data"`
 	}, 1)
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
-		return nil, fmt.Errorf("unable to decode payload: %w", err)
+		return nil, fmt.Errorf("unable to decode payload\n%w", err)
 	}
 
 	versions := make(map[Version]string, len(raw))

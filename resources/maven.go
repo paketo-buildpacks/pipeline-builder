@@ -50,7 +50,7 @@ func (m Maven) Versions(source map[string]interface{}) (map[Version]string, erro
 
 	resp, err := http.Get(uri)
 	if err != nil {
-		return nil, fmt.Errorf("unable to get %s: %w", uri, err)
+		return nil, fmt.Errorf("unable to get %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
@@ -62,7 +62,7 @@ func (m Maven) Versions(source map[string]interface{}) (map[Version]string, erro
 		Versions []string `xml:"versioning>versions>version"`
 	}{}
 	if err := xml.NewDecoder(resp.Body).Decode(&raw); err != nil {
-		return nil, fmt.Errorf("unable to decode payload: %w", err)
+		return nil, fmt.Errorf("unable to decode payload\n%w", err)
 	}
 
 	cp := regexp.MustCompile("^([\\d]+)\\.([\\d]+)\\.([\\d]+)[.-]?(.*)")

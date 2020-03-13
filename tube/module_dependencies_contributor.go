@@ -40,7 +40,7 @@ func NewModuleDependenciesContributor(descriptor Descriptor, salt string) (Modul
 	uri := strings.ReplaceAll(fmt.Sprintf("https://%s/master/go.mod", descriptor.Name), "github.com", "raw.githubusercontent.com")
 	resp, err := http.Get(uri)
 	if err != nil {
-		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s: %w", uri, err)
+		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
@@ -50,7 +50,7 @@ func NewModuleDependenciesContributor(descriptor Descriptor, salt string) (Modul
 
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s: %w", uri, err)
+		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s\n%w", uri, err)
 	}
 
 	re := regexp.MustCompile(`(?mU)^	([\S]+)(?:/v[\d]+)? v[^-\r\n\t\f\v ]+$`)

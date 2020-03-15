@@ -1,0 +1,6 @@
+---
+name: github.com/paketo-buildpacks/spring-boot
+package:
+  repository: gcr.io/paketo-buildpacks/spring-boot
+  username: _json_key
+  password: ((paketo-gcs-json-key))

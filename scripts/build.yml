@@ -14,18 +14,15 @@ outputs:
   - name: adopt-openjdk-resource
   - name: amazon-corretto-resource
   - name: azul-zulu-resource
-  #  - name: artifactory-builder
   - name: bellsoft-liberica-resource
   - name: gradle-resource
-  #  - name: http-builder
-  #  - name: jprofiler-builder
+  #  - name: jprofiler-resource
   - name: maven-resource
   - name: npm-resource
   - name: repository-resource
-#  - name: sky-walking-builder
-#  - name: tomcat-builder
-#  - name: wildfly-builder
-#  - name: your-kit-builder
+#  - name: sky-walking-resource
+#  - name: tomcat-resource
+#  - name: your-kit-resource
 
 caches:
   - path: go-cache

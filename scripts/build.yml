@@ -20,7 +20,7 @@ outputs:
   #  - name: http-builder
   #  - name: jprofiler-builder
   - name: maven-resource
-  - name: npm-builder
+  - name: npm-resource
   - name: repository-resource
 #  - name: sky-walking-builder
 #  - name: tomcat-builder

@@ -6,39 +6,11 @@ package:
   password: ((paketo-gcs-json-key))
 
 dependencies:
-  - name:            jre
-    resource:        sapmachine-jre-11
-    type:            github-release
-    icon:            github-circle
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-    source:
-      owner:        SAP
-      repository:   SapMachine
-      access_token: ((github-access-token))
-      tag_filter:   sapmachine-(11.*)
-    params:
-      globs:
-        - sapmachine-jre-*_linux-x64_bin.tar.gz
-        - sapmachine-jre-*_linux-x64_bin.sha256.txt
-  - name:            jre
-    resource:        sapmachine-jre-13
-    type:            github-release
-    icon:            github-circle
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-    source:
-      owner:        SAP
-      repository:   SapMachine
-      access_token: ((github-access-token))
-      tag_filter:   sapmachine-(13.*)
-    params:
-      globs:
-        - sapmachine-jre-*_linux-x64_bin.tar.gz
-        - sapmachine-jre-*_linux-x64_bin.sha256.txt
   - name:            jdk
     resource:        sapmachine-jdk-11
     type:            github-release
     icon:            github-circle
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       owner:        SAP
       repository:   SapMachine
@@ -48,11 +20,25 @@ dependencies:
       globs:
         - sapmachine-jdk-*_linux-x64_bin.tar.gz
         - sapmachine-jdk-*_linux-x64_bin.sha256.txt
+  - name:            jre
+    resource:        sapmachine-jre-11
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(11.*)
+    params:
+      globs:
+        - sapmachine-jre-*_linux-x64_bin.tar.gz
+        - sapmachine-jre-*_linux-x64_bin.sha256.txt
   - name:            jdk
     resource:        sapmachine-jdk-13
     type:            github-release
     icon:            github-circle
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       owner:        SAP
       repository:   SapMachine
@@ -62,6 +48,20 @@ dependencies:
       globs:
         - sapmachine-jdk-*_linux-x64_bin.tar.gz
         - sapmachine-jdk-*_linux-x64_bin.sha256.txt
+  - name:            jre
+    resource:        sapmachine-jre-13
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    source:
+      owner:        SAP
+      repository:   SapMachine
+      access_token: ((github-access-token))
+      tag_filter:   sapmachine-(13.*)
+    params:
+      globs:
+        - sapmachine-jre-*_linux-x64_bin.tar.gz
+        - sapmachine-jre-*_linux-x64_bin.sha256.txt
   - name: jvmkill
     type: repository-resource
     source:

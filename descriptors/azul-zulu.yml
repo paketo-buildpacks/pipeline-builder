@@ -6,54 +6,54 @@ package:
   password: ((paketo-gcs-json-key))
 
 dependencies:
-  - name:            jre
-    resource:        zulu-jre-8
-    type:            azul-zulu-resource
-    icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-    source:
-      version: "8"
-      type:    headfull
   - name:            jdk
     resource:        zulu-jdk-8
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "8"
       type:    jdk
   - name:            jre
-    resource:        zulu-jre-11
+    resource:        zulu-jre-8
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
-      version: "11"
+      version: "8"
       type:    headfull
   - name:            jdk
     resource:        zulu-jdk-11
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "11"
       type:    jdk
   - name:            jre
-    resource:        zulu-jre-13
+    resource:        zulu-jre-11
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
-      version: "13"
+      version: "11"
       type:    headfull
   - name:            jdk
     resource:        zulu-jdk-13
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "13"
       type:    jdk
+  - name:            jre
+    resource:        zulu-jre-13
+    type:            azul-zulu-resource
+    icon:            language-java
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    source:
+      version: "13"
+      type:    headfull
   - name: jvmkill
     type: repository-resource
     source:

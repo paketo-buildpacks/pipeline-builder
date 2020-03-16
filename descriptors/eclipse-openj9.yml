@@ -10,7 +10,7 @@ dependencies:
     resource:        openj9-jdk-8
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[8,9)"
       implementation: openj9
@@ -19,7 +19,7 @@ dependencies:
     resource:        openj9-jre-8
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[8,9)"
       implementation: openj9
@@ -28,7 +28,7 @@ dependencies:
     resource:        openj9-jdk-11
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[11,12)"
       implementation: openj9
@@ -37,7 +37,7 @@ dependencies:
     resource:        openj9-jre-11
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[11,12)"
       implementation: openj9
@@ -46,7 +46,7 @@ dependencies:
     resource:        openj9-jdk-13
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[13,14)"
       implementation: openj9
@@ -55,7 +55,7 @@ dependencies:
     resource:        openj9-jre-13
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version:        "[13,14)"
       implementation: openj9

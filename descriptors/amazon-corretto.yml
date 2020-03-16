@@ -10,7 +10,7 @@ dependencies:
     resource:        corretto-jdk-8
     type:            amazon-corretto-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       username:   ((github-username))
       password:   ((github-access-token))
@@ -20,7 +20,7 @@ dependencies:
     resource:        corretto-jdk-11
     type:            amazon-corretto-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       username:   ((github-username))
       password:   ((github-access-token))

@@ -10,7 +10,7 @@ dependencies:
     resource:        liberica-jdk-8
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "8"
       type:    jdk
@@ -18,7 +18,7 @@ dependencies:
     resource:        liberica-jre-8
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "8"
       type:    jre
@@ -26,7 +26,7 @@ dependencies:
     resource:        liberica-jdk-11
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "11"
       type:    jdk
@@ -34,7 +34,7 @@ dependencies:
     resource:        liberica-jre-11
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "11"
       type:    jre
@@ -42,7 +42,7 @@ dependencies:
     resource:        liberica-jdk-13
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "13"
       type:    jdk
@@ -50,7 +50,7 @@ dependencies:
     resource:        liberica-jre-13
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
     source:
       version: "13"
       type:    jre

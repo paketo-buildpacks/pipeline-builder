@@ -10,7 +10,7 @@ dependencies:
     resource:        sapmachine-jdk-11
     type:            github-release
     icon:            github-circle
-    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine
@@ -24,7 +24,7 @@ dependencies:
     resource:        sapmachine-jre-11
     type:            github-release
     icon:            github-circle
-    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine
@@ -38,7 +38,7 @@ dependencies:
     resource:        sapmachine-jdk-13
     type:            github-release
     icon:            github-circle
-    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine
@@ -52,7 +52,7 @@ dependencies:
     resource:        sapmachine-jre-13
     type:            github-release
     icon:            github-circle
-    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine

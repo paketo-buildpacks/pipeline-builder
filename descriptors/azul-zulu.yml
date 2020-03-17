@@ -10,7 +10,7 @@ dependencies:
     resource:        zulu-jdk-8
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "8"
       type:    jdk
@@ -18,7 +18,7 @@ dependencies:
     resource:        zulu-jre-8
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^8(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "8"
       type:    headfull
@@ -26,7 +26,7 @@ dependencies:
     resource:        zulu-jdk-11
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "11"
       type:    jdk
@@ -34,7 +34,7 @@ dependencies:
     resource:        zulu-jre-11
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^11(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "11"
       type:    headfull
@@ -42,7 +42,7 @@ dependencies:
     resource:        zulu-jdk-13
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "13"
       type:    jdk
@@ -50,7 +50,7 @@ dependencies:
     resource:        zulu-jre-13
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "^13(?:\\.[\\d]+(?:\\.[\\d]+)?)?$"
+    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       version: "13"
       type:    headfull

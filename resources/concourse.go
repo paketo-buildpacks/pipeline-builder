@@ -124,46 +124,48 @@ func Check(resource Resource) {
 		}
 	}
 
-	result := CheckResult{}
+	pr := true
+	if b, ok := request.Source["pre_release"].(bool); ok {
+		pr = b
+	}
+
+	var sv []*semver.Version
 	for k, _ := range versions {
 		if vp == nil || vp.MatchString(string(k)) {
-			result = append(result, k)
+			v, err := semver.NewVersion(string(k))
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			if v.Prerelease() == "" || pr {
+				sv = append(sv, v)
+			}
 		}
 	}
 
-	sort.Slice(result, func(i, j int) bool {
-		a, err := semver.NewVersion(string(result[i]))
-		if err != nil {
-			return false
-		}
-
-		b, err := semver.NewVersion(string(result[j]))
-		if err != nil {
-			return false
-		}
-
-		return a.LessThan(b)
+	sort.Slice(sv, func(i, j int) bool {
+		return sv[i].LessThan(sv[j])
 	})
 
 	if request.Version == "" {
-		result = result[len(result)-1:]
+		sv = sv[len(sv)-1:]
 	} else {
 		since, err := semver.NewVersion(string(request.Version))
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		for i, r := range result {
-			v, err := semver.NewVersion(string(r))
-			if err != nil {
-				log.Fatal(err)
-			}
-
+		for i, v := range sv {
 			if !v.LessThan(since) {
-				result = result[i:]
+				sv = sv[i:]
 				break
 			}
 		}
+	}
+
+	result := CheckResult{}
+	for _, v := range sv {
+		result = append(result, Version(v.Original()))
 	}
 
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {

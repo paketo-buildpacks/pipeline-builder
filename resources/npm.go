@@ -28,7 +28,7 @@ func (NPM) Out(request OutRequest, destination string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (N NPM) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (NPM) Versions(source map[string]interface{}) (map[Version]string, error) {
 	p, ok := source["package"]
 	if !ok {
 		return nil, fmt.Errorf("package must be specified")

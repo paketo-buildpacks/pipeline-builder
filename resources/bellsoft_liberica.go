@@ -28,7 +28,7 @@ func (BellSoftLiberica) Out(request OutRequest, destination string) (OutResult, 
 	return OutResult{}, nil
 }
 
-func (b BellSoftLiberica) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (BellSoftLiberica) Versions(source map[string]interface{}) (map[Version]string, error) {
 	t, ok := source["type"]
 	if !ok {
 		return nil, fmt.Errorf("type must be specified")

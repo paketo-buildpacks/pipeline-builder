@@ -28,7 +28,7 @@ func (Gradle) Out(request OutRequest, destination string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (g Gradle) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (Gradle) Versions(source map[string]interface{}) (map[Version]string, error) {
 	uri := "https://raw.githubusercontent.com/gradle/gradle/master/released-versions.json"
 
 	resp, err := http.Get(uri)

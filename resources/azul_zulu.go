@@ -28,7 +28,7 @@ func (AzulZulu) Out(request OutRequest, destination string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (a AzulZulu) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (AzulZulu) Versions(source map[string]interface{}) (map[Version]string, error) {
 	t, ok := source["type"].(string)
 	if !ok {
 		return nil, fmt.Errorf("type must be specified")

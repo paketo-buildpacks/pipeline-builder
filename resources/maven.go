@@ -30,7 +30,7 @@ func (Maven) Out(request OutRequest, destination string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (m Maven) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (Maven) Versions(source map[string]interface{}) (map[Version]string, error) {
 	u, ok := source["uri"].(string)
 	if !ok {
 		return nil, fmt.Errorf("uri must be specified")

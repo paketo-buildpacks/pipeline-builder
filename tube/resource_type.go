@@ -119,6 +119,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/sky-walking-resource",
 		},
 	},
+	"stackdriver-profiler-resource": {
+		Name: "stackdriver-profiler-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/stackdriver-profiler-resource",
+		},
+	},
 	"tomcat-resource": {
 		Name: "tomcat-resource",
 		Type: "registry-image",

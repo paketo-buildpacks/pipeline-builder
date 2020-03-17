@@ -31,7 +31,7 @@ func (AmazonCorretto) Out(request OutRequest, destination string) (OutResult, er
 	return OutResult{}, nil
 }
 
-func (a AmazonCorretto) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (AmazonCorretto) Versions(source map[string]interface{}) (map[Version]string, error) {
 	o, ok := source["owner"].(string)
 	if !ok {
 		return nil, fmt.Errorf("owner must be specified")

@@ -30,7 +30,7 @@ func (Repository) Out(request OutRequest, destination string) (OutResult, error)
 	return OutResult{}, nil
 }
 
-func (r Repository) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (Repository) Versions(source map[string]interface{}) (map[Version]string, error) {
 	uri, ok := source["uri"].(string)
 	if !ok {
 		return nil, fmt.Errorf("uri must be specified")

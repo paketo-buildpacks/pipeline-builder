@@ -29,7 +29,7 @@ func (AdoptOpenJDK) Out(request OutRequest, destination string) (OutResult, erro
 	return OutResult{}, nil
 }
 
-func (a AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (AdoptOpenJDK) Versions(source map[string]interface{}) (map[Version]string, error) {
 	v, ok := source["version"].(string)
 	if !ok {
 		return nil, fmt.Errorf("version must be specified")

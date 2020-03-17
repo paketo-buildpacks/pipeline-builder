@@ -17,13 +17,13 @@
 package resources
 
 import (
-	"archive/tar"
-	"compress/gzip"
+	"context"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
 	"regexp"
+
+	"cloud.google.com/go/storage"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
 )
 
 type StackdriverProfiler struct{}
@@ -33,49 +33,26 @@ func (StackdriverProfiler) Out(request OutRequest, destination string) (OutResul
 }
 
 func (StackdriverProfiler) Versions(source map[string]interface{}) (map[Version]string, error) {
-	uri := "https://storage.googleapis.com/cloud-profiler/java/latest/profiler_java_agent.tar.gz"
-
-	resp, err := http.Get(uri)
+	client, err := storage.NewClient(context.Background(), option.WithoutAuthentication())
 	if err != nil {
-		return nil, fmt.Errorf("unable to get %s\n%w", uri, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode)
+		return nil, fmt.Errorf("unable to create GCS client\n%w", err)
 	}
 
-	gz, err := gzip.NewReader(resp.Body)
-	if err != nil {
-		return nil, fmt.Errorf("unable to decompress %s\n%w", uri, err)
-	}
-	defer gz.Close()
+	cp := regexp.MustCompile("^.*_([\\d]+)_RC([\\d]+).*$")
+	versions := make(map[Version]string)
 
-	versions := make(map[Version]string, 1)
-
-	t := tar.NewReader(gz)
+	it := client.Bucket("cloud-profiler").Objects(context.Background(),
+		&storage.Query{Prefix: "java/cloud-profiler-java-agent"})
 	for {
-		f, err := t.Next()
-		if err != nil && err == io.EOF {
+		o, err := it.Next()
+		if err == iterator.Done {
 			break
 		} else if err != nil {
-			return nil, fmt.Errorf("unable to untar %s\n%w", uri, err)
+			return nil, fmt.Errorf("unable to list contents of bucket cloud-profiler\n%w", err)
 		}
 
-		if f.Name == "version.txt" {
-			b, err := ioutil.ReadAll(t)
-			if err != nil {
-				return nil, fmt.Errorf("unable to read version.txt from %s\n%w", uri, err)
-			}
-
-			s := string(b)
-			g := regexp.MustCompile("cloud-profiler-java-agent_([^_]+).*").FindStringSubmatch(s)
-			if len(g) < 1 {
-				return nil, fmt.Errorf("unable to extract version from %s", s)
-			}
-
-			versions[Version(g[1])] = uri
-			break
+		if p := cp.FindStringSubmatch(o.Name); p != nil {
+			versions[Version(fmt.Sprintf("%s.%s", p[1], p[2]))] = fmt.Sprintf("https://storage.googleapis.com/%s/%s", o.Bucket, o.Name)
 		}
 	}
 

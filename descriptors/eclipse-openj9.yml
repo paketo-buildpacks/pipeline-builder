@@ -43,21 +43,21 @@ dependencies:
       implementation: openj9
       type:           jre
   - name:            jdk
-    resource:        openj9-jdk-13
+    resource:        openj9-jdk-14
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version:        "[13,14)"
+      version:        "[14,15)"
       implementation: openj9
       type:           jdk
   - name:            jre
-    resource:        openj9-jre-13
+    resource:        openj9-jre-14
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version:        "[13,14)"
+      version:        "[14,15)"
       implementation: openj9
       type:           jre
   - name: jvmkill

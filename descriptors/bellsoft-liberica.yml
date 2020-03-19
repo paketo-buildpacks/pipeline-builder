@@ -39,20 +39,20 @@ dependencies:
       version: "11"
       type:    jre
   - name:            jdk
-    resource:        liberica-jdk-13
+    resource:        liberica-jdk-14
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version: "13"
+      version: "14"
       type:    jdk
   - name:            jre
-    resource:        liberica-jre-13
+    resource:        liberica-jre-14
     type:            bellsoft-liberica-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version: "13"
+      version: "14"
       type:    jre
   - name: jvmkill
     type: repository-resource

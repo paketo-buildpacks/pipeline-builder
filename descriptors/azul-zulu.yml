@@ -39,20 +39,20 @@ dependencies:
       version: "11"
       type:    headfull
   - name:            jdk
-    resource:        zulu-jdk-13
+    resource:        zulu-jdk-14
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version: "13"
+      version: "14"
       type:    jdk
   - name:            jre
-    resource:        zulu-jre-13
+    resource:        zulu-jre-14
     type:            azul-zulu-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version: "13"
+      version: "14"
       type:    headfull
   - name: jvmkill
     type: repository-resource

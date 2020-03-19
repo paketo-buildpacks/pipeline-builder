@@ -35,29 +35,29 @@ dependencies:
         - sapmachine-jre-*_linux-x64_bin.tar.gz
         - sapmachine-jre-*_linux-x64_bin.sha256.txt
   - name:            jdk
-    resource:        sapmachine-jdk-13
+    resource:        sapmachine-jdk-14
     type:            github-release
     icon:            github-circle
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine
       access_token: ((github-access-token))
-      tag_filter:   sapmachine-(13.*)
+      tag_filter:   sapmachine-(14.*)
     params:
       globs:
         - sapmachine-jdk-*_linux-x64_bin.tar.gz
         - sapmachine-jdk-*_linux-x64_bin.sha256.txt
   - name:            jre
-    resource:        sapmachine-jre-13
+    resource:        sapmachine-jre-14
     type:            github-release
     icon:            github-circle
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
       repository:   SapMachine
       access_token: ((github-access-token))
-      tag_filter:   sapmachine-(13.*)
+      tag_filter:   sapmachine-(14.*)
     params:
       globs:
         - sapmachine-jre-*_linux-x64_bin.tar.gz

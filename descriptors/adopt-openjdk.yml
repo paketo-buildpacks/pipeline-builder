@@ -43,21 +43,21 @@ dependencies:
       implementation: hotspot
       type:           jre
   - name:            jdk
-    resource:        hotspot-jdk-13
+    resource:        hotspot-jdk-14
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version:        "[13,14)"
+      version:        "[14,15)"
       implementation: hotspot
       type:           jdk
   - name:            jre
-    resource:        hotspot-jre-13
+    resource:        hotspot-jre-14
     type:            adopt-openjdk-resource
     icon:            language-java
-    version_pattern: "13(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
-      version:        "[13,14)"
+      version:        "[14,15)"
       implementation: hotspot
       type:           jre
   - name: jvmkill

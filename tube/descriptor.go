@@ -64,7 +64,7 @@ func NewDescriptor(path string) (Descriptor, error) {
 		}
 
 		if dep.VersionPattern == "" {
-			d.Dependencies[i].VersionPattern = "[\\d]+(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+			d.Dependencies[i].VersionPattern = `[\d]+(?:\.[\d]+(?:\.[\d]+)?)?`
 		}
 	}
 

@@ -65,7 +65,7 @@ func (Maven) Versions(source map[string]interface{}) (map[Version]string, error)
 		return nil, fmt.Errorf("unable to decode payload\n%w", err)
 	}
 
-	cp := regexp.MustCompile("^([\\d]+)\\.([\\d]+)\\.([\\d]+)[.-]?(.*)")
+	cp := regexp.MustCompile(`^([\d]+)\.([\d]+)\.([\d]+)[.-]?(.*)`)
 	versions := make(map[Version]string, len(raw.Versions))
 	for _, v := range raw.Versions {
 		if p := cp.FindStringSubmatch(v); p != nil {

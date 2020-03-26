@@ -70,7 +70,7 @@ func (AmazonCorretto) Versions(source map[string]interface{}) (map[Version]strin
 		opt.Page = r.NextPage
 	}
 
-	cp := regexp.MustCompile("([\\d]+)\\.([\\d]+)\\.([\\d]+)\\.([^-]+)")
+	cp := regexp.MustCompile(`([\d]+)\.([\d]+)\.([\d]+)\.([^-]+)`)
 	versions := make(map[Version]string, len(raw))
 	for _, r := range raw {
 		if p := cp.FindStringSubmatch(r.GetTagName()); p != nil {

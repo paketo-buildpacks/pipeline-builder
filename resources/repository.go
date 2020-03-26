@@ -51,7 +51,7 @@ func (Repository) Versions(source map[string]interface{}) (map[Version]string, e
 		return nil, fmt.Errorf("unable to decode payload\n%w", err)
 	}
 
-	cp := regexp.MustCompile("^([\\d]+)\\.([\\d]+)\\.([\\d]+)_?(.*)$")
+	cp := regexp.MustCompile(`^([\d]+)\.([\d]+)\.([\d]+)_?(.*)$`)
 	versions := make(map[Version]string, len(raw))
 	for k, v := range raw {
 		if p := cp.FindStringSubmatch(k); p != nil {

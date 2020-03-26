@@ -22,7 +22,7 @@ outputs:
   - name: repository-resource
   - name: stackdriver-profiler-resource
 #  - name: sky-walking-resource
-#  - name: tomcat-resource
+  - name: tomcat-resource
 #  - name: your-kit-resource
 
 caches:

@@ -1,0 +1,6 @@
+---
+name: github.com/paketo-buildpacks/dist-zip
+package:
+  repository: gcr.io/paketo-buildpacks/dist-zip
+  username: _json_key
+  password: ((paketo-gcs-json-key))

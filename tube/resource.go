@@ -41,7 +41,7 @@ func NewBuildCommonResource() Resource {
 			"uri":      d.GitRepository(),
 			"branch":   "master",
 			"username": "((github-username))",
-			"password": "((github-access-token))",
+			"password": "((github-password))",
 		},
 	}
 }
@@ -66,7 +66,7 @@ func NewModuleResource(name string) Resource {
 			"uri":        d.GitRepository(),
 			"tag_filter": "v*",
 			"username":   "((github-username))",
-			"password":   "((github-access-token))",
+			"password":   "((github-password))",
 		},
 	}
 }
@@ -109,7 +109,7 @@ func NewPackageSourceResource(descriptor Descriptor, salt string) Resource {
 			"uri":        descriptor.GitRepository(),
 			"tag_filter": "v*",
 			"username":   "((github-username))",
-			"password":   "((github-access-token))",
+			"password":   "((github-password))",
 		},
 	}
 }
@@ -125,7 +125,7 @@ func NewSourceResource(descriptor Descriptor, salt string) Resource {
 			"uri":      descriptor.GitRepository(),
 			"branch":   "master",
 			"username": "((github-username))",
-			"password": "((github-access-token))",
+			"password": "((github-password))",
 		},
 	}
 }
@@ -139,7 +139,7 @@ func NewVersionResource(descriptor Descriptor) Resource {
 			"driver":   "gcs",
 			"bucket":   "repository-versions",
 			"key":      descriptor.Name,
-			"json_key": "((gcs-json-key))",
+			"json_key": "((version-gcs-json-key))",
 		},
 	}
 }

@@ -3,7 +3,7 @@ name: github.com/paketo-buildpacks/amazon-corretto
 package:
   repository: gcr.io/paketo-buildpacks/amazon-corretto
   username: _json_key
-  password: ((paketo-gcs-json-key))
+  password: ((artifact-gcs-json-key))
 
 dependencies:
   - name:            jdk
@@ -13,7 +13,7 @@ dependencies:
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       username:   ((github-username))
-      password:   ((github-access-token))
+      password:   ((github-password))
       owner:      corretto
       repository: corretto-8
   - name:            jdk
@@ -23,7 +23,7 @@ dependencies:
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       username:   ((github-username))
-      password:   ((github-access-token))
+      password:   ((github-password))
       owner:      corretto
       repository: corretto-11
   - name: jvmkill

@@ -3,7 +3,7 @@ name: github.com/paketo-buildpacks/apache-tomcat
 package:
   repository: gcr.io/paketo-buildpacks/apache-tomcat
   username: _json_key
-  password: ((paketo-gcs-json-key))
+  password: ((artifact-gcs-json-key))
 
 dependencies:
   - name:            tomcat

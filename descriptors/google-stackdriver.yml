@@ -3,7 +3,7 @@ name: github.com/paketo-buildpacks/google-stackdriver
 package:
   repository: gcr.io/paketo-buildpacks/google-stackdriver
   username: _json_key
-  password: ((paketo-gcs-json-key))
+  password: ((artifact-gcs-json-key))
 
 dependencies:
   - name: google-stackdriver-debugger-java

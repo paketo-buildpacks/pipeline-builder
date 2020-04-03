@@ -34,6 +34,12 @@ type Dependency struct {
 	Params         map[string]interface{} `yaml:"params"`
 }
 
+type Builder struct {
+	Repository string `yaml:"repository"`
+	Username   string `yaml:"username"`
+	Password   string `yaml:"password"`
+}
+
 type Package struct {
 	Repository string `yaml:"repository"`
 	Username   string `yaml:"username"`
@@ -42,7 +48,8 @@ type Package struct {
 
 type Descriptor struct {
 	Name         string       `yaml:"name"`
-	Package      Package      `yaml:"package"`
+	Builder      *Builder     `yaml:"builder"`
+	Package      *Package     `yaml:"package"`
 	Dependencies []Dependency `yaml:"dependencies"`
 }
 

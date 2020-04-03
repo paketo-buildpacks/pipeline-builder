@@ -38,7 +38,6 @@ func (r ReleasePatchContributor) Job() Job {
 					{
 						"get":      "source",
 						"resource": s.Name,
-						"passed":   []string{"test"},
 					},
 					{
 						"get":      "version",

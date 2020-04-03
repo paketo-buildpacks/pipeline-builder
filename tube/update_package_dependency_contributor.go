@@ -16,23 +16,23 @@
 
 package tube
 
-type DependencyContributor struct {
+type UpdatePackageDependencyContributor struct {
 	Descriptor Descriptor
 	Dependency Dependency
 	Salt       string
 }
 
-func (d DependencyContributor) Group() string {
+func (UpdatePackageDependencyContributor) Group() string {
 	return "dependency"
 }
 
-func (d DependencyContributor) Job() Job {
+func (u UpdatePackageDependencyContributor) Job() Job {
 	b := NewBuildCommonResource()
-	e := NewDependencyResource(d.Dependency)
-	s := NewSourceResource(d.Descriptor, d.Salt)
+	p := NewPackageDependencyResource(u.Dependency)
+	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   e.Name,
+		Name:   p.Name,
 		Public: true,
 		Plan: []map[string]interface{}{
 			{
@@ -43,9 +43,9 @@ func (d DependencyContributor) Job() Job {
 					},
 					{
 						"get":      "dependency",
-						"resource": e.Name,
+						"resource": p.Name,
 						"trigger":  true,
-						"params":   d.Dependency.Params,
+						"params":   u.Dependency.Params,
 					},
 					{
 						"get":      "source",
@@ -54,11 +54,11 @@ func (d DependencyContributor) Job() Job {
 				},
 			},
 			{
-				"task": "update-dependency",
-				"file": "build-common/update-dependency.yml",
+				"task": "update-package-dependency",
+				"file": "build-common/update-package-dependency.yml",
 				"params": map[string]interface{}{
-					"DEPENDENCY":      d.Dependency.Name,
-					"VERSION_PATTERN": d.Dependency.VersionPattern,
+					"DEPENDENCY":      u.Dependency.Name,
+					"VERSION_PATTERN": u.Dependency.VersionPattern,
 				},
 			},
 			{
@@ -73,10 +73,10 @@ func (d DependencyContributor) Job() Job {
 
 }
 
-func (d DependencyContributor) Resources() []Resource {
+func (u UpdatePackageDependencyContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
-		NewDependencyResource(d.Dependency),
-		NewSourceResource(d.Descriptor, d.Salt),
+		NewPackageDependencyResource(u.Dependency),
+		NewSourceResource(u.Descriptor, u.Salt),
 	}
 }

@@ -19,6 +19,7 @@ package tube
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 type Resource struct {
@@ -46,12 +47,59 @@ func NewBuildCommonResource() Resource {
 	}
 }
 
-func NewDependencyResource(dependency Dependency) Resource {
+func NewBuilderResource(descriptor Descriptor) Resource {
 	return Resource{
-		Name:   fmt.Sprintf("dependency:%s", dependency.Resource),
-		Type:   dependency.Type,
-		Icon:   dependency.Icon,
-		Source: dependency.Source,
+		Name: strings.ReplaceAll(fmt.Sprintf("builder:%s", descriptor.Builder.Repository), "/", "|"),
+		Type: "registry-image",
+		Icon: "docker",
+		Source: map[string]interface{}{
+			"repository": descriptor.Builder.Repository,
+			"username":   descriptor.Builder.Username,
+			"password":   descriptor.Builder.Password,
+		},
+	}
+}
+
+func NewBuilderDependencyResource(name string) Resource {
+	return Resource{
+		Name: strings.ReplaceAll(fmt.Sprintf("dependency:%s", name), "/", "|"),
+		Type: "registry-image-version-resource",
+		Icon: "docker",
+		Source: map[string]interface{}{
+			"repository": name,
+			"username":   "_json_key",
+			"password":   "((artifact-gcs-json-key))",
+		},
+	}
+}
+
+func NewBuilderSourceResource(descriptor Descriptor, salt string) Resource {
+	return Resource{
+		Name:       fmt.Sprintf("builder-source:%s", descriptor.ShortName()),
+		Type:       "git",
+		Icon:       "github-circle",
+		CheckEvery: "4h",
+		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
+		Source: map[string]interface{}{
+			"uri":        descriptor.GitRepository(),
+			"tag_filter": "v*",
+			"username":   "((github-username))",
+			"password":   "((github-password))",
+		},
+	}
+}
+
+func NewLifecycleResource() Resource {
+	return Resource{
+		Name:       "lifecycle",
+		Type:       "github-release",
+		Icon:       "package-variant-closed",
+		CheckEvery: "4h",
+		Source: map[string]interface{}{
+			"owner":        "buildpacks",
+			"repository":   "lifecycle",
+			"access_token": "((github-access-token))",
+		},
 	}
 }
 
@@ -59,7 +107,7 @@ func NewModuleResource(name string) Resource {
 	d := Descriptor{Name: name}
 
 	return Resource{
-		Name: fmt.Sprintf("module:%s", name),
+		Name: strings.ReplaceAll(fmt.Sprintf("module:%s", name), "/", "|"),
 		Type: "git",
 		Icon: "github-circle",
 		Source: map[string]interface{}{
@@ -87,7 +135,7 @@ func NewPackResource() Resource {
 
 func NewPackageResource(descriptor Descriptor) Resource {
 	return Resource{
-		Name: fmt.Sprintf("package:%s", descriptor.Package.Repository),
+		Name: strings.ReplaceAll(fmt.Sprintf("package:%s", descriptor.Package.Repository), "/", "|"),
 		Type: "registry-image",
 		Icon: "docker",
 		Source: map[string]interface{}{
@@ -95,6 +143,15 @@ func NewPackageResource(descriptor Descriptor) Resource {
 			"username":   descriptor.Package.Username,
 			"password":   descriptor.Package.Password,
 		},
+	}
+}
+
+func NewPackageDependencyResource(dependency Dependency) Resource {
+	return Resource{
+		Name:   fmt.Sprintf("dependency:%s", dependency.Resource),
+		Type:   dependency.Type,
+		Icon:   dependency.Icon,
+		Source: dependency.Source,
 	}
 }
 

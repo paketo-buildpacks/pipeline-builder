@@ -38,7 +38,6 @@ func (r ReleaseMinorContributor) Job() Job {
 					{
 						"get":      "source",
 						"resource": s.Name,
-						"passed":   []string{"test"},
 					},
 					{
 						"get":      "version",

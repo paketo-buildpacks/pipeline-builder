@@ -16,51 +16,51 @@
 
 package tube
 
-type PackageContributor struct {
+type CreatePackageContributor struct {
 	Descriptor Descriptor
 	Salt       string
 }
 
-func (p PackageContributor) Group() string {
+func (c CreatePackageContributor) Group() string {
 	return "build"
 }
 
-func (p PackageContributor) Job() Job {
+func (c CreatePackageContributor) Job() Job {
 	b := NewBuildCommonResource()
-	q := NewPackResource()
-	r := NewPackageResource(p.Descriptor)
-	s := NewPackageSourceResource(p.Descriptor, p.Salt)
-
-	inputs := []map[string]interface{}{
-		{
-			"get":      "build-common",
-			"resource": b.Name,
-		},
-		{
-			"get":      "pack",
-			"resource": q.Name,
-			"params": map[string]interface{}{
-				"globs": []string{"pack-*-linux.tgz"},
-			},
-		},
-		{
-			"get":      "source",
-			"resource": s.Name,
-			"trigger":  true,
-		},
-	}
+	k := NewPackResource()
+	p := NewPackageResource(c.Descriptor)
+	s := NewPackageSourceResource(c.Descriptor, c.Salt)
 
 	return Job{
-		Name:   "package",
+		Name:   "create-package",
 		Public: true,
 		Plan: []map[string]interface{}{
-			{"in_parallel": inputs},
+			{
+				"in_parallel": []map[string]interface{}{
+					{
+						"get":      "build-common",
+						"resource": b.Name,
+					},
+					{
+						"get":      "pack",
+						"resource": k.Name,
+						"params": map[string]interface{}{
+							"globs": []string{"pack-*-linux.tgz"},
+						},
+					},
+					{
+						"get":      "source",
+						"resource": s.Name,
+						"trigger":  true,
+					},
+				},
+			},
 			{
 				"task": "create-package",
 				"file": "build-common/create-package.yml",
 			},
 			{
-				"put": r.Name,
+				"put": p.Name,
 				"params": map[string]interface{}{
 					"image":           "image/image.tar",
 					"additional_tags": "image/tags",
@@ -70,11 +70,11 @@ func (p PackageContributor) Job() Job {
 	}
 }
 
-func (p PackageContributor) Resources() []Resource {
+func (c CreatePackageContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
 		NewPackResource(),
-		NewPackageResource(p.Descriptor),
-		NewPackageSourceResource(p.Descriptor, p.Salt),
+		NewPackageResource(c.Descriptor),
+		NewPackageSourceResource(c.Descriptor, c.Salt),
 	}
 }

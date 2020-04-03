@@ -98,6 +98,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/registry-image-resource",
 		},
 	},
+	"registry-image-version-resource": {
+		Name: "registry-image-version-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/registry-image-version-resource",
+		},
+	},
 	"repository-resource": {
 		Name: "repository-resource",
 		Type: "registry-image",

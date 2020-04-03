@@ -17,40 +17,36 @@
 package tube
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
-	"net/http"
 	"regexp"
 	"sort"
-	"strings"
+
+	"github.com/google/go-github/v30/github"
 )
 
-type ModuleDependenciesContributor struct {
+type UpdateModuleDependenciesContributor struct {
 	Descriptor Descriptor
 	Modules    []string
 	Salt       string
 }
 
-func NewModuleDependenciesContributor(descriptor Descriptor, salt string) (ModuleDependenciesContributor, error) {
-	m := ModuleDependenciesContributor{
+func NewUpdateModuleDependenciesContributor(descriptor Descriptor, salt string, gh *github.Client) (UpdateModuleDependenciesContributor, error) {
+	in, err := gh.Repositories.DownloadContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "go.mod", nil)
+	if err != nil {
+		return UpdateModuleDependenciesContributor{}, fmt.Errorf("unable to get %s/go.mod\n%w", descriptor.Name, err)
+	}
+	defer in.Close()
+
+	b, err := ioutil.ReadAll(in)
+	if err != nil {
+		return UpdateModuleDependenciesContributor{}, fmt.Errorf("unable to read go.mod\n%w", err)
+	}
+
+	m := UpdateModuleDependenciesContributor{
 		Descriptor: descriptor,
 		Salt:       salt,
-	}
-
-	uri := strings.ReplaceAll(fmt.Sprintf("https://%s/master/go.mod", descriptor.Name), "github.com", "raw.githubusercontent.com")
-	resp, err := http.Get(uri)
-	if err != nil {
-		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s\n%w", uri, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode < 200 || resp.StatusCode > 299 {
-		return ModuleDependenciesContributor{}, fmt.Errorf("could not download %s: %d", uri, resp.StatusCode)
-	}
-
-	b, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return ModuleDependenciesContributor{}, fmt.Errorf("unable to read %s\n%w", uri, err)
 	}
 
 	re := regexp.MustCompile(`(?mU)^	([\S]+)(?:/v[\d]+)? v[^-\r\n\t\f\v ]+$`)
@@ -63,13 +59,13 @@ func NewModuleDependenciesContributor(descriptor Descriptor, salt string) (Modul
 	return m, nil
 }
 
-func (m ModuleDependenciesContributor) Group() string {
+func (UpdateModuleDependenciesContributor) Group() string {
 	return "module-dependencies"
 }
 
-func (m ModuleDependenciesContributor) Job() Job {
+func (u UpdateModuleDependenciesContributor) Job() Job {
 	b := NewBuildCommonResource()
-	s := NewSourceResource(m.Descriptor, m.Salt)
+	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	inputs := []map[string]interface{}{
 		{
@@ -82,7 +78,7 @@ func (m ModuleDependenciesContributor) Job() Job {
 		},
 	}
 
-	for _, m := range m.Modules {
+	for _, m := range u.Modules {
 		inputs = append(inputs, map[string]interface{}{
 			"get":     NewModuleResource(m).Name,
 			"trigger": true,
@@ -90,7 +86,7 @@ func (m ModuleDependenciesContributor) Job() Job {
 	}
 
 	return Job{
-		Name:   "module-dependencies",
+		Name:   "update-module-dependencies",
 		Public: true,
 		Plan: []map[string]interface{}{
 			{"in_parallel": inputs},
@@ -109,13 +105,13 @@ func (m ModuleDependenciesContributor) Job() Job {
 	}
 }
 
-func (m ModuleDependenciesContributor) Resources() []Resource {
+func (u UpdateModuleDependenciesContributor) Resources() []Resource {
 	r := []Resource{
 		NewBuildCommonResource(),
-		NewSourceResource(m.Descriptor, m.Salt),
+		NewSourceResource(u.Descriptor, u.Salt),
 	}
 
-	for _, m := range m.Modules {
+	for _, m := range u.Modules {
 		r = append(r, NewModuleResource(m))
 	}
 

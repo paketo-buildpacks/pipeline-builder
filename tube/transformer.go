@@ -25,7 +25,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/google/go-github/v29/github"
+	"github.com/google/go-github/v30/github"
 	"gopkg.in/yaml.v3"
 )
 
@@ -50,6 +50,11 @@ type PipelineContributor interface {
 func (t *Transformer) Transform() error {
 	var err error
 
+	gh := github.NewClient((&github.BasicAuthTransport{
+		Username: t.GitHubUsername,
+		Password: t.GitHubAccessToken,
+	}).Client())
+
 	d, err := NewDescriptor(t.DescriptorPath)
 	if err != nil {
 		return fmt.Errorf("unable to read descriptor\n%w", err)
@@ -61,21 +66,36 @@ func (t *Transformer) Transform() error {
 		ReleaseMajorContributor{Descriptor: d, Salt: t.WebHookSalt},
 		ReleaseMinorContributor{Descriptor: d, Salt: t.WebHookSalt},
 		ReleasePatchContributor{Descriptor: d, Salt: t.WebHookSalt},
-		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
-	if m, err := NewModuleDependenciesContributor(d, t.WebHookSalt); err != nil {
-		return fmt.Errorf("unable to create new module dependencies job\n%w", err)
-	} else {
-		contributors = append(contributors, m)
+	if t.hasCode(d) {
+		contributors = append(contributors, TestContributor{Descriptor: d, Salt: t.WebHookSalt})
+
+		if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
+			return fmt.Errorf("unable to create new module dependencies job\n%w", err)
+		} else {
+			contributors = append(contributors, m)
+		}
 	}
 
-	if !reflect.DeepEqual(Package{}, d.Package) {
-		contributors = append(contributors, PackageContributor{Descriptor: d, Salt: t.WebHookSalt})
+	if d.Builder != nil {
+		contributors = append(contributors, CreateBuilderContributor{Descriptor: d, Salt: t.WebHookSalt})
+
+		if b, err := NewUpdateBuilderDependencyContributors(d, t.WebHookSalt, gh); err != nil {
+			return fmt.Errorf("unable to create new builder dependencies job\n%w", err)
+		} else {
+			for _, c := range b {
+				contributors = append(contributors, c)
+			}
+		}
 	}
 
 	for _, dep := range d.Dependencies {
-		contributors = append(contributors, DependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
+		contributors = append(contributors, UpdatePackageDependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
+	}
+
+	if d.Package != nil {
+		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
 	p := NewPipeline(d.ShortName())
@@ -104,14 +124,14 @@ func (t *Transformer) Transform() error {
 		return fmt.Errorf("unable to write pipeline\n%w", err)
 	}
 
-	if err := t.CreateWebHooks(p); err != nil {
+	if err := t.CreateWebHooks(p, gh); err != nil {
 		return fmt.Errorf("unable to create webhooks\n%w", err)
 	}
 
 	return nil
 }
 
-func (t *Transformer) CreateWebHooks(pipeline Pipeline) error {
+func (t *Transformer) CreateWebHooks(pipeline Pipeline, gh *github.Client) error {
 	var r []Resource
 	for _, v := range pipeline.Resources {
 		if !reflect.DeepEqual(WebHook{}, v.WebHook) {
@@ -122,11 +142,6 @@ func (t *Transformer) CreateWebHooks(pipeline Pipeline) error {
 	sort.Slice(r, func(i, j int) bool {
 		return fmt.Sprintf("%s%s", r[i].WebHook.Owner, r[i].WebHook.Repository) < r[j].Name
 	})
-
-	gh := github.NewClient((&github.BasicAuthTransport{
-		Username: t.GitHubUsername,
-		Password: t.GitHubAccessToken,
-	}).Client())
 
 	for _, r := range r {
 		if err := t.CreateWebHook(pipeline, r, gh); err != nil {
@@ -213,4 +228,8 @@ func (t *Transformer) WritePipeline(pipeline Pipeline) error {
 	}
 
 	return nil
+}
+
+func (Transformer) hasCode(descriptor Descriptor) bool {
+	return descriptor.Builder == nil
 }

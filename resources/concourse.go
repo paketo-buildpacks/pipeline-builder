@@ -19,8 +19,10 @@ package resources
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 
@@ -30,7 +32,7 @@ import (
 type Version string
 
 type version struct {
-	Ref string `json:"ref"`
+	Ref string `json:"ref,omitempty"`
 }
 
 func (v Version) MarshalJSON() ([]byte, error) {
@@ -86,8 +88,8 @@ type InRequest struct {
 }
 
 type InResult struct {
-	Version  Version  `json:"version"`
-	Metadata Metadata `json:"metadata"`
+	Version  Version  `json:"version,omitempty"`
+	Metadata Metadata `json:"metadata,omitempty"`
 }
 
 type OutRequest struct {
@@ -96,8 +98,8 @@ type OutRequest struct {
 }
 
 type OutResult struct {
-	Version  Version    `json:"version"`
-	Metadata []Metadata `json:"metadata"`
+	Version  Version    `json:"version,omitempty"`
+	Metadata []Metadata `json:"metadata,omitempty"`
 }
 
 type Resource interface {
@@ -186,17 +188,23 @@ func In(resource Resource) {
 
 	uri := versions[request.Version]
 
-	sha256, err := DownloadArtifact(uri, request.Version, os.Args[1])
-	if err != nil {
+	file := filepath.Join(os.Args[1], "version")
+	if err := ioutil.WriteFile(file, []byte(request.Version), 0644); err != nil {
 		log.Fatal(err)
 	}
 
-	result := InResult{
-		Version: request.Version,
-		Metadata: Metadata{
+	result := InResult{Version: request.Version}
+
+	if uri != "" {
+		sha256, err := DownloadArtifact(uri, request.Version, os.Args[1])
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		result.Metadata = Metadata{
 			"uri":    uri,
 			"sha256": sha256,
-		},
+		}
 	}
 
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {

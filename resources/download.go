@@ -69,10 +69,5 @@ func DownloadArtifact(uri string, version Version, destination string) (string, 
 		return "", fmt.Errorf("unable to write %s\n%w", file, err)
 	}
 
-	file = filepath.Join(destination, "version")
-	if err := ioutil.WriteFile(file, []byte(version), 0644); err != nil {
-		return "", fmt.Errorf("unable to write %s\n%w", file, err)
-	}
-
 	return hash, nil
 }

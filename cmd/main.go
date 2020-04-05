@@ -29,6 +29,7 @@ func main() {
 	t := tube.Transformer{}
 
 	flagSet := pflag.NewFlagSet("Pipeline Builder", pflag.ExitOnError)
+	flagSet.StringVar(&t.Name, "name", "", "name of the pipeline")
 	flagSet.StringVar(&t.DescriptorPath, "descriptor", "", "path to input descriptor")
 	flagSet.StringVar(&t.PipelinePath, "pipeline", "", "path to output pipeline")
 

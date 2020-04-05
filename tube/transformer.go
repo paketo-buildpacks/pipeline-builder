@@ -30,6 +30,7 @@ import (
 )
 
 type Transformer struct {
+	Name           string
 	DescriptorPath string
 	PipelinePath   string
 
@@ -98,7 +99,7 @@ func (t *Transformer) Transform() error {
 		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
-	p := NewPipeline(d.ShortName())
+	p := NewPipeline(t.Name)
 	for _, c := range contributors {
 		j := c.Job()
 		r := c.Resources()

@@ -18,6 +18,7 @@ outputs:
   - name: gradle-resource
   #  - name: jprofiler-resource
   - name: maven-resource
+  - name: new-relic-resource
   - name: npm-resource
   - name: registry-image-version-resource
   - name: repository-resource

@@ -40,8 +40,7 @@ func (Tomcat) Versions(source map[string]interface{}) (map[Version]string, error
 	cp := regexp.MustCompile(`^v([\d]+)\.([\d]+)\.([\d]+)/$`)
 	versions := make(map[Version]string)
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
-		h := element.Attr("href")
-		if p := cp.FindStringSubmatch(h); p != nil {
+		if p := cp.FindStringSubmatch(element.Attr("href")); p != nil {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[Version(v)] = fmt.Sprintf("%s/v%[2]s/bin/apache-tomcat-%[2]s.tar.gz", uri, v)

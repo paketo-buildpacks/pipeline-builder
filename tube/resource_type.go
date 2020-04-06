@@ -84,6 +84,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/maven-resource",
 		},
 	},
+	"new-relic-resource": {
+		Name: "new-relic-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/new-relic-resource",
+		},
+	},
 	"npm-resource": {
 		Name: "npm-resource",
 		Type: "registry-image",

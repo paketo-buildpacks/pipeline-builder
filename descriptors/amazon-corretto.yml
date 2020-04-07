@@ -26,11 +26,17 @@ dependencies:
       password:   ((github-password))
       owner:      corretto
       repository: corretto-11
-  - name: jvmkill
-    type: repository-resource
+  - name:            jvmkill
+    type:            github-release
+    icon:            github-circle
     source:
-      uri: https://java-buildpack.cloudfoundry.org/jvmkill/bionic/x86_64/index.yml
-  - name: memory-calculator
-    type: repository-resource
+      owner:        cloudfoundry
+      repository:   jvmkill
+      access_token: ((github-access-token))
+  - name:            memory-calculator
+    type:            github-release
+    icon:            github-circle
     source:
-      uri: https://java-buildpack.cloudfoundry.org/memory-calculator/bionic/x86_64/index.yml
+      owner:        cloudfoundry
+      repository:   java-buildpack-memory-calculator
+      access_token: ((github-access-token))

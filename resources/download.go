@@ -27,13 +27,28 @@ import (
 	"path/filepath"
 )
 
-func DownloadArtifact(uri string, version Version, destination string) (string, error) {
+type RequestModifier interface {
+	Modify(request *http.Request, source map[string]interface{}) (*http.Request, error)
+}
+
+func DownloadArtifact(uri string, destination string, requestModifier RequestModifier, source map[string]interface{}) (string, error) {
 	if err := os.MkdirAll(destination, 0755); err != nil {
 		return "", fmt.Errorf("unable to make directory %s\n%w", destination, err)
-
 	}
 
-	resp, err := http.Get(uri)
+	req, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		return "", fmt.Errorf("unable to create GET %s\n%w", uri, err)
+	}
+
+	if requestModifier != nil {
+		req, err = requestModifier.Modify(req, source)
+		if err != nil {
+			return "", fmt.Errorf("unable to modify request\n%w", err)
+		}
+	}
+
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return "", fmt.Errorf("unable to GET %s\n%w", uri, err)
 	}

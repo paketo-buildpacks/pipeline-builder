@@ -21,5 +21,5 @@ import (
 )
 
 func main() {
-	resources.In(resources.Repository{})
+	resources.In(resources.AppDynamics{})
 }

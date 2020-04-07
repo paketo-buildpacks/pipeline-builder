@@ -30,7 +30,7 @@ func (RegistryImageVersion) Out(request OutRequest, destination string) (OutResu
 	return OutResult{}, nil
 }
 
-func (r RegistryImageVersion) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (RegistryImageVersion) Versions(source map[string]interface{}) (map[Version]string, error) {
 	rep, ok := source["repository"].(string)
 	if !ok {
 		return nil, fmt.Errorf("repository must be specified")

@@ -35,6 +35,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/amazon-corretto-resource",
 		},
 	},
+	"appdynamics-resource": {
+		Name: "appdynamics-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/appdynamics-resource",
+		},
+	},
 	"azul-zulu-resource": {
 		Name: "azul-zulu-resource",
 		Type: "registry-image",
@@ -110,13 +117,6 @@ var KnownResourceTypes = map[string]ResourceType{
 		Type: "registry-image",
 		Source: map[string]interface{}{
 			"repository": "gcr.io/paketo-buildpacks/registry-image-version-resource",
-		},
-	},
-	"repository-resource": {
-		Name: "repository-resource",
-		Type: "registry-image",
-		Source: map[string]interface{}{
-			"repository": "gcr.io/paketo-buildpacks/repository-resource",
 		},
 	},
 	"semver": {

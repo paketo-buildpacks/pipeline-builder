@@ -196,10 +196,7 @@ func In(resource Resource) {
 	result := InResult{Version: request.Version}
 
 	if uri != "" {
-		var rm RequestModifier
-		rm, _ = resource.(RequestModifier)
-
-		sha256, err := DownloadArtifact(uri, os.Args[1], rm, request.Source)
+		sha256, err := DownloadArtifact(uri, os.Args[1], request.Source)
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -17,7 +17,6 @@
 package resources
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -85,54 +84,4 @@ func (AppDynamics) Versions(source map[string]interface{}) (map[Version]string, 
 	}
 
 	return versions, nil
-}
-
-func (AppDynamics) Modify(request *http.Request, source map[string]interface{}) (*http.Request, error) {
-	u, ok := source["username"].(string)
-	if !ok {
-		return nil, fmt.Errorf("username must be specified")
-	}
-
-	p, ok := source["password"].(string)
-	if !ok {
-		return nil, fmt.Errorf("password must be specified")
-	}
-
-	payload := struct {
-		Password string   `json:"password"`
-		Scopes   []string `json:"scopes"`
-		Username string   `json:"username"`
-	}{
-		Password: p,
-		Scopes:   []string{"download"},
-		Username: u,
-	}
-	b, err := json.Marshal(payload)
-	if err != nil {
-		return nil, fmt.Errorf("unable to marshal payload\n%w", err)
-	}
-
-	uri := "https://identity.msrv.saas.appdynamics.com/v2.0/oauth/token"
-	resp, err := http.Post(uri, "application/json", bytes.NewBuffer(b))
-	if err != nil {
-		return nil, fmt.Errorf("unable to get %s\n%w", uri, err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != 200 {
-		return nil, fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode)
-	}
-
-	raw := struct {
-		TokenType   string `json:"token_type"`
-		AccessToken string `json:"access_token"`
-	}{}
-
-	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
-		return nil, fmt.Errorf("unable to decode payload\n%w", err)
-	}
-
-	request.Header.Add("Authorization", fmt.Sprintf("%s %s", raw.TokenType, raw.AccessToken))
-
-	return request, nil
 }

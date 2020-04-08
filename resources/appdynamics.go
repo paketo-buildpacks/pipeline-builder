@@ -68,7 +68,17 @@ func (AppDynamics) Versions(source map[string]interface{}) (map[Version]string, 
 					ref = fmt.Sprintf("%s-%s", ref, p[4])
 				}
 
-				versions[Version(ref)] = r.DownloadPath
+				var uri string
+				switch t {
+				case "php-tar":
+					uri = fmt.Sprintf("https://packages.appdynamics.com/php/%[1]s/appdynamics-php-agent-linux_x64-%[1]s.tar.bz2", r.Version)
+				case "sun-jvm":
+					uri = fmt.Sprintf("https://packages.appdynamics.com/java/%[1]s/AppServerAgent-%[1]s.zip", r.Version)
+				default:
+					return nil, fmt.Errorf("unknown uri type %s\n", t)
+				}
+
+				versions[Version(ref)] = uri
 			}
 			break
 		}

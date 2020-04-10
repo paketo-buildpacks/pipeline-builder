@@ -77,6 +77,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/gradle-resource",
 		},
 	},
+	"jrebel-resource": {
+		Name: "jrebel-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/jrebel-resource",
+		},
+	},
 	"jprofiler-resource": {
 		Name: "jprofiler-resource",
 		Type: "registry-image",

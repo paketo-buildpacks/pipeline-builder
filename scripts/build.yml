@@ -17,6 +17,7 @@ outputs:
   - name: azul-zulu-resource
   - name: bellsoft-liberica-resource
   - name: gradle-resource
+  - name: jrebel-resource
   #  - name: jprofiler-resource
   - name: maven-resource
   - name: new-relic-resource

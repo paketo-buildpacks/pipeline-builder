@@ -147,6 +147,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/tomcat-resource",
 		},
 	},
+	"yourkit-resource": {
+		Name: "yourkit-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/yourkit-resource",
+		},
+	},
 }
 
 type ResourceType struct {

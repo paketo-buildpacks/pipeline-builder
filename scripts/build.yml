@@ -25,7 +25,7 @@ outputs:
   - name: stackdriver-profiler-resource
 #  - name: sky-walking-resource
   - name: tomcat-resource
-#  - name: your-kit-resource
+  - name: your-kit-resource
 
 caches:
   - path: go-cache

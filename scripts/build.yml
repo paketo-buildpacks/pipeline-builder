@@ -18,7 +18,7 @@ outputs:
   - name: bellsoft-liberica-resource
   - name: gradle-resource
   - name: jrebel-resource
-  #  - name: jprofiler-resource
+  - name: jprofiler-resource
   - name: maven-resource
   - name: new-relic-resource
   - name: npm-resource

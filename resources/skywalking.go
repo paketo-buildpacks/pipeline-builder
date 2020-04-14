@@ -30,7 +30,7 @@ func (SkyWalking) Out(request OutRequest, destination string) (OutResult, error)
 }
 
 func (SkyWalking) Versions(source map[string]interface{}) (map[Version]string, error) {
-	uri := "https://archive.apache.org/dist/skywalking/"
+	uri := "https://archive.apache.org/dist/skywalking"
 
 	c := colly.NewCollector()
 

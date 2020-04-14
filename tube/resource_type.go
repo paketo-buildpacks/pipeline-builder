@@ -133,11 +133,11 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "concourse/semver-resource",
 		},
 	},
-	"sky-walking-resource": {
-		Name: "sky-walking-resource",
+	"skywalking-resource": {
+		Name: "skywalking-resource",
 		Type: "registry-image",
 		Source: map[string]interface{}{
-			"repository": "gcr.io/paketo-buildpacks/sky-walking-resource",
+			"repository": "gcr.io/paketo-buildpacks/skywalking-resource",
 		},
 	},
 	"stackdriver-profiler-resource": {

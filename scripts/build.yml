@@ -24,7 +24,7 @@ outputs:
   - name: npm-resource
   - name: registry-image-version-resource
   - name: stackdriver-profiler-resource
-#  - name: sky-walking-resource
+  - name: skywalking-resource
   - name: tomcat-resource
   - name: yourkit-resource
 

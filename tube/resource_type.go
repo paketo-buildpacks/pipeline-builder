@@ -147,6 +147,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/stackdriver-profiler-resource",
 		},
 	},
+	"takipi-resource": {
+		Name: "takipi-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/takipi-resource",
+		},
+	},
 	"tomcat-resource": {
 		Name: "tomcat-resource",
 		Type: "registry-image",

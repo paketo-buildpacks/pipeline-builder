@@ -67,11 +67,10 @@ func (t *Transformer) Transform() error {
 		ReleaseMajorContributor{Descriptor: d, Salt: t.WebHookSalt},
 		ReleaseMinorContributor{Descriptor: d, Salt: t.WebHookSalt},
 		ReleasePatchContributor{Descriptor: d, Salt: t.WebHookSalt},
+		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
-	if t.hasCode(d) {
-		contributors = append(contributors, TestContributor{Descriptor: d, Salt: t.WebHookSalt})
-
+	if d.Builder == nil {
 		if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
 			return fmt.Errorf("unable to create new module dependencies job\n%w", err)
 		} else {
@@ -80,7 +79,10 @@ func (t *Transformer) Transform() error {
 	}
 
 	if d.Builder != nil {
-		contributors = append(contributors, CreateBuilderContributor{Descriptor: d, Salt: t.WebHookSalt})
+		contributors = append(contributors,
+			CreateBuilderContributor{Descriptor: d, Salt: t.WebHookSalt},
+			UpdateLifecycleDependencyContributor{Descriptor: d, Salt: t.WebHookSalt},
+		)
 
 		if b, err := NewUpdateBuilderDependencyContributors(d, t.WebHookSalt, gh); err != nil {
 			return fmt.Errorf("unable to create new builder dependencies job\n%w", err)
@@ -229,8 +231,4 @@ func (t *Transformer) WritePipeline(pipeline Pipeline) error {
 	}
 
 	return nil
-}
-
-func (Transformer) hasCode(descriptor Descriptor) bool {
-	return descriptor.Builder == nil
 }

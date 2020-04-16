@@ -41,11 +41,13 @@ func (t TestContributor) Job() Job {
 		},
 	}
 
-	jobs := []map[string]interface{}{
-		{
+	var jobs []map[string]interface{}
+
+	if t.Descriptor.Builder == nil {
+		jobs = append(jobs, map[string]interface{}{
 			"task": "test",
 			"file": "build-common/test.yml",
-		},
+		})
 	}
 
 	if t.Descriptor.Package != nil {
@@ -60,6 +62,21 @@ func (t TestContributor) Job() Job {
 		jobs = append(jobs, map[string]interface{}{
 			"task": "create-package",
 			"file": "build-common/create-package.yml",
+		})
+	}
+
+	if t.Descriptor.Builder != nil {
+		inputs = append(inputs, map[string]interface{}{
+			"get":      "pack",
+			"resource": NewPackResource().Name,
+			"params": map[string]interface{}{
+				"globs": []string{"pack-*-linux.tgz"},
+			},
+		})
+
+		jobs = append(jobs, map[string]interface{}{
+			"task": "create-package",
+			"file": "build-common/create-builder.yml",
 		})
 	}
 

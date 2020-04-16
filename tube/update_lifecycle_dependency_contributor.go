@@ -16,65 +16,63 @@
 
 package tube
 
-type CreateBuilderContributor struct {
+type UpdateLifecycleDependencyContributor struct {
 	Descriptor Descriptor
 	Salt       string
 }
 
-func (CreateBuilderContributor) Group() string {
-	return "build"
+func (UpdateLifecycleDependencyContributor) Group() string {
+	return "lifecycle-dependency"
 }
 
-func (c CreateBuilderContributor) Job() Job {
-	b := NewBuilderResource(c.Descriptor)
-	d := NewBuildCommonResource()
-	k := NewPackResource()
-	s := NewBuilderSourceResource(c.Descriptor, c.Salt)
+func (u UpdateLifecycleDependencyContributor) Job() Job {
+	b := NewBuildCommonResource()
+	l := NewLifecycleResource()
+	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   "create-builder",
+		Name:   "update-lifecycle-dependency",
 		Public: true,
 		Plan: []map[string]interface{}{
 			{
 				"in_parallel": []map[string]interface{}{
 					{
 						"get":      "build-common",
-						"resource": d.Name,
+						"resource": b.Name,
 					},
 					{
-						"get":      "pack",
-						"resource": k.Name,
+						"get":     l.Name,
+						"trigger": true,
 						"params": map[string]interface{}{
-							"globs": []string{"pack-*-linux.tgz"},
+							"globs": []string{""},
 						},
 					},
 					{
 						"get":      "source",
 						"resource": s.Name,
-						"trigger":  true,
 					},
 				},
 			},
 			{
-				"task": "create-builder",
-				"file": "build-common/create-builder.yml",
+				"task": "update-lifecycle-dependency",
+				"file": "build-common/update-lifecycle-dependency.yml",
 			},
 			{
-				"put": b.Name,
+				"put": s.Name,
 				"params": map[string]interface{}{
-					"image":           "image/image.tar",
-					"additional_tags": "image/tags",
+					"repository": "source",
+					"rebase":     true,
 				},
 			},
 		},
 	}
+
 }
 
-func (c CreateBuilderContributor) Resources() []Resource {
+func (u UpdateLifecycleDependencyContributor) Resources() []Resource {
 	return []Resource{
-		NewBuilderResource(c.Descriptor),
 		NewBuildCommonResource(),
-		NewPackResource(),
-		NewBuilderSourceResource(c.Descriptor, c.Salt),
+		NewLifecycleResource(),
+		NewSourceResource(u.Descriptor, u.Salt),
 	}
 }

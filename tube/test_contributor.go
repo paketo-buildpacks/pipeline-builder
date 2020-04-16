@@ -75,7 +75,7 @@ func (t TestContributor) Job() Job {
 		})
 
 		jobs = append(jobs, map[string]interface{}{
-			"task": "create-package",
+			"task": "create-builder",
 			"file": "build-common/create-builder.yml",
 		})
 	}

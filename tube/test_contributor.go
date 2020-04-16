@@ -29,34 +29,59 @@ func (t TestContributor) Job() Job {
 	b := NewBuildCommonResource()
 	s := NewSourceResource(t.Descriptor, t.Salt)
 
+	inputs := []map[string]interface{}{
+		{
+			"get":      "build-common",
+			"resource": b.Name,
+		},
+		{
+			"get":      "source",
+			"resource": s.Name,
+			"trigger":  true,
+		},
+	}
+
+	jobs := []map[string]interface{}{
+		{
+			"task": "test",
+			"file": "build-common/test.yml",
+		},
+	}
+
+	if t.Descriptor.Package != nil {
+		inputs = append(inputs, map[string]interface{}{
+			"get":      "pack",
+			"resource": NewPackResource().Name,
+			"params": map[string]interface{}{
+				"globs": []string{"pack-*-linux.tgz"},
+			},
+		})
+
+		jobs = append(jobs, map[string]interface{}{
+			"task": "create-package",
+			"file": "build-common/create-package.yml",
+		})
+	}
+
 	return Job{
 		Name:   "test",
 		Public: true,
 		Plan: []map[string]interface{}{
-			{
-				"in_parallel": []map[string]interface{}{
-					{
-						"get":      "build-common",
-						"resource": b.Name,
-					},
-					{
-						"get":      "source",
-						"resource": s.Name,
-						"trigger":  true,
-					},
-				},
-			},
-			{
-				"task": "test",
-				"file": "build-common/test.yml",
-			},
+			{"in_parallel": inputs},
+			{"in_parallel": jobs},
 		},
 	}
 }
 
 func (t TestContributor) Resources() []Resource {
-	return []Resource{
+	r := []Resource{
 		NewBuildCommonResource(),
 		NewSourceResource(t.Descriptor, t.Salt),
 	}
+
+	if t.Descriptor.Package != nil {
+		r = append(r, NewPackResource())
+	}
+
+	return r
 }

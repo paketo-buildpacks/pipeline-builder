@@ -25,13 +25,26 @@ import (
 	"github.com/google/go-github/v30/github"
 )
 
-type UpdateBuilderDependencyContributor struct {
-	Descriptor Descriptor
-	Package    string
-	Salt       string
+type ImageType uint8
+
+const (
+	Build ImageType = iota
+	Run
+)
+
+func (i ImageType) String() string {
+	return []string{"build", "run"}[i]
 }
 
-func NewUpdateBuilderDependencyContributors(descriptor Descriptor, salt string, gh *github.Client) ([]UpdateBuilderDependencyContributor, error) {
+type UpdateImageDependencyContributor struct {
+	Descriptor     Descriptor
+	Name           string
+	Salt           string
+	Type           ImageType
+	VersionPattern string
+}
+
+func NewUpdateImageDependencyContributors(descriptor Descriptor, salt string, gh *github.Client) ([]UpdateImageDependencyContributor, error) {
 	in, err := gh.Repositories.DownloadContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "builder.toml", nil)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get %s/go.mod\n%w", descriptor.Name, err)
@@ -39,41 +52,53 @@ func NewUpdateBuilderDependencyContributors(descriptor Descriptor, salt string, 
 	defer in.Close()
 
 	d := struct {
-		Buildpacks []struct {
-			Image string `toml:"image"`
-		} `toml:"buildpacks"`
+		Stack struct {
+			BuildImage string `toml:"build-image"`
+			RunImage   string `toml:"run-image"`
+		} `toml:"stack"`
 	}{}
 
 	if _, err := toml.DecodeReader(in, &d); err != nil {
 		return nil, fmt.Errorf("unable to decode\n%w", err)
 	}
 
-	re := regexp.MustCompile(`(?m)^(.+):[^:]+$`)
-	var b []UpdateBuilderDependencyContributor
-	for _, bp := range d.Buildpacks {
-		if s := re.FindStringSubmatch(bp.Image); s != nil {
-			b = append(b, UpdateBuilderDependencyContributor{
-				Descriptor: descriptor,
-				Package:    s[1],
-				Salt:       salt,
-			})
-		}
+	re := regexp.MustCompile(`(?m)^(.+):[^:-]+([^:]+)$`)
+	var i []UpdateImageDependencyContributor
+
+	if s := re.FindStringSubmatch(d.Stack.BuildImage); s != nil {
+		i = append(i, UpdateImageDependencyContributor{
+			Descriptor:     descriptor,
+			Name:           s[1],
+			Salt:           salt,
+			Type:           Build,
+			VersionPattern: fmt.Sprintf(".+%s", s[2]),
+		})
 	}
 
-	return b, nil
+	if s := re.FindStringSubmatch(d.Stack.RunImage); s != nil {
+		i = append(i, UpdateImageDependencyContributor{
+			Descriptor:     descriptor,
+			Name:           s[1],
+			Salt:           salt,
+			Type:           Run,
+			VersionPattern: fmt.Sprintf(".+%s", s[2]),
+		})
+	}
+
+	return i, nil
 }
 
-func (UpdateBuilderDependencyContributor) Group() string {
-	return "dependencies"
+func (UpdateImageDependencyContributor) Group() string {
+	return "builder-dependencies"
 }
 
-func (u UpdateBuilderDependencyContributor) Job() Job {
+func (u UpdateImageDependencyContributor) Job() Job {
 	b := NewBuildCommonResource()
-	d := NewBuilderDependencyResource(u.Package)
+	i := NewImageDependencyResource(u.Name, u.VersionPattern)
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   d.Name,
+		Name:   fmt.Sprintf("update-%s-image", u.Type),
 		Public: true,
 		Plan: []map[string]interface{}{
 			{
@@ -83,8 +108,8 @@ func (u UpdateBuilderDependencyContributor) Job() Job {
 						"resource": b.Name,
 					},
 					{
-						"get":      "dependency",
-						"resource": d.Name,
+						"get":      "image",
+						"resource": i.Name,
 						"trigger":  true,
 					},
 					{
@@ -94,10 +119,10 @@ func (u UpdateBuilderDependencyContributor) Job() Job {
 				},
 			},
 			{
-				"task": "update-builder-dependency",
-				"file": "build-common/update-builder-dependency.yml",
+				"task": "update-image-dependency",
+				"file": "build-common/update-image-dependency.yml",
 				"params": map[string]interface{}{
-					"DEPENDENCY": u.Package,
+					"TYPE": u.Type.String(),
 				},
 			},
 			{
@@ -112,10 +137,10 @@ func (u UpdateBuilderDependencyContributor) Job() Job {
 
 }
 
-func (u UpdateBuilderDependencyContributor) Resources() []Resource {
+func (u UpdateImageDependencyContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
-		NewBuilderDependencyResource(u.Package),
+		NewImageDependencyResource(u.Name, u.VersionPattern),
 		NewSourceResource(u.Descriptor, u.Salt),
 	}
 }

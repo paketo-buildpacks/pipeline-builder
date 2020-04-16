@@ -22,7 +22,7 @@ type UpdateLifecycleDependencyContributor struct {
 }
 
 func (UpdateLifecycleDependencyContributor) Group() string {
-	return "lifecycle-dependency"
+	return "builder-dependencies"
 }
 
 func (u UpdateLifecycleDependencyContributor) Job() Job {

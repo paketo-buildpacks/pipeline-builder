@@ -23,7 +23,7 @@ type UpdatePackageDependencyContributor struct {
 }
 
 func (UpdatePackageDependencyContributor) Group() string {
-	return "dependency"
+	return "dependencies"
 }
 
 func (u UpdatePackageDependencyContributor) Job() Job {

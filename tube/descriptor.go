@@ -38,6 +38,9 @@ type Builder struct {
 	Repository string `yaml:"repository"`
 	Username   string `yaml:"username"`
 	Password   string `yaml:"password"`
+
+	BuildImage string `yaml:"build_image"`
+	RunImage   string `yaml:"run_image"`
 }
 
 type Package struct {

@@ -64,9 +64,9 @@ func (t *Transformer) Transform() error {
 	log.Println(d.Name)
 
 	contributors := []PipelineContributor{
-		ReleaseMajorContributor{Descriptor: d, Salt: t.WebHookSalt},
-		ReleaseMinorContributor{Descriptor: d, Salt: t.WebHookSalt},
-		ReleasePatchContributor{Descriptor: d, Salt: t.WebHookSalt},
+		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Major},
+		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Minor},
+		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Patch},
 		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
@@ -85,9 +85,17 @@ func (t *Transformer) Transform() error {
 		)
 
 		if b, err := NewUpdateBuilderDependencyContributors(d, t.WebHookSalt, gh); err != nil {
-			return fmt.Errorf("unable to create new builder dependencies job\n%w", err)
+			return fmt.Errorf("unable to create new builder dependencies jobs\n%w", err)
 		} else {
 			for _, c := range b {
+				contributors = append(contributors, c)
+			}
+		}
+
+		if i, err := NewUpdateImageDependencyContributors(d, t.WebHookSalt, gh); err != nil {
+			return fmt.Errorf("unable to create new image dependencies jobs\n%w", err)
+		} else {
+			for _, c := range i {
 				contributors = append(contributors, c)
 			}
 		}

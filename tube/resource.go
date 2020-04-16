@@ -89,6 +89,20 @@ func NewBuilderSourceResource(descriptor Descriptor, salt string) Resource {
 	}
 }
 
+func NewImageDependencyResource(name string, versionPattern string) Resource {
+	return Resource{
+		Name: strings.ReplaceAll(fmt.Sprintf("dependency:%s", name), "/", "|"),
+		Type: "registry-image-version-resource",
+		Icon: "docker",
+		Source: map[string]interface{}{
+			"repository":      name,
+			"username":        "_json_key",
+			"password":        "((artifact-gcs-json-key))",
+			"version_pattern": versionPattern,
+		},
+	}
+}
+
 func NewLifecycleResource() Resource {
 	return Resource{
 		Name:       "lifecycle",

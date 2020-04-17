@@ -47,6 +47,8 @@ type Package struct {
 	Repository string `yaml:"repository"`
 	Username   string `yaml:"username"`
 	Password   string `yaml:"password"`
+
+	IncludeDependencies bool `yaml:"include_dependencies"`
 }
 
 type Descriptor struct {

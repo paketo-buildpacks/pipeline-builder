@@ -31,6 +31,14 @@ func (c CreatePackageContributor) Job() Job {
 	p := NewPackageResource(c.Descriptor)
 	s := NewPackageSourceResource(c.Descriptor, c.Salt)
 
+	job := map[string]interface{}{
+		"task": "create-package",
+		"file": "build-common/create-package.yml",
+	}
+	if c.Descriptor.Package.IncludeDependencies {
+		job["params"] = map[string]interface{}{"INCLUDE_DEPENDENCIES": true}
+	}
+
 	return Job{
 		Name:   "create-package",
 		Public: true,
@@ -55,10 +63,7 @@ func (c CreatePackageContributor) Job() Job {
 					},
 				},
 			},
-			{
-				"task": "create-package",
-				"file": "build-common/create-package.yml",
-			},
+			job,
 			{
 				"put": p.Name,
 				"params": map[string]interface{}{

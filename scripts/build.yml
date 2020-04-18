@@ -16,6 +16,7 @@ outputs:
   - name: appdynamics-resource
   - name: azul-zulu-resource
   - name: bellsoft-liberica-resource
+  - name: ca-apm-resource
   - name: gradle-resource
   - name: jrebel-resource
   - name: jprofiler-resource

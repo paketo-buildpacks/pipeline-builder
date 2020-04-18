@@ -56,6 +56,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/bellsoft-liberica-resource",
 		},
 	},
+	"ca-apm-resource": {
+		Name: "ca-apm-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/ca-apm-resource",
+		},
+	},
 	"git": {
 		Name: "git",
 		Type: "registry-image",

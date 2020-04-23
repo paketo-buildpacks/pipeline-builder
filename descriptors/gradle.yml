@@ -6,5 +6,5 @@ package:
   password: ((artifact-gcs-json-key))
 
 dependencies:
-  - name:            gradle
-    type:            gradle-resource
+  - name: gradle
+    type: gradle-resource

@@ -60,19 +60,6 @@ func NewBuilderResource(descriptor Descriptor) Resource {
 	}
 }
 
-func NewBuilderDependencyResource(name string) Resource {
-	return Resource{
-		Name: strings.ReplaceAll(fmt.Sprintf("dependency:%s", name), "/", "|"),
-		Type: "registry-image-version-resource",
-		Icon: "docker",
-		Source: map[string]interface{}{
-			"repository": name,
-			"username":   "_json_key",
-			"password":   "((artifact-gcs-json-key))",
-		},
-	}
-}
-
 func NewBuilderSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("builder-source:%s", descriptor.ShortName()),
@@ -86,6 +73,15 @@ func NewBuilderSourceResource(descriptor Descriptor, salt string) Resource {
 			"username":   "((github-username))",
 			"password":   "((github-password))",
 		},
+	}
+}
+
+func NewBuildpackDependencyResource(dependency Dependency) Resource {
+	return Resource{
+		Name:   fmt.Sprintf("dependency:%s", dependency.Resource),
+		Type:   dependency.Type,
+		Icon:   dependency.Icon,
+		Source: dependency.Source,
 	}
 }
 
@@ -133,6 +129,19 @@ func NewModuleResource(name string) Resource {
 	}
 }
 
+func NewPackageDependencyResource(name string) Resource {
+	return Resource{
+		Name: strings.ReplaceAll(fmt.Sprintf("dependency:%s", name), "/", "|"),
+		Type: "registry-image-version-resource",
+		Icon: "docker",
+		Source: map[string]interface{}{
+			"repository": name,
+			"username":   "_json_key",
+			"password":   "((artifact-gcs-json-key))",
+		},
+	}
+}
+
 func NewPackResource() Resource {
 	return Resource{
 		Name:       "pack",
@@ -157,15 +166,6 @@ func NewPackageResource(descriptor Descriptor) Resource {
 			"username":   descriptor.Package.Username,
 			"password":   descriptor.Package.Password,
 		},
-	}
-}
-
-func NewPackageDependencyResource(dependency Dependency) Resource {
-	return Resource{
-		Name:   fmt.Sprintf("dependency:%s", dependency.Resource),
-		Type:   dependency.Type,
-		Icon:   dependency.Icon,
-		Source: dependency.Source,
 	}
 }
 

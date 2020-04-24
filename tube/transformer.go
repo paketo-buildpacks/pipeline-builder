@@ -70,12 +70,8 @@ func (t *Transformer) Transform() error {
 		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
 	}
 
-	if d.Builder == nil {
-		if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
-			return fmt.Errorf("unable to create new module dependencies job\n%w", err)
-		} else {
-			contributors = append(contributors, m)
-		}
+	if d.Package != nil {
+		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
 	if d.Builder != nil {
@@ -84,16 +80,8 @@ func (t *Transformer) Transform() error {
 			UpdateLifecycleDependencyContributor{Descriptor: d, Salt: t.WebHookSalt},
 		)
 
-		if b, err := NewUpdateBuilderDependencyContributors(d, t.WebHookSalt, gh); err != nil {
-			return fmt.Errorf("unable to create new builder dependencies jobs\n%w", err)
-		} else {
-			for _, c := range b {
-				contributors = append(contributors, c)
-			}
-		}
-
 		if i, err := NewUpdateImageDependencyContributors(d, t.WebHookSalt, gh); err != nil {
-			return fmt.Errorf("unable to create new image dependencies jobs\n%w", err)
+			return fmt.Errorf("unable to create new update image dependencies jobs\n%w", err)
 		} else {
 			for _, c := range i {
 				contributors = append(contributors, c)
@@ -102,11 +90,21 @@ func (t *Transformer) Transform() error {
 	}
 
 	for _, dep := range d.Dependencies {
-		contributors = append(contributors, UpdatePackageDependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
+		contributors = append(contributors, UpdateBuildpackDependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
 	}
 
-	if d.Package != nil {
-		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
+	if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
+		return fmt.Errorf("unable to create new update module dependencies job\n%w", err)
+	} else if m != nil {
+		contributors = append(contributors, m)
+	}
+
+	if b, err := NewUpdatePackageDependencyContributors(d, t.WebHookSalt, gh); err != nil {
+		return fmt.Errorf("unable to create new updated builder dependencies jobs\n%w", err)
+	} else {
+		for _, c := range b {
+			contributors = append(contributors, c)
+		}
 	}
 
 	p := NewPipeline(t.Name)

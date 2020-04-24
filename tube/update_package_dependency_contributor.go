@@ -16,19 +16,130 @@
 
 package tube
 
+import (
+	"context"
+	"fmt"
+	"regexp"
+	"sync"
+
+	"github.com/BurntSushi/toml"
+	"github.com/google/go-github/v30/github"
+)
+
 type UpdatePackageDependencyContributor struct {
 	Descriptor Descriptor
-	Dependency Dependency
+	Package    string
 	Salt       string
 }
 
+type result struct {
+	err   error
+	value string
+}
+
+func NewUpdatePackageDependencyContributors(descriptor Descriptor, salt string, gh *github.Client) ([]UpdatePackageDependencyContributor, error) {
+	results := make(chan result)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		file, _, resp, err := gh.Repositories.GetContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "builder.toml", nil)
+		if resp != nil && resp.StatusCode == 404 {
+			return
+		} else if err != nil {
+			results <- result{err: fmt.Errorf("unable to get %s/builder.toml\n%w", descriptor.Name, err)}
+			return
+		}
+
+		s, err := file.GetContent()
+		if err != nil {
+			results <- result{err: fmt.Errorf("unable to get %s/builder.toml content\n%w", descriptor.Name, err)}
+			return
+		}
+
+		raw := struct {
+			Buildpacks []struct {
+				Image string `toml:"image"`
+			} `toml:"buildpacks"`
+		}{}
+
+		if _, err := toml.Decode(s, &raw); err != nil {
+			results <- result{err: fmt.Errorf("unable to decode\n%w", err)}
+			return
+		}
+
+		for _, b := range raw.Buildpacks {
+			results <- result{value: b.Image}
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+
+		file, _, resp, err := gh.Repositories.GetContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "package.toml", nil)
+		if resp != nil && resp.StatusCode == 404 {
+			return
+		} else if err != nil {
+			results <- result{err: fmt.Errorf("unable to get %s/package.toml\n%w", descriptor.Name, err)}
+			return
+		}
+
+		s, err := file.GetContent()
+		if err != nil {
+			results <- result{err: fmt.Errorf("unable to get %s/builder.toml content\n%w", descriptor.Name, err)}
+			return
+		}
+
+		raw := struct {
+			Dependencies []struct {
+				Image string `toml:"image"`
+			} `toml:"dependencies"`
+		}{}
+
+		if _, err := toml.Decode(s, &raw); err != nil {
+			results <- result{err: fmt.Errorf("unable to decode\n%w", err)}
+			return
+		}
+
+		for _, d := range raw.Dependencies {
+			results <- result{value: d.Image}
+		}
+	}()
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	re := regexp.MustCompile(`(?m)^(.+):[^:]+$`)
+	var b []UpdatePackageDependencyContributor
+	for result := range results {
+		if result.err != nil {
+			return nil, fmt.Errorf("unable to get image listing\n%w", result.err)
+		}
+
+		if s := re.FindStringSubmatch(result.value); s != nil {
+			b = append(b, UpdatePackageDependencyContributor{
+				Descriptor: descriptor,
+				Package:    s[1],
+				Salt:       salt,
+			})
+		}
+	}
+
+	return b, nil
+}
+
 func (UpdatePackageDependencyContributor) Group() string {
-	return "dependencies"
+	return "package-dependencies"
 }
 
 func (u UpdatePackageDependencyContributor) Job() Job {
 	b := NewBuildCommonResource()
-	p := NewPackageDependencyResource(u.Dependency)
+	p := NewPackageDependencyResource(u.Package)
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
@@ -45,7 +156,6 @@ func (u UpdatePackageDependencyContributor) Job() Job {
 						"get":      "dependency",
 						"resource": p.Name,
 						"trigger":  true,
-						"params":   u.Dependency.Params,
 					},
 					{
 						"get":      "source",
@@ -57,8 +167,7 @@ func (u UpdatePackageDependencyContributor) Job() Job {
 				"task": "update-package-dependency",
 				"file": "build-common/update-package-dependency.yml",
 				"params": map[string]interface{}{
-					"DEPENDENCY":      u.Dependency.Name,
-					"VERSION_PATTERN": u.Dependency.VersionPattern,
+					"DEPENDENCY": u.Package,
 				},
 			},
 			{
@@ -76,7 +185,7 @@ func (u UpdatePackageDependencyContributor) Job() Job {
 func (u UpdatePackageDependencyContributor) Resources() []Resource {
 	return []Resource{
 		NewBuildCommonResource(),
-		NewPackageDependencyResource(u.Dependency),
+		NewPackageDependencyResource(u.Package),
 		NewSourceResource(u.Descriptor, u.Salt),
 	}
 }

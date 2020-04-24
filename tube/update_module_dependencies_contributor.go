@@ -19,7 +19,6 @@ package tube
 import (
 	"context"
 	"fmt"
-	"io/ioutil"
 	"regexp"
 	"sort"
 
@@ -32,16 +31,17 @@ type UpdateModuleDependenciesContributor struct {
 	Salt       string
 }
 
-func NewUpdateModuleDependenciesContributor(descriptor Descriptor, salt string, gh *github.Client) (UpdateModuleDependenciesContributor, error) {
-	in, err := gh.Repositories.DownloadContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "go.mod", nil)
-	if err != nil {
-		return UpdateModuleDependenciesContributor{}, fmt.Errorf("unable to get %s/go.mod\n%w", descriptor.Name, err)
+func NewUpdateModuleDependenciesContributor(descriptor Descriptor, salt string, gh *github.Client) (*UpdateModuleDependenciesContributor, error) {
+	file, _, resp, err := gh.Repositories.GetContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "go.mod", nil)
+	if resp != nil && resp.StatusCode == 404 {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("unable to get %s/go.mod\n%w", descriptor.Name, err)
 	}
-	defer in.Close()
 
-	b, err := ioutil.ReadAll(in)
+	s, err := file.GetContent()
 	if err != nil {
-		return UpdateModuleDependenciesContributor{}, fmt.Errorf("unable to read go.mod\n%w", err)
+		return nil, fmt.Errorf("unable to get %s/go.mod content\n%w", descriptor.Name, err)
 	}
 
 	m := UpdateModuleDependenciesContributor{
@@ -50,13 +50,13 @@ func NewUpdateModuleDependenciesContributor(descriptor Descriptor, salt string, 
 	}
 
 	re := regexp.MustCompile(`(?mU)^	([\S]+)(?:/v[\d]+)? v[^-\r\n\t\f\v ]+$`)
-	for _, s := range re.FindAllStringSubmatch(string(b), -1) {
+	for _, s := range re.FindAllStringSubmatch(s, -1) {
 		m.Modules = append(m.Modules, s[1])
 	}
 
 	sort.Strings(m.Modules)
 
-	return m, nil
+	return &m, nil
 }
 
 func (UpdateModuleDependenciesContributor) Group() string {

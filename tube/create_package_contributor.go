@@ -31,12 +31,9 @@ func (c CreatePackageContributor) Job() Job {
 	p := NewPackageResource(c.Descriptor)
 	s := NewPackageSourceResource(c.Descriptor, c.Salt)
 
-	job := map[string]interface{}{
-		"task": "create-package",
-		"file": "build-common/create-package.yml",
-	}
+	params := map[string]interface{}{"GOOGLE_APPLICATION_CREDENTIALS": "((artifact-gcs-json-key))"}
 	if c.Descriptor.Package.IncludeDependencies {
-		job["params"] = map[string]interface{}{"INCLUDE_DEPENDENCIES": true}
+		params["INCLUDE_DEPENDENCIES"] = true
 	}
 
 	return Job{
@@ -63,7 +60,11 @@ func (c CreatePackageContributor) Job() Job {
 					},
 				},
 			},
-			job,
+			{
+				"task":   "create-package",
+				"file":   "build-common/create-package.yml",
+				"params": params,
+			},
 			{
 				"put": p.Name,
 				"params": map[string]interface{}{

@@ -67,7 +67,12 @@ func (t *Transformer) Transform() error {
 		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Major},
 		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Minor},
 		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Patch},
-		TestContributor{Descriptor: d, Salt: t.WebHookSalt},
+	}
+
+	if t, err := NewTestContributor(d, t.WebHookSalt, gh); err != nil {
+		return fmt.Errorf("unable to create new test job\n%w", err)
+	} else {
+		contributors = append(contributors, t)
 	}
 
 	if d.Package != nil {

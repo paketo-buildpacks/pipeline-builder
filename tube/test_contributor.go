@@ -16,9 +16,34 @@
 
 package tube
 
+import (
+	"context"
+	"fmt"
+
+	"github.com/google/go-github/v30/github"
+)
+
 type TestContributor struct {
+	Code       bool
 	Descriptor Descriptor
 	Salt       string
+}
+
+func NewTestContributor(descriptor Descriptor, salt string, gh *github.Client) (TestContributor, error) {
+	t := TestContributor{
+		Descriptor: descriptor,
+		Salt:       salt,
+	}
+
+	_, _, resp, err := gh.Repositories.GetContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "go.mod", nil)
+	if resp != nil && resp.StatusCode == 404 {
+		return t, nil
+	} else if err != nil {
+		return TestContributor{}, fmt.Errorf("unable to get %s/go.mod\n%w", descriptor.Name, err)
+	}
+
+	t.Code = true
+	return t, nil
 }
 
 func (TestContributor) Group() string {
@@ -43,7 +68,7 @@ func (t TestContributor) Job() Job {
 
 	var jobs []map[string]interface{}
 
-	if t.Descriptor.Builder == nil {
+	if t.Code {
 		jobs = append(jobs, map[string]interface{}{
 			"task": "test",
 			"file": "build-common/test.yml",
@@ -60,9 +85,12 @@ func (t TestContributor) Job() Job {
 		})
 
 		jobs = append(jobs, map[string]interface{}{
-			"task":   "create-package",
-			"file":   "build-common/create-package.yml",
-			"params": map[string]interface{}{"INCLUDE_DEPENDENCIES": true},
+			"task": "create-package",
+			"file": "build-common/create-package.yml",
+			"params": map[string]interface{}{
+				"GOOGLE_APPLICATION_CREDENTIALS": "((artifact-gcs-json-key))",
+				"INCLUDE_DEPENDENCIES":           true,
+			},
 		})
 	}
 

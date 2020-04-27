@@ -32,6 +32,34 @@ dependencies:
     params:
       globs:
         - graalvm-ce-java11-linux-amd64-*.tar.gz
+  - name:            native-image-svm
+    resource:        graalvm-native-image-8
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        graalvm
+      repository:   graalvm-ce-builds
+      access_token: ((github-access-token))
+      tag_filter:   vm-(.*)
+    params:
+      globs:
+        - graalvm-ce-java8-linux-amd64-*.tar.gz
+        - native-image-installable-svm-java8-linux-amd64-*.jar
+  - name:            native-image-svm
+    resource:        graalvm-native-image-11
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        graalvm
+      repository:   graalvm-ce-builds
+      access_token: ((github-access-token))
+      tag_filter:   vm-(.*)
+    params:
+      globs:
+        - graalvm-ce-java11-linux-amd64-*.tar.gz
+        - native-image-installable-svm-java11-linux-amd64-*.jar
   - name:            jvmkill
     type:            github-release
     icon:            github-circle

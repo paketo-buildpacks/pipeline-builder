@@ -1,0 +1,48 @@
+---
+name: github.com/paketo-buildpacks/graalvm
+package:
+  repository: gcr.io/paketo-buildpacks/graalvm
+  username: _json_key
+  password: ((artifact-gcs-json-key))
+
+dependencies:
+  - name:            jdk
+    resource:        graalvm-jdk-8
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        graalvm
+      repository:   graalvm-ce-builds
+      access_token: ((github-access-token))
+      tag_filter:   vm-(.*)
+    params:
+      globs:
+        - graalvm-ce-java8-linux-amd64-*.tar.gz
+  - name:            jdk
+    resource:        graalvm-jdk-11
+    type:            github-release
+    icon:            github-circle
+    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+    source:
+      owner:        graalvm
+      repository:   graalvm-ce-builds
+      access_token: ((github-access-token))
+      tag_filter:   vm-(.*)
+    params:
+      globs:
+        - graalvm-ce-java11-linux-amd64-*.tar.gz
+  - name:            jvmkill
+    type:            github-release
+    icon:            github-circle
+    source:
+      owner:        cloudfoundry
+      repository:   jvmkill
+      access_token: ((github-access-token))
+  - name:            memory-calculator
+    type:            github-release
+    icon:            github-circle
+    source:
+      owner:        cloudfoundry
+      repository:   java-buildpack-memory-calculator
+      access_token: ((github-access-token))

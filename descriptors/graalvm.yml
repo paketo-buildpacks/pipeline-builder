@@ -74,3 +74,9 @@ dependencies:
       owner:        cloudfoundry
       repository:   java-buildpack-memory-calculator
       access_token: ((github-access-token))
+  - name: openssl-security-provider
+    type: maven-resource
+    source:
+      uri:         https://jitpack.io
+      group_id:    com.github.paketo-buildpacks
+      artifact_id: openssl-security-provider

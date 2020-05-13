@@ -8,7 +8,7 @@ package:
 dependencies:
   - name: google-stackdriver-debugger-java
     type: github-release
-    icon: github-circle
+    icon: github
     source:
       owner:        GoogleCloudPlatform
       repository:   cloud-debug-java

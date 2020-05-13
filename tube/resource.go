@@ -37,7 +37,7 @@ func NewBuildCommonResource() Resource {
 	return Resource{
 		Name: d.ShortName(),
 		Type: "git",
-		Icon: "github-circle",
+		Icon: "github",
 		Source: map[string]interface{}{
 			"uri":      d.GitRepository(),
 			"branch":   "master",
@@ -64,7 +64,7 @@ func NewBuilderSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("builder-source:%s", descriptor.ShortName()),
 		Type:       "git",
-		Icon:       "github-circle",
+		Icon:       "github",
 		CheckEvery: "4h",
 		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
 		Source: map[string]interface{}{
@@ -119,7 +119,7 @@ func NewModuleResource(name string) Resource {
 	return Resource{
 		Name: strings.ReplaceAll(fmt.Sprintf("module:%s", name), "/", "|"),
 		Type: "git",
-		Icon: "github-circle",
+		Icon: "github",
 		Source: map[string]interface{}{
 			"uri":        d.GitRepository(),
 			"tag_filter": "v*",
@@ -173,7 +173,7 @@ func NewPackageSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("package-source:%s", descriptor.ShortName()),
 		Type:       "git",
-		Icon:       "github-circle",
+		Icon:       "github",
 		CheckEvery: "4h",
 		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
 		Source: map[string]interface{}{
@@ -189,7 +189,7 @@ func NewSourceResource(descriptor Descriptor, salt string) Resource {
 	return Resource{
 		Name:       fmt.Sprintf("source:%s", descriptor.ShortName()),
 		Type:       "git",
-		Icon:       "github-circle",
+		Icon:       "github",
 		CheckEvery: "4h",
 		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
 		Source: map[string]interface{}{

@@ -9,7 +9,7 @@ dependencies:
   - name:            jdk
     resource:        sapmachine-jdk-11
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
@@ -23,7 +23,7 @@ dependencies:
   - name:            jre
     resource:        sapmachine-jre-11
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
@@ -37,7 +37,7 @@ dependencies:
   - name:            jdk
     resource:        sapmachine-jdk-14
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
@@ -51,7 +51,7 @@ dependencies:
   - name:            jre
     resource:        sapmachine-jre-14
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        SAP
@@ -64,14 +64,14 @@ dependencies:
         - sapmachine-jre-*_linux-x64_bin.sha256.txt
   - name:            jvmkill
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   jvmkill
       access_token: ((github-access-token))
   - name:            memory-calculator
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   java-buildpack-memory-calculator

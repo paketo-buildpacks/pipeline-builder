@@ -9,7 +9,7 @@ dependencies:
   - name:            jdk
     resource:        graalvm-jdk-8
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        graalvm
@@ -22,7 +22,7 @@ dependencies:
   - name:            jdk
     resource:        graalvm-jdk-11
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        graalvm
@@ -35,7 +35,7 @@ dependencies:
   - name:            native-image-svm
     resource:        graalvm-native-image-8
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        graalvm
@@ -49,7 +49,7 @@ dependencies:
   - name:            native-image-svm
     resource:        graalvm-native-image-11
     type:            github-release
-    icon:            github-circle
+    icon:            github
     version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
     source:
       owner:        graalvm
@@ -62,14 +62,14 @@ dependencies:
         - native-image-installable-svm-java11-linux-amd64-*.jar
   - name:            jvmkill
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   jvmkill
       access_token: ((github-access-token))
   - name:            memory-calculator
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   java-buildpack-memory-calculator

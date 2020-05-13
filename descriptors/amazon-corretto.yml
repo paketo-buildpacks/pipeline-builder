@@ -28,14 +28,14 @@ dependencies:
       repository: corretto-11
   - name:            jvmkill
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   jvmkill
       access_token: ((github-access-token))
   - name:            memory-calculator
     type:            github-release
-    icon:            github-circle
+    icon:            github
     source:
       owner:        cloudfoundry
       repository:   java-buildpack-memory-calculator

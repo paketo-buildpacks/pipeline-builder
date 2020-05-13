@@ -8,7 +8,7 @@ package:
 dependencies:
   - name: azure-application-insights-java
     type: github-release
-    icon: github-circle
+    icon: github
     source:
       owner:        Microsoft
       repository:   ApplicationInsights-Java

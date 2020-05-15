@@ -21,9 +21,10 @@ import (
 )
 
 type Job struct {
-	Name   string                   `yaml:"name,omitempty"`
-	Public bool                     `yaml:"public,omitempty"`
-	Plan   []map[string]interface{} `yaml:"plan,omitempty"`
+	Name         string                   `yaml:"name,omitempty"`
+	Public       bool                     `yaml:"public,omitempty"`
+	Plan         []map[string]interface{} `yaml:"plan,omitempty"`
+	SerialGroups []string                 `yaml:"serial_groups,omitempty"`
 }
 
 type Jobs map[string]Job

@@ -143,8 +143,9 @@ func (u UpdatePackageDependencyContributor) Job() Job {
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   p.Name,
-		Public: true,
+		Name:         p.Name,
+		Public:       true,
+		SerialGroups: []string{"update-package"},
 		Plan: []map[string]interface{}{
 			{
 				"in_parallel": []map[string]interface{}{

@@ -63,6 +63,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/ca-apm-resource",
 		},
 	},
+	"gcs-resource": {
+		Name: "gcs-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "frodenas/gcs-resource",
+		},
+	},
 	"git": {
 		Name: "git",
 		Type: "registry-image",

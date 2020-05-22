@@ -112,6 +112,7 @@ func (t TestContributor) Job() Job {
 	return Job{
 		Name:   "test",
 		Public: true,
+		Serial: true,
 		Plan: []map[string]interface{}{
 			{"in_parallel": inputs},
 			{"in_parallel": jobs},

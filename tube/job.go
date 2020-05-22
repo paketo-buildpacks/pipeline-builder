@@ -24,6 +24,7 @@ type Job struct {
 	Name         string                   `yaml:"name,omitempty"`
 	Public       bool                     `yaml:"public,omitempty"`
 	Plan         []map[string]interface{} `yaml:"plan,omitempty"`
+	Serial       bool                     `yaml:"serial,omitempty"`
 	SerialGroups []string                 `yaml:"serial_groups,omitempty"`
 }
 

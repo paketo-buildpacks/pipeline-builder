@@ -40,7 +40,7 @@ func NewBuildCommonResource() Resource {
 		Icon: "github",
 		Source: map[string]interface{}{
 			"uri":      d.GitRepository(),
-			"branch":   "master",
+			"branch":   "main",
 			"username": "((github-username))",
 			"password": "((github-password))",
 		},
@@ -194,7 +194,7 @@ func NewSourceResource(descriptor Descriptor, salt string) Resource {
 		WebHook:    NewWebHook(salt, descriptor.Owner(), descriptor.Repository()),
 		Source: map[string]interface{}{
 			"uri":      descriptor.GitRepository(),
-			"branch":   "master",
+			"branch":   "main",
 			"username": "((github-username))",
 			"password": "((github-password))",
 		},

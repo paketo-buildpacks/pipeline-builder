@@ -63,16 +63,22 @@ func (t *Transformer) Transform() error {
 
 	log.Println(d.Name)
 
-	contributors := []PipelineContributor{
-		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Major},
-		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Minor},
-		ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Patch},
+	var contributors []PipelineContributor
+
+	if !d.SkipRelease {
+		contributors = append(contributors,
+			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Major},
+			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Minor},
+			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Patch},
+		)
 	}
 
-	if t, err := NewTestContributor(d, t.WebHookSalt, gh); err != nil {
-		return fmt.Errorf("unable to create new test job\n%w", err)
-	} else {
-		contributors = append(contributors, t)
+	if !d.SkipTest {
+		if t, err := NewTestContributor(d, t.WebHookSalt, gh); err != nil {
+			return fmt.Errorf("unable to create new test job\n%w", err)
+		} else {
+			contributors = append(contributors, t)
+		}
 	}
 
 	if d.Package != nil {
@@ -98,10 +104,12 @@ func (t *Transformer) Transform() error {
 		contributors = append(contributors, UpdateBuildpackDependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
 	}
 
-	if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
-		return fmt.Errorf("unable to create new update module dependencies job\n%w", err)
-	} else if m != nil {
-		contributors = append(contributors, m)
+	if !d.SkipModuleDependencies {
+		if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
+			return fmt.Errorf("unable to create new update module dependencies job\n%w", err)
+		} else if m != nil {
+			contributors = append(contributors, m)
+		}
 	}
 
 	if b, err := NewUpdatePackageDependencyContributors(d, t.WebHookSalt, gh); err != nil {

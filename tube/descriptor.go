@@ -52,10 +52,13 @@ type Package struct {
 }
 
 type Descriptor struct {
-	Name         string       `yaml:"name"`
-	Builder      *Builder     `yaml:"builder"`
-	Package      *Package     `yaml:"package"`
-	Dependencies []Dependency `yaml:"dependencies"`
+	Name                   string       `yaml:"name"`
+	Builder                *Builder     `yaml:"builder"`
+	Package                *Package     `yaml:"package"`
+	Dependencies           []Dependency `yaml:"dependencies"`
+	SkipModuleDependencies bool         `yaml:"skip_module_dependencies"`
+	SkipRelease            bool         `yaml:"skip_release"`
+	SkipTest               bool         `yaml:"skip_test"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {

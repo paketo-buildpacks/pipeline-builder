@@ -58,6 +58,9 @@ func (c CreateBuilderContributor) Job() Job {
 			{
 				"task": "create-builder",
 				"file": "build-common/create-builder.yml",
+				"params": map[string]interface{}{
+					"GOOGLE_APPLICATION_CREDENTIALS": "((artifact-gcs-json-key))",
+				},
 			},
 			{
 				"put": b.Name,

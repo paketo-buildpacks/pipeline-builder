@@ -106,6 +106,9 @@ func (t TestContributor) Job() Job {
 		jobs = append(jobs, map[string]interface{}{
 			"task": "create-builder",
 			"file": "build-common/create-builder.yml",
+			"params": map[string]interface{}{
+				"GOOGLE_APPLICATION_CREDENTIALS": "((artifact-gcs-json-key))",
+			},
 		})
 	}
 

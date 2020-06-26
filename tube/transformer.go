@@ -142,6 +142,19 @@ func (t *Transformer) Transform() error {
 
 	}
 
+	if !d.SkipAdditional {
+		p.ResourceTypes.Add(d.ResourceTypes...)
+		p.Resources.Add(d.Resources...)
+
+		for _, g := range d.Groups {
+			for _, j := range g.Jobs {
+				p.Groups.Add(g.Name, j)
+			}
+		}
+
+		p.Jobs.Add(d.Jobs...)
+	}
+
 	if err := t.WritePipeline(p); err != nil {
 		return fmt.Errorf("unable to write pipeline\n%w", err)
 	}

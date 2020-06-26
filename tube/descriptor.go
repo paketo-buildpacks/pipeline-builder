@@ -56,9 +56,15 @@ type Descriptor struct {
 	Builder                *Builder     `yaml:"builder"`
 	Package                *Package     `yaml:"package"`
 	Dependencies           []Dependency `yaml:"dependencies"`
+	SkipAdditional         bool         `yaml:"skip_additional"`
 	SkipModuleDependencies bool         `yaml:"skip_module_dependencies"`
 	SkipRelease            bool         `yaml:"skip_release"`
 	SkipTest               bool         `yaml:"skip_test"`
+
+	ResourceTypes []ResourceType `yaml:"resource_types"`
+	Resources     []Resource     `yaml:"resources"`
+	Groups        []Group        `yaml:"groups"`
+	Jobs          []Job          `yaml:"jobs"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {

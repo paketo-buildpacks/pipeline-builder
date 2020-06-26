@@ -25,7 +25,15 @@ import (
 
 type SkyWalking struct{}
 
-func (SkyWalking) Out(request OutRequest, destination string) (OutResult, error) {
+func (s SkyWalking) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, s)
+}
+
+func (s SkyWalking) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, s)
+}
+
+func (SkyWalking) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

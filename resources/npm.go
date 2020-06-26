@@ -24,7 +24,15 @@ import (
 
 type NPM struct{}
 
-func (NPM) Out(request OutRequest, destination string) (OutResult, error) {
+func (n NPM) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, n)
+}
+
+func (n NPM) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, n)
+}
+
+func (NPM) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

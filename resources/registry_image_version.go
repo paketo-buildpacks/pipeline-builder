@@ -26,7 +26,15 @@ import (
 
 type RegistryImageVersion struct{}
 
-func (RegistryImageVersion) Out(request OutRequest, destination string) (OutResult, error) {
+func (r RegistryImageVersion) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, r)
+}
+
+func (r RegistryImageVersion) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, r)
+}
+
+func (RegistryImageVersion) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

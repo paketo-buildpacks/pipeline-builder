@@ -24,7 +24,15 @@ import (
 
 type BellSoftLiberica struct{}
 
-func (BellSoftLiberica) Out(request OutRequest, destination string) (OutResult, error) {
+func (b BellSoftLiberica) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, b)
+}
+
+func (b BellSoftLiberica) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, b)
+}
+
+func (BellSoftLiberica) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

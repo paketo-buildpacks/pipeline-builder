@@ -24,7 +24,15 @@ import (
 
 type Takipi struct{}
 
-func (Takipi) Out(request OutRequest, destination string) (OutResult, error) {
+func (t Takipi) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, t)
+}
+
+func (t Takipi) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, t)
+}
+
+func (Takipi) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

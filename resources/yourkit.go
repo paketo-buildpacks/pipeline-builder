@@ -25,11 +25,19 @@ import (
 
 type YourKit struct{}
 
-func (YourKit) Out(request OutRequest, destination string) (OutResult, error) {
+func (y YourKit) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, y)
+}
+
+func (y YourKit) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, y)
+}
+
+func (YourKit) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (y YourKit) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (YourKit) Versions(source map[string]interface{}) (map[Version]string, error) {
 	c := colly.NewCollector()
 
 	cp := regexp.MustCompile(`(?s)Version: ([\d]+)\.([\d]+).*Build: #([\d]+)`)

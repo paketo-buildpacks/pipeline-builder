@@ -25,7 +25,15 @@ import (
 
 type Tomcat struct{}
 
-func (Tomcat) Out(request OutRequest, destination string) (OutResult, error) {
+func (t Tomcat) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, t)
+}
+
+func (t Tomcat) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, t)
+}
+
+func (Tomcat) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

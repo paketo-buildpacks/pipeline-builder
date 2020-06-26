@@ -27,7 +27,15 @@ import (
 
 type AmazonCorretto struct{}
 
-func (AmazonCorretto) Out(request OutRequest, destination string) (OutResult, error) {
+func (a AmazonCorretto) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, a)
+}
+
+func (a AmazonCorretto) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, a)
+}
+
+func (AmazonCorretto) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
@@ -57,17 +65,17 @@ func (AmazonCorretto) Versions(source map[string]interface{}) (map[Version]strin
 	var raw []*github.RepositoryRelease
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		s, r, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
+		s, resp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
 		if err != nil {
 			return nil, fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, r, err)
 		}
 
 		raw = append(raw, s...)
 
-		if r.NextPage == 0 {
+		if resp.NextPage == 0 {
 			break
 		}
-		opt.Page = r.NextPage
+		opt.Page = resp.NextPage
 	}
 
 	cp := regexp.MustCompile(`([\d]+)\.([\d]+)\.([\d]+)\.([^-]+)`)

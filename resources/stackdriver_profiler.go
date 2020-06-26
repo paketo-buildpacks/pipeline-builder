@@ -28,7 +28,15 @@ import (
 
 type StackdriverProfiler struct{}
 
-func (StackdriverProfiler) Out(request OutRequest, destination string) (OutResult, error) {
+func (s StackdriverProfiler) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, s)
+}
+
+func (s StackdriverProfiler) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, s)
+}
+
+func (StackdriverProfiler) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

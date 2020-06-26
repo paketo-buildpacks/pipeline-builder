@@ -21,5 +21,5 @@ import (
 )
 
 func main() {
-	resources.Check(resources.SpringGeneration{})
+	resources.Check(resources.SpringGenerations{})
 }

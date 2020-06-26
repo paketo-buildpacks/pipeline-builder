@@ -32,9 +32,9 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-type SpringGeneration struct{}
+type SpringGenerations struct{}
 
-func (SpringGeneration) Check(request CheckRequest) (CheckResult, error) {
+func (SpringGenerations) Check(request CheckRequest) (CheckResult, error) {
 	u, ok := request.Source["uri"].(string)
 	if !ok {
 		return CheckResult{}, fmt.Errorf("uri must be specified")
@@ -53,7 +53,7 @@ func (SpringGeneration) Check(request CheckRequest) (CheckResult, error) {
 	return CheckResult{Version(resp.Header.Get("Date"))}, nil
 }
 
-func (SpringGeneration) In(request InRequest, destination string) (InResult, error) {
+func (SpringGenerations) In(request InRequest, destination string) (InResult, error) {
 	u, ok := request.Source["uri"].(string)
 	if !ok {
 		return InResult{}, fmt.Errorf("uri must be specified")
@@ -144,7 +144,7 @@ func (SpringGeneration) In(request InRequest, destination string) (InResult, err
 		return content.Projects[i].Slug < content.Projects[j].Slug
 	})
 
-	file := filepath.Join(destination, "support.toml")
+	file := filepath.Join(destination, "spring-generations.toml")
 	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return InResult{}, fmt.Errorf("unable to open file %s\n%w", file, err)
@@ -172,7 +172,7 @@ func (SpringGeneration) In(request InRequest, destination string) (InResult, err
 	return result, nil
 }
 
-func (SpringGeneration) Out(request OutRequest, source string) (OutResult, error) {
+func (SpringGenerations) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

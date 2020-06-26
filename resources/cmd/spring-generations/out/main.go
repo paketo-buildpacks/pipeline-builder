@@ -21,6 +21,5 @@ import (
 )
 
 func main() {
-	resources.In(resources.SpringGeneration{})
-
+	resources.Out(resources.SpringGenerations{})
 }

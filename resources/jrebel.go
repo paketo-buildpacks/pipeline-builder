@@ -25,11 +25,19 @@ import (
 
 type JRebel struct{}
 
-func (JRebel) Out(request OutRequest, destination string) (OutResult, error) {
+func (j JRebel) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, j)
+}
+
+func (j JRebel) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, j)
+}
+
+func (JRebel) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (J JRebel) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (JRebel) Versions(source map[string]interface{}) (map[Version]string, error) {
 	c := colly.NewCollector()
 
 	cp := regexp.MustCompile(`^([\d]+)\.([\d]+)\.([\d]+).*$`)

@@ -26,7 +26,15 @@ import (
 
 type Maven struct{}
 
-func (Maven) Out(request OutRequest, destination string) (OutResult, error) {
+func (m Maven) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, m)
+}
+
+func (m Maven) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, m)
+}
+
+func (Maven) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

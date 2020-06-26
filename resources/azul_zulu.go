@@ -24,7 +24,15 @@ import (
 
 type AzulZulu struct{}
 
-func (AzulZulu) Out(request OutRequest, destination string) (OutResult, error) {
+func (a AzulZulu) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, a)
+}
+
+func (a AzulZulu) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, a)
+}
+
+func (AzulZulu) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

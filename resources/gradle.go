@@ -24,7 +24,15 @@ import (
 
 type Gradle struct{}
 
-func (Gradle) Out(request OutRequest, destination string) (OutResult, error) {
+func (g Gradle) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, g)
+}
+
+func (g Gradle) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, g)
+}
+
+func (Gradle) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

@@ -19,14 +19,9 @@ package resources
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
-	"regexp"
 	"sort"
-
-	"github.com/Masterminds/semver/v3"
 )
 
 type Version string
@@ -103,8 +98,9 @@ type OutResult struct {
 }
 
 type Resource interface {
-	Out(request OutRequest, destination string) (OutResult, error)
-	Versions(source map[string]interface{}) (map[Version]string, error)
+	Check(request CheckRequest) (CheckResult, error)
+	In(request InRequest, destination string) (InResult, error)
+	Out(request OutRequest, source string) (OutResult, error)
 }
 
 func Check(resource Resource) {
@@ -113,61 +109,9 @@ func Check(resource Resource) {
 		log.Fatal(err)
 	}
 
-	versions, err := resource.Versions(request.Source)
+	result, err := resource.Check(request)
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	var vp *regexp.Regexp
-	if s, ok := request.Source["version_pattern"].(string); ok {
-		vp, err = regexp.Compile(s)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	pr := true
-	if b, ok := request.Source["pre_release"].(bool); ok {
-		pr = b
-	}
-
-	var sv []*semver.Version
-	for k, _ := range versions {
-		if vp == nil || vp.MatchString(string(k)) {
-			v, err := semver.NewVersion(string(k))
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			if v.Prerelease() == "" || pr {
-				sv = append(sv, v)
-			}
-		}
-	}
-
-	sort.Slice(sv, func(i, j int) bool {
-		return sv[i].LessThan(sv[j])
-	})
-
-	if request.Version == "" {
-		sv = sv[len(sv)-1:]
-	} else {
-		since, err := semver.NewVersion(string(request.Version))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		for i, v := range sv {
-			if !v.LessThan(since) {
-				sv = sv[i:]
-				break
-			}
-		}
-	}
-
-	result := CheckResult{}
-	for _, v := range sv {
-		result = append(result, Version(v.Original()))
 	}
 
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {
@@ -181,30 +125,9 @@ func In(resource Resource) {
 		log.Fatal(err)
 	}
 
-	versions, err := resource.Versions(request.Source)
+	result, err := resource.In(request, os.Args[1])
 	if err != nil {
 		log.Fatal(err)
-	}
-
-	uri := versions[request.Version]
-
-	file := filepath.Join(os.Args[1], "version")
-	if err := ioutil.WriteFile(file, []byte(request.Version), 0644); err != nil {
-		log.Fatal(err)
-	}
-
-	result := InResult{Version: request.Version}
-
-	if uri != "" {
-		sha256, err := DownloadArtifact(uri, os.Args[1], request.Source)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		result.Metadata = Metadata{
-			"uri":    uri,
-			"sha256": sha256,
-		}
 	}
 
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {

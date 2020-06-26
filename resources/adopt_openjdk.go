@@ -25,7 +25,15 @@ import (
 
 type AdoptOpenJDK struct{}
 
-func (AdoptOpenJDK) Out(request OutRequest, destination string) (OutResult, error) {
+func (a AdoptOpenJDK) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, a)
+}
+
+func (a AdoptOpenJDK) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, a)
+}
+
+func (AdoptOpenJDK) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

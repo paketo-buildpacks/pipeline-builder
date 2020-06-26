@@ -25,11 +25,19 @@ import (
 
 type NewRelic struct{}
 
-func (NewRelic) Out(request OutRequest, destination string) (OutResult, error) {
+func (r NewRelic) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, r)
+}
+
+func (r NewRelic) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, r)
+}
+
+func (NewRelic) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (n NewRelic) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (NewRelic) Versions(source map[string]interface{}) (map[Version]string, error) {
 	t, ok := source["type"].(string)
 	if !ok {
 		return nil, fmt.Errorf("type must be specified")

@@ -25,7 +25,15 @@ import (
 
 type JProfiler struct{}
 
-func (JProfiler) Out(request OutRequest, destination string) (OutResult, error) {
+func (j JProfiler) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, j)
+}
+
+func (j JProfiler) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, j)
+}
+
+func (JProfiler) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 

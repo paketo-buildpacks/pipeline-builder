@@ -26,6 +26,7 @@ outputs:
   - name: registry-image-version-resource
   - name: stackdriver-profiler-resource
   - name: skywalking-resource
+  - name: spring-generation-resource
   - name: takipi-resource
   - name: tomcat-resource
   - name: yourkit-resource

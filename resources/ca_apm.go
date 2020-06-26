@@ -25,11 +25,19 @@ import (
 
 type CAAPM struct{}
 
-func (CAAPM) Out(request OutRequest, destination string) (OutResult, error) {
+func (c CAAPM) Check(request CheckRequest) (CheckResult, error) {
+	return VersionCheck(request, c)
+}
+
+func (c CAAPM) In(request InRequest, destination string) (InResult, error) {
+	return VersionIn(request, destination, c)
+}
+
+func (CAAPM) Out(request OutRequest, source string) (OutResult, error) {
 	return OutResult{}, nil
 }
 
-func (C CAAPM) Versions(source map[string]interface{}) (map[Version]string, error) {
+func (CAAPM) Versions(source map[string]interface{}) (map[Version]string, error) {
 	t, ok := source["type"].(string)
 	if !ok {
 		return nil, fmt.Errorf("type must be specified")

@@ -27,21 +27,22 @@ import (
 	"path/filepath"
 )
 
-func DownloadArtifact(uri string, destination string, source map[string]interface{}) (string, error) {
+func DownloadArtifact(uri string, destination string) (string, error) {
 	if err := os.MkdirAll(destination, 0755); err != nil {
 		return "", fmt.Errorf("unable to make directory %s\n%w", destination, err)
 	}
 
-	req, err := http.NewRequest("GET", uri, nil)
-	if err != nil {
-		return "", fmt.Errorf("unable to create GET %s\n%w", uri, err)
-	}
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := http.Get(uri)
 	if err != nil {
 		return "", fmt.Errorf("unable to GET %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("unable to download %s", uri)
+	}
+
+	_, _ = fmt.Fprintf(os.Stderr, "Downloading %s\n", uri)
 
 	file := filepath.Join(destination, filepath.Base(uri))
 	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
@@ -52,11 +53,6 @@ func DownloadArtifact(uri string, destination string, source map[string]interfac
 
 	s := sha256.New()
 	out := io.MultiWriter(f, s)
-
-	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("unable to download %s", uri)
-	}
-	_, _ = fmt.Fprintf(os.Stderr, "Downloading %s\n", uri)
 
 	if _, err := io.Copy(out, resp.Body); err != nil {
 		return "", fmt.Errorf("unable to copy data\n%w", err)

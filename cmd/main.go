@@ -21,8 +21,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/paketo-buildpacks/pipeline-builder/tube"
 	"github.com/spf13/pflag"
+
+	"github.com/paketo-buildpacks/pipeline-builder/tube"
 )
 
 func main() {

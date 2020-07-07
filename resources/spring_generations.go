@@ -84,13 +84,13 @@ func (SpringGenerations) In(request InRequest, destination string) (InResult, er
 
 		wg.Add(1)
 		go func(raw json.RawMessage) {
+			defer wg.Done()
+
 			var project Project
 			if err := json.Unmarshal(raw, &project); err != nil {
 				results <- result{err: fmt.Errorf("unable to decode %s\n%w", uri, err)}
 				return
 			}
-
-			defer wg.Done()
 
 			uri := fmt.Sprintf("%s/projects/%s/generations", u, project.Slug)
 			resp, err := http.Get(uri)

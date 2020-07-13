@@ -98,8 +98,9 @@ func (u UpdateImageDependencyContributor) Job() Job {
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   fmt.Sprintf("update-%s-image", u.Type),
-		Public: true,
+		Name:         fmt.Sprintf("update-%s-image", u.Type),
+		Public:       true,
+		SerialGroups: []string{"update-image-dependency"},
 		Plan: []map[string]interface{}{
 			{
 				"in_parallel": []map[string]interface{}{

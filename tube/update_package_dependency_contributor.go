@@ -145,7 +145,7 @@ func (u UpdatePackageDependencyContributor) Job() Job {
 	return Job{
 		Name:         p.Name,
 		Public:       true,
-		SerialGroups: []string{"update-package"},
+		SerialGroups: []string{"update-package-dependency"},
 		Plan: []map[string]interface{}{
 			{
 				"in_parallel": []map[string]interface{}{

@@ -46,7 +46,7 @@ func (StackdriverProfiler) Versions(source map[string]interface{}) (map[Version]
 		return nil, fmt.Errorf("unable to create GCS client\n%w", err)
 	}
 
-	cp := regexp.MustCompile(`^.*_([\d]+)_RC([\d]+).*$`)
+	cp := regexp.MustCompile(`^.*_([\d]+)_RC([\d]+)\.tar\.gz$`)
 	versions := make(map[Version]string)
 
 	it := client.Bucket("cloud-profiler").Objects(context.Background(),

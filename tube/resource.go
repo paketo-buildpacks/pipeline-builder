@@ -85,6 +85,19 @@ func NewBuildpackDependencyResource(dependency Dependency) Resource {
 	}
 }
 
+func NewGithubReleaseResource(descriptor Descriptor) Resource {
+	return Resource{
+		Name: fmt.Sprintf("release:%s", descriptor.ShortName()),
+		Type: "github-release",
+		Icon: "tag",
+		Source: map[string]interface{}{
+			"owner":        descriptor.Owner(),
+			"repository":   descriptor.Repository(),
+			"access_token": "((github-access-token))",
+		},
+	}
+}
+
 func NewImageDependencyResource(name string, versionPattern string) Resource {
 	return Resource{
 		Name: strings.ReplaceAll(fmt.Sprintf("dependency:%s", name), "/", "|"),

@@ -85,6 +85,10 @@ func (t *Transformer) Transform() error {
 		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
 	}
 
+	if d.Package != nil && !d.SkipRelease {
+		contributors = append(contributors, CreateGithubReleaseContributor{Descriptor: d})
+	}
+
 	if d.Builder != nil {
 		contributors = append(contributors,
 			CreateBuilderContributor{Descriptor: d, Salt: t.WebHookSalt},

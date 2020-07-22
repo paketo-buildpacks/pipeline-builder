@@ -62,9 +62,6 @@ func (c CreateGithubReleaseContributor) Job() Job {
 					"name": "release/name",
 					"tag":  "release/tag",
 					"body": "release/body",
-					"globs": []string{
-						"release/manifest.json",
-					},
 				},
 			},
 		},

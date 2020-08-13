@@ -5,6 +5,9 @@ package:
   username: _json_key
   password: ((artifact-gcs-json-key))
 
-# dependencies:
-#   - name: leiningen
-#     type: leiningen-resource
+dependencies:
+  - name: leiningen
+    type: leiningen-resource
+    source:
+      username:     ((github-username))
+      access_token: ((github-password))

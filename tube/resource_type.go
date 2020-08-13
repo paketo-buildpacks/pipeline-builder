@@ -105,6 +105,13 @@ var KnownResourceTypes = map[string]ResourceType{
 			"repository": "gcr.io/paketo-buildpacks/jprofiler-resource",
 		},
 	},
+	"leiningen-resource": {
+		Name: "leiningen-resource",
+		Type: "registry-image",
+		Source: map[string]interface{}{
+			"repository": "gcr.io/paketo-buildpacks/leiningen-resource",
+		},
+	},
 	"maven-resource": {
 		Name: "maven-resource",
 		Type: "registry-image",

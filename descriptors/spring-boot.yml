@@ -6,12 +6,6 @@ package:
   password: ((artifact-gcs-json-key))
 
 dependencies:
-- name: spring-graalvm-native
-  type: maven-resource
-  source:
-    uri:         https://repo.spring.io/milestone
-    group_id:    org.springframework.experimental
-    artifact_id: spring-graalvm-native
 - name: spring-cloud-bindings
   type: maven-resource
   source:

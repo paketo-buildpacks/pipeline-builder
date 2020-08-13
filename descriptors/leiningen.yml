@@ -6,7 +6,7 @@ package:
   password: ((artifact-gcs-json-key))
 
 dependencies:
-  - name: leiningen
+  - name: lein
     type: leiningen-resource
     source:
       username:     ((github-username))

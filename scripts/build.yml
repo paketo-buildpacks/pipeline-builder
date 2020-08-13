@@ -20,6 +20,7 @@ outputs:
   - name: gradle-resource
   - name: jrebel-resource
   - name: jprofiler-resource
+  - name: leiningen-resource
   - name: maven-resource
   - name: new-relic-resource
   - name: npm-resource

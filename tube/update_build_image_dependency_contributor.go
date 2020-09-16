@@ -25,22 +25,10 @@ import (
 	"github.com/google/go-github/v30/github"
 )
 
-type ImageType uint8
-
-const (
-	Build ImageType = iota
-	Run
-)
-
-func (i ImageType) String() string {
-	return []string{"build", "run"}[i]
-}
-
 type UpdateImageDependencyContributor struct {
 	Descriptor     Descriptor
 	Name           string
 	Salt           string
-	Type           ImageType
 	VersionPattern string
 }
 
@@ -54,7 +42,6 @@ func NewUpdateImageDependencyContributors(descriptor Descriptor, salt string, gh
 	d := struct {
 		Stack struct {
 			BuildImage string `toml:"build-image"`
-			RunImage   string `toml:"run-image"`
 		} `toml:"stack"`
 	}{}
 
@@ -70,17 +57,6 @@ func NewUpdateImageDependencyContributors(descriptor Descriptor, salt string, gh
 			Descriptor:     descriptor,
 			Name:           s[1],
 			Salt:           salt,
-			Type:           Build,
-			VersionPattern: fmt.Sprintf(".+%s", s[2]),
-		})
-	}
-
-	if s := re.FindStringSubmatch(d.Stack.RunImage); s != nil {
-		i = append(i, UpdateImageDependencyContributor{
-			Descriptor:     descriptor,
-			Name:           s[1],
-			Salt:           salt,
-			Type:           Run,
 			VersionPattern: fmt.Sprintf(".+%s", s[2]),
 		})
 	}
@@ -98,7 +74,7 @@ func (u UpdateImageDependencyContributor) Job() Job {
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:         fmt.Sprintf("update-%s-image", u.Type),
+		Name:         "update-build-image",
 		Public:       true,
 		SerialGroups: []string{"update-image-dependency"},
 		Plan: []map[string]interface{}{
@@ -120,11 +96,8 @@ func (u UpdateImageDependencyContributor) Job() Job {
 				},
 			},
 			{
-				"task": "update-image-dependency",
-				"file": "build-common/update-image-dependency.yml",
-				"params": map[string]interface{}{
-					"TYPE": u.Type.String(),
-				},
+				"task": "update-build-image-dependency",
+				"file": "build-common/update-build-image-dependency.yml",
 			},
 			{
 				"put": s.Name,

@@ -31,7 +31,7 @@ func (u UpdateLifecycleDependencyContributor) Job() Job {
 	s := NewSourceResource(u.Descriptor, u.Salt)
 
 	return Job{
-		Name:   "update-lifecycle-dependency",
+		Name:   "update-lifecycle",
 		Public: true,
 		Plan: []map[string]interface{}{
 			{

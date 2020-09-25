@@ -1,0 +1,5 @@
+path: ../../libjvm
+
+codeowners:
+- path: "*"
+  owner: "@paketo-buildpacks/java-buildpacks"

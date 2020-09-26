@@ -1,0 +1,8 @@
+path: ../../java-native-image
+
+codeowners:
+- path: "*"
+  owner: "@paketo-buildpacks/java-buildpacks"
+
+package:
+  repository: gcr.io/paketo-buildpacks/java-native-image

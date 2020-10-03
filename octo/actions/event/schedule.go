@@ -22,7 +22,13 @@ import (
 
 const ScheduleType Type = "schedule"
 
-type Schedule struct {
+type Schedule []Cron
+
+func (Schedule) Type() Type {
+	return ScheduleType
+}
+
+type Cron struct {
 	Minute     string
 	Hour       string
 	DayOfMonth string
@@ -30,31 +36,27 @@ type Schedule struct {
 	DayOfWeek  string
 }
 
-func (Schedule) Type() Type {
-	return ScheduleType
-}
-
-func (s Schedule) MarshalYAML() (interface{}, error) {
+func (c Cron) MarshalYAML() (interface{}, error) {
 	t := []string{"*", "*", "*", "*", "*"}
 
-	if s.Minute != "" {
-		t[0] = s.Minute
+	if c.Minute != "" {
+		t[0] = c.Minute
 	}
 
-	if s.Hour != "" {
-		t[1] = s.Hour
+	if c.Hour != "" {
+		t[1] = c.Hour
 	}
 
-	if s.DayOfMonth != "" {
-		t[2] = s.DayOfMonth
+	if c.DayOfMonth != "" {
+		t[2] = c.DayOfMonth
 	}
 
-	if s.Month != "" {
-		t[3] = s.Month
+	if c.Month != "" {
+		t[3] = c.Month
 	}
 
-	if s.DayOfWeek != "" {
-		t[4] = s.DayOfWeek
+	if c.DayOfWeek != "" {
+		t[4] = c.DayOfWeek
 	}
 
 	return map[string]string{"cron": strings.Join(t, " ")}, nil

@@ -80,6 +80,12 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c...)
 	}
 
+	if c, err := ContributePackageDependencies(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if c, err := ContributeTest(descriptor); err != nil {
 		return err
 	} else {

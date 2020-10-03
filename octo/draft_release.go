@@ -76,7 +76,6 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			event.PushType: event.Push{
 				Branches: []string{"main"},
 			},
-			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{
 			"update": {

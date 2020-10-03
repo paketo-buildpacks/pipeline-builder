@@ -4,14 +4,16 @@ set -euo pipefail
 
 PAYLOAD=$(yj -tj < buildpack.toml | jq '{ primary: . }')
 
-for PACKAGE in $(yj -t < package.toml | jq -r '.dependencies[].image'); do
-  PAYLOAD=$(jq -n -r \
-    --argjson PAYLOAD "${PAYLOAD}" \
-    --argjson BUILDPACK "$(crane export "${PACKAGE}" - \
-      | tar xOf - --absolute-names --wildcards "/cnb/buildpacks/*/*/buildpack.toml" \
-      | yj -tj)" \
-    '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
-done
+if [[ -e package.toml ]]; then
+  for PACKAGE in $(yj -t < package.toml | jq -r '.dependencies[].image'); do
+    PAYLOAD=$(jq -n -r \
+      --argjson PAYLOAD "${PAYLOAD}" \
+      --argjson BUILDPACK "$(crane export "${PACKAGE}" - \
+        | tar xOf - --absolute-names --wildcards "/cnb/buildpacks/*/*/buildpack.toml" \
+        | yj -tj)" \
+      '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
+  done
+fi
 
 jq -n -r \
   --argjson PAYLOAD "${PAYLOAD}" \

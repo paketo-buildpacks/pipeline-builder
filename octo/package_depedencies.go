@@ -30,7 +30,10 @@ import (
 )
 
 func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error) {
-	if descriptor.Package == nil {
+	file := filepath.Join(descriptor.Path, "package.toml")
+	if e, err := internal.Exists(file); err != nil {
+		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+	} else if !e {
 		return nil, nil
 	}
 
@@ -38,7 +41,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 
 	var p _package.Package
 
-	file := filepath.Join(descriptor.Path, "package.toml")
+	file = filepath.Join(descriptor.Path, "package.toml")
 	if _, err := toml.DecodeFile(file, &p); err != nil {
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}

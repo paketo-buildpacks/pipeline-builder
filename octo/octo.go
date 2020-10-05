@@ -56,6 +56,12 @@ func (o Octo) Contribute() error {
 
 	contributions = append(contributions, ContributeCodeOwners(descriptor))
 
+	if c, err := ContributeActions(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if c, err := ContributeCreatePackage(descriptor); err != nil {
 		return err
 	} else if c != nil {
@@ -224,6 +230,12 @@ type Descriptor struct {
 	Package         *Package
 	Credentials     []Credentials
 	OfflinePackages []OfflinePackage `yaml:"offline-packages"`
+	Actions         []Action
+}
+
+type Action struct {
+	Source string
+	Target string
 }
 
 type CodeOwner struct {

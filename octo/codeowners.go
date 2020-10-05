@@ -18,6 +18,7 @@ package octo
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/disiqueira/gotree"
@@ -26,7 +27,7 @@ import (
 func ContributeCodeOwners(descriptor Descriptor) Contribution {
 	var c Contribution
 
-	c.Path = "CODEOWNERS"
+	c.Path = filepath.Join(".github", "CODEOWNERS")
 	c.Permissions = 0644
 
 	c.Structure = gotree.New(c.Path)

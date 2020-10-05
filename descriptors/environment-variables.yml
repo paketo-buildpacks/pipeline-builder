@@ -1,6 +1,0 @@
----
-name: github.com/paketo-buildpacks/environment-variables
-package:
-  repository: gcr.io/paketo-buildpacks/environment-variables
-  username: _json_key
-  password: ((artifact-gcs-json-key))

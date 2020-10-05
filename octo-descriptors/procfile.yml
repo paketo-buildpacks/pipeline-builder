@@ -1,0 +1,13 @@
+path: ../../procfile
+
+codeowners:
+- path: "*"
+  owner: "@paketo-buildpacks/java-buildpacks"
+
+package:
+  repository: gcr.io/paketo-buildpacks/procfile
+
+credentials:
+- registry: gcr.io
+  username: _json_key
+  password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}

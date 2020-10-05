@@ -1,0 +1,27 @@
+path: ../../leiningen
+
+codeowners:
+- path: "*"
+  owner: "@paketo-buildpacks/java-buildpacks"
+
+package:
+  repository: gcr.io/paketo-buildpacks/leiningen
+
+credentials:
+- registry: gcr.io
+  username: _json_key
+  password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
+
+#---
+#name: github.com/paketo-buildpacks/leiningen
+#package:
+#  repository: gcr.io/paketo-buildpacks/leiningen
+#  username: _json_key
+#  password: ((artifact-gcs-json-key))
+#
+#dependencies:
+#  - name: lein
+#    type: leiningen-resource
+#    source:
+#      username:     ((github-username))
+#      access_token: ((github-password))

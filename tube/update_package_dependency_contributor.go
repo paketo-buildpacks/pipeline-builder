@@ -75,40 +75,6 @@ func NewUpdatePackageDependencyContributors(descriptor Descriptor, salt string, 
 		}
 	}()
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-
-		file, _, resp, err := gh.Repositories.GetContents(context.Background(), descriptor.Owner(), descriptor.Repository(), "package.toml", nil)
-		if resp != nil && resp.StatusCode == 404 {
-			return
-		} else if err != nil {
-			results <- result{err: fmt.Errorf("unable to get %s/package.toml\n%w", descriptor.Name, err)}
-			return
-		}
-
-		s, err := file.GetContent()
-		if err != nil {
-			results <- result{err: fmt.Errorf("unable to get %s/builder.toml content\n%w", descriptor.Name, err)}
-			return
-		}
-
-		raw := struct {
-			Dependencies []struct {
-				Image string `toml:"image"`
-			} `toml:"dependencies"`
-		}{}
-
-		if _, err := toml.Decode(s, &raw); err != nil {
-			results <- result{err: fmt.Errorf("unable to decode\n%w", err)}
-			return
-		}
-
-		for _, d := range raw.Dependencies {
-			results <- result{value: d.Image}
-		}
-	}()
-
 	go func() {
 		wg.Wait()
 		close(results)

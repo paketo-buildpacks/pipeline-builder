@@ -1,6 +1,0 @@
----
-name: github.com/paketo-buildpacks/encrypt-at-rest
-package:
-  repository: gcr.io/paketo-buildpacks/encrypt-at-rest
-  username: _json_key
-  password: ((artifact-gcs-json-key))

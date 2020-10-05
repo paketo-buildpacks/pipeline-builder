@@ -65,28 +65,12 @@ func (t *Transformer) Transform() error {
 
 	var contributors []PipelineContributor
 
-	if !d.SkipRelease {
-		contributors = append(contributors,
-			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Major},
-			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Minor},
-			ReleaseContributor{Descriptor: d, Salt: t.WebHookSalt, Type: Patch},
-		)
-	}
-
 	if !d.SkipTest {
 		if t, err := NewTestContributor(d, t.WebHookSalt, gh); err != nil {
 			return fmt.Errorf("unable to create new test job\n%w", err)
-		} else {
+		} else if t != nil {
 			contributors = append(contributors, t)
 		}
-	}
-
-	if d.Package != nil {
-		contributors = append(contributors, CreatePackageContributor{Descriptor: d, Salt: t.WebHookSalt})
-	}
-
-	if d.Package != nil && !d.SkipRelease {
-		contributors = append(contributors, CreateGithubReleaseContributor{Descriptor: d})
 	}
 
 	if d.Builder != nil {
@@ -106,14 +90,6 @@ func (t *Transformer) Transform() error {
 
 	for _, dep := range d.Dependencies {
 		contributors = append(contributors, UpdateBuildpackDependencyContributor{Descriptor: d, Dependency: dep, Salt: t.WebHookSalt})
-	}
-
-	if !d.SkipModuleDependencies {
-		if m, err := NewUpdateModuleDependenciesContributor(d, t.WebHookSalt, gh); err != nil {
-			return fmt.Errorf("unable to create new update module dependencies job\n%w", err)
-		} else if m != nil {
-			contributors = append(contributors, m)
-		}
 	}
 
 	if b, err := NewUpdatePackageDependencyContributors(d, t.WebHookSalt, gh); err != nil {
@@ -157,6 +133,20 @@ func (t *Transformer) Transform() error {
 		}
 
 		p.Jobs.Add(d.Jobs...)
+
+		if p.Jobs != nil {
+			b := NewBuildCommonResource()
+			t, _ := KnownResourceTypes[b.Type]
+
+			p.Resources.Add(b)
+			p.ResourceTypes.Add(t)
+
+			pr := NewPackageResource(d)
+			t, _ = KnownResourceTypes[pr.Type]
+
+			p.Resources.Add(pr)
+			p.ResourceTypes.Add(t)
+		}
 	}
 
 	if err := t.WritePipeline(p); err != nil {

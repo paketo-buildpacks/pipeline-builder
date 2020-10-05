@@ -17,5 +17,5 @@
 package _package
 
 type Dependency struct {
-	Image string `toml:",omitempty"`
+	Image string
 }

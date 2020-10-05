@@ -18,7 +18,7 @@ package octo
 
 import (
 	"fmt"
-	"strconv"
+	"path/filepath"
 	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
@@ -26,38 +26,37 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
-func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
-	if descriptor.Package == nil {
-		return nil, nil
+func ContributeOfflinePackages(descriptor Descriptor) ([]Contribution, error) {
+	var contributions []Contribution
+
+	for _, o := range descriptor.OfflinePackages {
+		if c, err := contributeOfflinePackage(descriptor, o); err != nil {
+			return nil, err
+		} else {
+			contributions = append(contributions, c)
+		}
 	}
 
+	return contributions, nil
+}
+
+func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePackage) (Contribution, error) {
 	w := actions.Workflow{
-		Name: "Create Package",
+		Name: fmt.Sprintf("Create Package %s", filepath.Base(offlinePackage.Target)),
 		On: map[event.Type]event.Event{
-			event.ReleaseType: event.Release{
-				Types: []event.ReleaseActivityType{
-					event.ReleasePublished,
-				},
-			},
+			event.ScheduleType:         event.Schedule{{Minute: "45"}},
+			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{
-			"create-package": {
-				Name:   "Create Package",
+			"offline-package": {
+				Name:   "Create Offline Package",
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
 						Uses: "actions/checkout@v2",
-					},
-					{
-						Uses: "actions/cache@v2",
-						If: fmt.Sprintf("${{ %t }}", descriptor.Package.IncludeDependencies),
 						With: map[string]interface{}{
-							"path": strings.Join([]string{
-								"${{ env.HOME }}/.pack",
-								"${{ env.HOME }}/carton-cache",
-							}, "\n"),
-							"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}",
-							"restore-keys": "${{ runner.os }}-go-",
+							"repository":  offlinePackage.Source,
+							"fetch-depth": 0,
 						},
 					},
 					{
@@ -69,43 +68,59 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  internal.StatikString("/install-crane.sh"),
 					},
 					{
+						Id:   "next",
+						Name: "Checkout next version",
+						Run:  internal.StatikString("/checkout-next-version.sh"),
+						Env: map[string]string{
+							"SOURCE": offlinePackage.Source,
+							"TARGET": offlinePackage.Target,
+						},
+					},
+					{
+						Uses: "actions/cache@v2",
+						If:   "${{ ! steps.next.outputs.skip }}",
+						With: map[string]interface{}{
+							"path": strings.Join([]string{
+								"${{ env.HOME }}/carton-cache",
+							}, "\n"),
+							"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml') }}",
+							"restore-keys": "${{ runner.os }}-go-",
+						},
+					},
+					{
 						Name: "Install create-package",
+						If:   "${{ ! steps.next.outputs.skip }}",
 						Run:  internal.StatikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install pack",
+						If:   "${{ ! steps.next.outputs.skip }}",
 						Run:  internal.StatikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
 						Id:   "version",
 						Name: "Compute Version",
+						If:   "${{ ! steps.next.outputs.skip }}",
 						Run:  internal.StatikString("/compute-version.sh"),
 					},
 					{
 						Name: "Create Package",
+						If:   "${{ ! steps.next.outputs.skip }}",
 						Run:  internal.StatikString("/create-package.sh"),
 						Env: map[string]string{
-							"INCLUDE_DEPENDENCIES": strconv.FormatBool(descriptor.Package.IncludeDependencies),
+							"INCLUDE_DEPENDENCIES": "true",
 							"VERSION":              "${{ steps.version.outputs.version }}",
 						},
 					},
 					{
-						Id:   "package",
 						Name: "Package Buildpack",
+						If:   "${{ ! steps.next.outputs.skip }}",
 						Run:  internal.StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
-							"PACKAGE": descriptor.Package.Repository,
+							"PACKAGE": offlinePackage.Target,
 							"PUBLISH": "true",
 							"VERSION": "${{ steps.version.outputs.version }}",
-						},
-					},
-					{
-						Name: "Update release with digest",
-						Run:  internal.StatikString("/update-release-digest.sh"),
-						Env: map[string]string{
-							"DIGEST":       "${{ steps.package.outputs.digest }}",
-							"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
 						},
 					},
 				},
@@ -113,14 +128,9 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 		},
 	}
 
-	j := w.Jobs["create-package"]
+	j := w.Jobs["offline-package"]
 	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
-	w.Jobs["create-package"] = j
+	w.Jobs["offline-package"] = j
 
-	c, err := NewActionContribution(w)
-	if err != nil {
-		return nil, err
-	}
-
-	return &c, nil
+	return NewActionContribution(w)
 }

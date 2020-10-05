@@ -27,6 +27,10 @@ import (
 )
 
 func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
+	if descriptor.OfflinePackages != nil {
+		return nil, nil
+	}
+
 	var contributions []Contribution
 
 	d := release.Drafter{
@@ -98,11 +102,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 	} else if e {
 		j := w.Jobs["update"]
 
-		j.Steps = append(j.Steps,
-			actions.Step{
-				Uses: "actions/checkout@v2",
-			},
-		)
+		j.Steps = append(j.Steps, NewDockerLoginActions(descriptor.Credentials)...)
 
 		file := filepath.Join(descriptor.Path, "package.toml")
 		if e, err := internal.Exists(file); err != nil {
@@ -117,20 +117,13 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 					Name: "Install crane",
 					Run:  internal.StatikString("/install-crane.sh"),
 				},
-				actions.Step{
-					Uses: "GoogleCloudPlatform/github-actions/setup-gcloud@master",
-					With: map[string]interface{}{
-						"service_account_key": "${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}",
-					},
-				},
-				actions.Step{
-					Name: "Configure gcloud docker credentials",
-					Run:  "gcloud auth configure-docker",
-				},
 			)
 		}
 
 		j.Steps = append(j.Steps,
+			actions.Step{
+				Uses: "actions/checkout@v2",
+			},
 			actions.Step{
 				Name: "Install yj",
 				Run:  internal.StatikString("/install-yj.sh"),

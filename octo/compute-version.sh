@@ -10,7 +10,7 @@ else
 fi
 
 echo "::set-output name=version::${VERSION}"
-printf "Selected %s from
-  * ref: %s
-  * sha: %s
-" "${VERSION}" "${GITHUB_REF}" "${GITHUB_SHA}"
+echo "Selected ${VERSION} from
+  * ref: ${GITHUB_REF}
+  * sha: ${GITHUB_SHA}
+"

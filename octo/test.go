@@ -26,7 +26,11 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
-func ContributeTest(descriptor Descriptor) (Contribution, error) {
+func ContributeTest(descriptor Descriptor) (*Contribution, error) {
+	if descriptor.OfflinePackages != nil {
+		return nil, nil
+	}
+
 	w := actions.Workflow{
 		Name: "Tests",
 		On: map[event.Type]event.Event{
@@ -39,7 +43,7 @@ func ContributeTest(descriptor Descriptor) (Contribution, error) {
 	}
 
 	if f, err := internal.Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
-		return Contribution{}, fmt.Errorf("unable to find .go files in %s\n%w", descriptor.Path, err)
+		return nil, fmt.Errorf("unable to find .go files in %s\n%w", descriptor.Path, err)
 	} else if len(f) > 0 {
 		w.Jobs["unit"] = actions.Job{
 			Name:   "Unit Test",
@@ -49,16 +53,16 @@ func ContributeTest(descriptor Descriptor) (Contribution, error) {
 					Uses: "actions/checkout@v2",
 				},
 				{
-					Uses: "actions/setup-go@v2",
-					With: map[string]interface{}{"go-version": GoVersion},
-				},
-				{
 					Uses: "actions/cache@v2",
 					With: map[string]interface{}{
 						"path":         "${{ env.HOME }}/go/pkg/mod",
 						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
 						"restore-keys": "${{ runner.os }}-go-",
 					},
+				},
+				{
+					Uses: "actions/setup-go@v2",
+					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
 					Name: "Install richgo",
@@ -74,48 +78,49 @@ func ContributeTest(descriptor Descriptor) (Contribution, error) {
 	}
 
 	if descriptor.Package != nil {
-		w.Jobs["package"] = actions.Job{
-			Name:   "Package Test",
+		j := actions.Job{
+			Name:   "Create Package Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
 					Uses: "actions/checkout@v2",
 				},
 				{
-					Id: "version",
-					Name: "Compute Version",
-					Run:  internal.StatikString("/compute-version.sh"),
+					Uses: "actions/cache@v2",
+					With: map[string]interface{}{
+						"path": strings.Join([]string{
+							"${{ env.HOME }}/.pack",
+							"${{ env.HOME }}/carton-cache",
+						}, "\n"),
+						"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}",
+						"restore-keys": "${{ runner.os }}-go-",
+					},
 				},
 				{
 					Uses: "actions/setup-go@v2",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
-					Uses: "actions/cache@v2",
-					With: map[string]interface{}{
-						"path": strings.Join([]string{
-							"${{ env.HOME }}/carton-cache",
-						}, "\n"),
-						"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml') }}",
-						"restore-keys": "${{ runner.os }}-go-",
-					},
+					Name: "Install create-package",
+					Run:  internal.StatikString("/install-create-package.sh"),
 				},
 				{
-					Name: "Install Create Package",
-					Run:  internal.StatikString("/install-create-package.sh"),
+					Name: "Install pack",
+					Run:  internal.StatikString("/install-pack.sh"),
+					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Id:   "version",
+					Name: "Compute Version",
+					Run:  internal.StatikString("/compute-version.sh"),
 				},
 				{
 					Name: "Create Package",
 					Run:  internal.StatikString("/create-package.sh"),
 					Env: map[string]string{
 						"INCLUDE_DEPENDENCIES": "true",
-						"VERSION": "${{ steps.version.outputs.version }}",
+						"VERSION":              "${{ steps.version.outputs.version }}",
 					},
-				},
-				{
-					Name: "Install pack",
-					Run:  internal.StatikString("/install-pack.sh"),
-					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
 					Name: "Package Buildpack",
@@ -127,7 +132,16 @@ func ContributeTest(descriptor Descriptor) (Contribution, error) {
 				},
 			},
 		}
+
+		j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+
+		w.Jobs["create-package"] = j
 	}
 
-	return NewActionContribution(w)
+	c, err := NewActionContribution(w)
+	if err != nil {
+		return nil, err
+	}
+
+	return &c, err
 }

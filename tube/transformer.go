@@ -133,6 +133,20 @@ func (t *Transformer) Transform() error {
 		}
 
 		p.Jobs.Add(d.Jobs...)
+
+		if p.Jobs != nil {
+			b := NewBuildCommonResource()
+			t, _ := KnownResourceTypes[b.Type]
+
+			p.Resources.Add(b)
+			p.ResourceTypes.Add(t)
+
+			pr := NewPackageResource(d)
+			t, _ = KnownResourceTypes[pr.Type]
+
+			p.Resources.Add(pr)
+			p.ResourceTypes.Add(t)
+		}
 	}
 
 	if err := t.WritePipeline(p); err != nil {

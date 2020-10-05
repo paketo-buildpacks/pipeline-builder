@@ -7,6 +7,11 @@ codeowners:
 package:
   repository: gcr.io/paketo-buildpacks/graalvm
 
+credentials:
+- registry: gcr.io
+  username: _json_key
+  password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
+
 #---
 #name: github.com/paketo-buildpacks/graalvm
 #package:

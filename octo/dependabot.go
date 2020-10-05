@@ -17,10 +17,14 @@
 package octo
 
 import (
+	"fmt"
+	"path/filepath"
+
 	"github.com/paketo-buildpacks/pipeline-builder/octo/dependabot"
+	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
-func ContributeDependabot() (Contribution, error) {
+func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
 	d := dependabot.Dependabot{
 		Version: dependabot.Version,
 		Updates: []dependabot.Update{
@@ -30,13 +34,19 @@ func ContributeDependabot() (Contribution, error) {
 				Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
 				Labels:           []string{"semver:patch", "type:dependency-upgrade"},
 			},
-			{
-				PackageEcosystem: dependabot.GoModulesPackageEcosystem,
-				Directory:        "/",
-				Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
-				Labels:           []string{"semver:patch", "type:dependency-upgrade"},
-			},
 		},
+	}
+
+	file := filepath.Join(descriptor.Path, "go.mod")
+	if e, err := internal.Exists(file); err != nil {
+		return Contribution{}, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+	} else if e {
+		d.Updates = append(d.Updates, dependabot.Update{
+			PackageEcosystem: dependabot.GoModulesPackageEcosystem,
+			Directory:        "/",
+			Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
+			Labels:           []string{"semver:patch", "type:dependency-upgrade"},
+		})
 	}
 
 	return NewDependabotContribution(d)

@@ -17,5 +17,5 @@
 package _package
 
 type Package struct {
-	Dependencies []Dependency `toml:",omitempty"`
+	Dependencies []Dependency
 }

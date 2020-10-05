@@ -51,7 +51,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 		if g := re.FindStringSubmatch(d.Image); g == nil {
 			return nil, fmt.Errorf("unable to parse image coordinates from %s", d.Image)
 		} else {
-			if c, err := contributePackageDependency(g[1]); err != nil {
+			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
 				return nil, err
 			} else {
 				contributions = append(contributions, c)
@@ -62,7 +62,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 	return contributions, nil
 }
 
-func contributePackageDependency(name string) (Contribution, error) {
+func contributePackageDependency(descriptor Descriptor, name string) (Contribution, error) {
 	w := actions.Workflow{
 		Name: fmt.Sprintf("Update %s", filepath.Base(name)),
 		On: map[event.Type]event.Event{
@@ -86,23 +86,13 @@ func contributePackageDependency(name string) (Contribution, error) {
 						Run:  internal.StatikString("/install-crane.sh"),
 					},
 					{
-						Name: "Install yj",
-						Run:  internal.StatikString("/install-yj.sh"),
-						Env:  map[string]string{"YJ_VERSION": YJVersion},
-					},
-					{
 						Name: "Install update-package-dependency",
 						Run:  internal.StatikString("/install-update-package-dependency.sh"),
 					},
 					{
-						Uses: "GoogleCloudPlatform/github-actions/setup-gcloud@master",
-						With: map[string]interface{}{
-							"service_account_key": "${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}",
-						},
-					},
-					{
-						Name: "Configure gcloud docker credentials",
-						Run:  "gcloud auth configure-docker",
+						Name: "Install yj",
+						Run:  internal.StatikString("/install-yj.sh"),
+						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
 						Id:   "package",
@@ -129,6 +119,10 @@ Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.o
 			},
 		},
 	}
+
+	j := w.Jobs["update"]
+	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+	w.Jobs["update"] = j
 
 	return NewActionContribution(w)
 }

@@ -38,7 +38,7 @@ import (
 
 const (
 	GoVersion   = "1.15"
-	PackVersion = "0.13.1"
+	PackVersion = "0.14.1"
 	YJVersion   = "5.0.0"
 )
 
@@ -62,7 +62,7 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, *c)
 	}
 
-	if c, err := ContributeDependabot(); err != nil {
+	if c, err := ContributeDependabot(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c)
@@ -80,6 +80,12 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c...)
 	}
 
+	if c, err := ContributeOfflinePackages(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if c, err := ContributePackageDependencies(descriptor); err != nil {
 		return err
 	} else {
@@ -88,8 +94,8 @@ func (o Octo) Contribute() error {
 
 	if c, err := ContributeTest(descriptor); err != nil {
 		return err
-	} else {
-		contributions = append(contributions, c)
+	} else if c != nil {
+		contributions = append(contributions, *c)
 	}
 
 	return o.Write(descriptor, contributions)
@@ -213,9 +219,11 @@ func NewLabelsContribution(labels []labels.Label) (Contribution, error) {
 }
 
 type Descriptor struct {
-	Path       string
-	CodeOwners []CodeOwner
-	Package    *Package
+	Path            string
+	CodeOwners      []CodeOwner
+	Package         *Package
+	Credentials     []Credentials
+	OfflinePackages []OfflinePackage `yaml:"offline-packages"`
 }
 
 type CodeOwner struct {
@@ -223,9 +231,20 @@ type CodeOwner struct {
 	Owner string
 }
 
+type Credentials struct {
+	Registry string
+	Username string
+	Password string
+}
+
+type OfflinePackage struct {
+	Source string
+	Target string
+}
+
 type Package struct {
 	Repository          string
-	IncludeDependencies bool `yaml:"include_dependencies"`
+	IncludeDependencies bool `yaml:"include-dependencies"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {
@@ -241,10 +260,28 @@ func NewDescriptor(path string) (Descriptor, error) {
 	}
 
 	if !filepath.IsAbs(d.Path) {
-		if d.Path, err = filepath.Abs(filepath.Join(filepath.Base(path), d.Path)); err != nil {
+		if d.Path, err = filepath.Abs(filepath.Join(filepath.Dir(path), d.Path)); err != nil {
 			return Descriptor{}, fmt.Errorf("unable to find absolute path\n%w", err)
 		}
 	}
 
 	return d, nil
+}
+
+func NewDockerLoginActions(credentials []Credentials) []actions.Step {
+	var s []actions.Step
+
+	for _, c := range credentials {
+		s = append(s, actions.Step{
+			Name: fmt.Sprintf("Docker login %s", c.Registry),
+			Uses: "docker/login-action@v1",
+			With: map[string]interface{}{
+				"registry": c.Registry,
+				"username": c.Username,
+				"password": c.Password,
+			},
+		})
+	}
+
+	return s
 }

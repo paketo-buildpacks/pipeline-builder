@@ -17,32 +17,27 @@
 package actions
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
-	"os"
-	"regexp"
-	"strings"
+	"net/http"
 )
 
-type Inputs map[string]string
+func SHA256FromURI(uri string) string {
+	resp, err := http.Get(uri)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	defer resp.Body.Close()
 
-func NewInputs() Inputs {
-	re := regexp.MustCompile("^INPUT_([A-Z0-9-_]+)=(.+)$")
-
-	i := make(Inputs)
-	for _, s := range os.Environ() {
-		if g := re.FindStringSubmatch(s); g != nil {
-			i[strings.ToLower(g[1])] = g[2]
-		}
+	if resp.StatusCode != 200 {
+		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
 	}
 
-	return i
-}
-
-type Outputs map[string]string
-
-func (o Outputs) Write(writer io.Writer) {
-	for k, v := range o {
-		_, _ = fmt.Fprintf(writer, "::set-output name=%s::%s\n", k, v)
+	s := sha256.New()
+	if _, err := io.Copy(s, resp.Body); err != nil {
+		panic(fmt.Errorf("unable to download %s\n%w", uri, err))
 	}
+	return hex.EncodeToString(s.Sum(nil))
 }

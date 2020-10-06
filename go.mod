@@ -15,6 +15,7 @@ require (
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-github/v30 v30.1.0
+	github.com/google/go-github/v32 v32.1.0
 	github.com/heroku/docker-registry-client v0.0.0-20190909225348-afc9e1acc3d5
 	github.com/iancoleman/strcase v0.1.2
 	github.com/kennygrant/sanitize v1.2.4 // indirect
@@ -26,6 +27,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	golang.org/x/crypto v0.0.0-20200728195943-123391ffb6de // indirect
+	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
 	google.golang.org/api v0.32.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

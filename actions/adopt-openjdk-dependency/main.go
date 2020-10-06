@@ -69,12 +69,17 @@ func main() {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
-	versions := make(actions.Versions, len(raw))
-	for _, r := range raw {
-		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
+	versions := actions.Versions{
+		Contents:        make(map[string]string),
+		Inputs:          inputs,
+		SemverConverter: actions.IdentitySemverConverter,
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	for _, r := range raw {
+		versions.Contents[r.VersionData.Semver] = r.Binaries[0].Package.Link
+	}
+
+	versions.GetLatest().Write(os.Stdout)
 }
 
 type Asset struct {

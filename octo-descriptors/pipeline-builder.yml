@@ -12,3 +12,5 @@ credentials:
 actions:
 - source: adopt-openjdk-dependency
   target: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
+- source: github-release-dependency
+  target: ghcr.io/paketo-buildpacks/actions/github-release-dependency

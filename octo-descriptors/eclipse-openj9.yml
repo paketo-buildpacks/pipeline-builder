@@ -15,7 +15,7 @@ credentials:
 dependencies:
 - name: JDK 8
   id: jdk
-  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -23,7 +23,7 @@ dependencies:
     version: "[8,9)"
 - name: JRE 8
   id: jre
-  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -31,7 +31,7 @@ dependencies:
     version: "[8,9)"
 - name: JDK 11
   id: jdk
-  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -39,7 +39,7 @@ dependencies:
     version: "[11,12)"
 - name: JRE 11
   id: jre
-  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -47,7 +47,7 @@ dependencies:
     version: "[11,12)"
 - name: JDK 14
   id: jdk
-  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -55,7 +55,7 @@ dependencies:
     version: "[14,15)"
 - name: JRE 14
   id: jre
-  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -63,7 +63,7 @@ dependencies:
     version: "[14,15)"
 - name: JDK 15
   id: jdk
-  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
@@ -71,7 +71,7 @@ dependencies:
     version: "[15,16)"
 - name: JRE 15
   id: jre
-  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  version-pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
   uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9

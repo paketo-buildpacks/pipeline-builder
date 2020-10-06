@@ -24,65 +24,41 @@ import (
 	"github.com/Masterminds/semver/v3"
 )
 
-type Versions struct {
-	Contents        map[string]string
-	Inputs          Inputs
-	SemverConverter SemverConverter
-}
+type Versions map[string]string
 
 func (v Versions) GetLatest() Outputs {
-	var err error
-
-	var vp *regexp.Regexp
-	if s, ok := v.Inputs["version-pattern"]; ok {
-		vp, err = regexp.Compile(s)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	var keys []string
-	for k := range v.Contents {
-		if vp == nil || vp.MatchString(k) {
-			keys = append(keys, k)
-		}
-	}
-
-	if len(keys) == 0 {
+	if len(v) == 0 {
 		panic(fmt.Errorf("no candidate version"))
 	}
 
-	sort.Slice(keys, func(i, j int) bool {
-		return v.SemverConverter(keys[i]).LessThan(v.SemverConverter(keys[j]))
+	var sv []*semver.Version
+	for k := range v {
+		v, err := semver.NewVersion(k)
+		if err != nil {
+			panic(fmt.Errorf("unable to parse %s as semver\n%w", k, err))
+		}
+		sv = append(sv, v)
+	}
+
+	sort.Slice(sv, func(i, j int) bool {
+		return sv[i].LessThan(sv[j])
 	})
 
-	version := keys[len(keys)-1]
-	uri := v.Contents[version]
+	l := sv[len(sv)-1]
+	uri := v[l.Original()]
 	sha256 := SHA256FromURI(uri)
-
-	sv := v.SemverConverter(version)
 
 	return Outputs{
 		"sha256":  sha256,
 		"uri":     uri,
-		"version": fmt.Sprintf("%d.%d.%d", sv.Major(), sv.Minor(), sv.Patch()),
+		"version": fmt.Sprintf("%d.%d.%d", l.Major(), l.Minor(), l.Patch()),
 	}
 }
 
-type SemverConverter func(string) *semver.Version
+var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[+-.]?(.*)$`)
 
-var IdentitySemverConverter = func(raw string) *semver.Version {
-	sv, err := semver.NewVersion(raw)
-	if err != nil {
-		panic(fmt.Errorf("unable to convert %s to semver\n%w", raw, err))
-	}
-
-	return sv
-}
-
-var MetadataVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[+-.]?(.*)$`)
-var MetadataSemverConverter = func(raw string) *semver.Version {
-	if p := MetadataVersionPattern.FindStringSubmatch(raw); p != nil {
+func NormalizeVersionWithMetadata(raw string) string {
+	if p := ExtendedVersionPattern.FindStringSubmatch(raw); p != nil {
 		for i := 1; i < 4; i++ {
 			if p[i] == "" {
 				p[i] = "0"
@@ -94,13 +70,8 @@ var MetadataSemverConverter = func(raw string) *semver.Version {
 			s = fmt.Sprintf("%s+%s", s, p[4])
 		}
 
-		sv, err := semver.NewVersion(s)
-		if err != nil {
-			panic(fmt.Errorf("unable to convert %s to semver\n%w", s, err))
-		}
-
-		return sv
+		return s
 	}
 
-	panic(fmt.Errorf("unable to parse %s as a metadata version (%s)", raw, MetadataVersionPattern))
+	panic(fmt.Errorf("unable to parse %s as a extended version (%s)", raw, ExtendedVersionPattern))
 }

@@ -69,14 +69,9 @@ func main() {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
-	versions := actions.Versions{
-		Contents:        make(map[string]string),
-		Inputs:          inputs,
-		SemverConverter: actions.IdentitySemverConverter,
-	}
-
+	versions := make(actions.Versions)
 	for _, r := range raw {
-		versions.Contents[r.VersionData.Semver] = r.Binaries[0].Package.Link
+		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
 	}
 
 	versions.GetLatest().Write(os.Stdout)

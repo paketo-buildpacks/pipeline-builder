@@ -32,4 +32,3 @@ for GIT in $(git tag | sort -V -r ); do
   echo "::endgroup::"
   exit
 done
-

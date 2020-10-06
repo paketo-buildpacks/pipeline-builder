@@ -277,7 +277,7 @@ type Credentials struct {
 type Dependency struct {
 	Name           string
 	Id             string
-	VersionPattern string `yaml:"version_pattern"`
+	VersionPattern string `yaml:"version-pattern"`
 	Uses           string
 	With           map[string]interface{}
 }

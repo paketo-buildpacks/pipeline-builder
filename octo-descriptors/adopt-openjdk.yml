@@ -12,72 +12,74 @@ credentials:
   username: _json_key
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
-#---
-#name: github.com/paketo-buildpacks/adopt-openjdk
-#package:
-#  repository: gcr.io/paketo-buildpacks/adopt-openjdk
-#  username: _json_key
-#  password: ((artifact-gcs-json-key))
-#
-#dependencies:
-#  - name:            jdk
-#    resource:        hotspot-jdk-8
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[8,9)"
-#      implementation: hotspot
-#      type:           jdk
-#  - name:            jre
-#    resource:        hotspot-jre-8
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[8,9)"
-#      implementation: hotspot
-#      type:           jre
-#  - name:            jdk
-#    resource:        hotspot-jdk-11
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[11,12)"
-#      implementation: hotspot
-#      type:           jdk
-#  - name:            jre
-#    resource:        hotspot-jre-11
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[11,12)"
-#      implementation: hotspot
-#      type:           jre
-#  - name:            jdk
-#    resource:        hotspot-jdk-14
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[14,15)"
-#      implementation: hotspot
-#      type:           jdk
-#  - name:            jre
-#    resource:        hotspot-jre-14
-#    type:            adopt-openjdk-resource
-#    icon:            language-java
-#    version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      version:        "[14,15)"
-#      implementation: hotspot
-#      type:           jre
-#  - name:            jvmkill
-#    type:            github-release
-#    icon:            github
-#    source:
-#      owner:        cloudfoundry
-#      repository:   jvmkill
-#      access_token: ((github-access-token))
+dependencies:
+- name: JDK 8
+  id: jdk
+  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jdk
+    version: "[8,9)"
+- name: JRE 8
+  id: jre
+  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jre
+    version: "[8,9)"
+- name: JDK 11
+  id: jdk
+  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jdk
+    version: "[11,12)"
+- name: JRE 11
+  id: jre
+  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jre
+    version: "[11,12)"
+- name: JDK 14
+  id: jdk
+  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jdk
+    version: "[14,15)"
+- name: JRE 14
+  id: jre
+  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jre
+    version: "[14,15)"
+- name: JDK 15
+  id: jdk
+  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jdk
+    version: "[15,16)"
+- name: JRE 15
+  id: jre
+  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  with:
+    implementation: hotspot
+    type: jre
+    version: "[15,16)"
+- id: jvmkill
+  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  with:
+    owner: cloudfoundry
+    repository: jvmkill
+    token: ${{ secrets.GITHUB_TOKEN }}

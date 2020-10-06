@@ -1,7 +1,7 @@
 path: ../../amazon-corretto
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 package:
@@ -13,23 +13,23 @@ credentials:
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
 dependencies:
-- name: JDK 8
-  id: jdk
-  version-pattern: "8\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
+- name:            JDK 8
+  id:              jdk
+  version_pattern: "8\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
   with:
-    glob: amazon-corretto-*-linux-x64.tar.gz
+    glob:       amazon-corretto-*-linux-x64.tar.gz
     repository: corretto-8
-- name: JDK 11
-  id: jdk
-  version-pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
+- name:            JDK 11
+  id:              jdk
+  version_pattern: "11\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
   with:
-    glob: amazon-corretto-*-linux-x64.tar.gz
+    glob:       amazon-corretto-*-linux-x64.tar.gz
     repository: corretto-11
-- id: jvmkill
+- id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    owner: cloudfoundry
+    owner:      cloudfoundry
     repository: jvmkill
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token:      ${{ secrets.GITHUB_TOKEN }}

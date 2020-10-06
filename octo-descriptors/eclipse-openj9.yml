@@ -1,7 +1,7 @@
 path: ../../eclipse-openj9
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 package:
@@ -13,73 +13,73 @@ credentials:
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
 dependencies:
-- name: JDK 8
-  id: jdk
-  version-pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+- name:            JDK 8
+  id:              jdk
+  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jdk
-    version: "[8,9)"
-- name: JRE 8
-  id: jre
-  version-pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jdk
+    version:        "[8,9)"
+- name:            JRE 8
+  id:              jre
+  version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jre
-    version: "[8,9)"
-- name: JDK 11
-  id: jdk
-  version-pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jre
+    version:        "[8,9)"
+- name:            JDK 11
+  id:              jdk
+  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jdk
-    version: "[11,12)"
-- name: JRE 11
-  id: jre
-  version-pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jdk
+    version:        "[11,12)"
+- name:            JRE 11
+  id:              jre
+  version_pattern: "11(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jre
-    version: "[11,12)"
-- name: JDK 14
-  id: jdk
-  version-pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jre
+    version:        "[11,12)"
+- name:            JDK 14
+  id:              jdk
+  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jdk
-    version: "[14,15)"
-- name: JRE 14
-  id: jre
-  version-pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jdk
+    version:        "[14,15)"
+- name:            JRE 14
+  id:              jre
+  version_pattern: "14(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jre
-    version: "[14,15)"
-- name: JDK 15
-  id: jdk
-  version-pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jre
+    version:        "[14,15)"
+- name:            JDK 15
+  id:              jdk
+  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jdk
-    version: "[15,16)"
-- name: JRE 15
-  id: jre
-  version-pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+    type:           jdk
+    version:        "[15,16)"
+- name:            JRE 15
+  id:              jre
+  version_pattern: "15(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
   with:
     implementation: openj9
-    type: jre
-    version: "[15,16)"
-- id: jvmkill
+    type:           jre
+    version:        "[15,16)"
+- id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    owner: cloudfoundry
+    owner:      cloudfoundry
     repository: jvmkill
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token:      ${{ secrets.GITHUB_TOKEN }}

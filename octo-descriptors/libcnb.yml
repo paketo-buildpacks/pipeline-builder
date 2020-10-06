@@ -1,5 +1,5 @@
 path: ../../../buildpacks/libcnb
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@buildpacks/implementation-maintainers"

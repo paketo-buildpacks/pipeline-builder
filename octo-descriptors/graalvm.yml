@@ -1,7 +1,7 @@
 path: ../../graalvm
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 package:
@@ -13,49 +13,49 @@ credentials:
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
 dependencies:
-- name: JDK 8
-  id: jdk
-  version-pattern: "8\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+- name:            JDK 8
+  id:              jdk
+  version_pattern: "8\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: graalvm-ce-java8-linux-amd64-*.tar.gz
-    owner: graalvm
+    glob:       graalvm-ce-java8-linux-amd64-*.tar.gz
+    owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
-    token: ${{ secrets.GITHUB_TOKEN }}
-- name: Native Image 8
-  id: native-image-svm
-  version-pattern: "8\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+    token:      ${{ secrets.GITHUB_TOKEN }}
+- name:            Native Image 8
+  id:              native-image-svm
+  version_pattern: "8\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: native-image-installable-svm-java8-linux-amd64-*.jar
-    owner: graalvm
+    glob:       native-image-installable-svm-java8-linux-amd64-*.jar
+    owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
-    token: ${{ secrets.GITHUB_TOKEN }}
-- name: JDK 11
-  id: jdk
-  version-pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+    token:      ${{ secrets.GITHUB_TOKEN }}
+- name:            JDK 11
+  id:              jdk
+  version_pattern: "11\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:  graalvm-ce-java11-linux-amd64-*.tar.gz
-    owner: graalvm
+    glob:       graalvm-ce-java11-linux-amd64-*.tar.gz
+    owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
-    token: ${{ secrets.GITHUB_TOKEN }}
-- name: Native Image 11
-  id: native-image-svm
-  version-pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+    token:      ${{ secrets.GITHUB_TOKEN }}
+- name:            Native Image 11
+  id:              native-image-svm
+  version_pattern: "11\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: native-image-installable-svm-java11-linux-amd64-*.jar
-    owner: graalvm
+    glob:       native-image-installable-svm-java11-linux-amd64-*.jar
+    owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
-    token: ${{ secrets.GITHUB_TOKEN }}
-- id: jvmkill
+    token:      ${{ secrets.GITHUB_TOKEN }}
+- id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    owner: cloudfoundry
+    owner:      cloudfoundry
     repository: jvmkill
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token:      ${{ secrets.GITHUB_TOKEN }}

@@ -55,9 +55,9 @@ func (v Versions) GetLatest() Outputs {
 	}
 }
 
-var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[+-.]?(.*)$`)
+var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)$`)
 
-func NormalizeVersionWithMetadata(raw string) string {
+func NormalizeVersion(raw string) string {
 	if p := ExtendedVersionPattern.FindStringSubmatch(raw); p != nil {
 		for i := 1; i < 4; i++ {
 			if p[i] == "" {
@@ -67,7 +67,7 @@ func NormalizeVersionWithMetadata(raw string) string {
 
 		s := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 		if p[4] != "" {
-			s = fmt.Sprintf("%s+%s", s, p[4])
+			s = fmt.Sprintf("%s-%s", s, p[4])
 		}
 
 		return s

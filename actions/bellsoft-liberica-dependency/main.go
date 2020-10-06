@@ -66,7 +66,7 @@ func main() {
 	versions := make(actions.Versions)
 
 	for _, r := range raw {
-		versions[fmt.Sprintf("%d.%d.%d+%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)] = r.DownloadURL
+		versions[fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)] = r.DownloadURL
 	}
 
 	versions.GetLatest().Write(os.Stdout)

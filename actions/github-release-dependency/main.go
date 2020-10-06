@@ -79,7 +79,7 @@ func main() {
 					if ok, err := filepath.Match(g, *a.Name); err != nil {
 						panic(err)
 					} else if ok {
-						versions[actions.NormalizeVersionWithMetadata(p[1])] = *a.BrowserDownloadURL
+						versions[actions.NormalizeVersion(p[1])] = *a.BrowserDownloadURL
 						break
 					}
 				}

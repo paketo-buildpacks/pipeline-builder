@@ -74,6 +74,12 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c)
 	}
 
+	if c, err := ContributeDependencies(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if c, err := ContributeDraftRelease(descriptor); err != nil {
 		return err
 	} else {
@@ -184,6 +190,24 @@ func NewDependabotContribution(dependabot dependabot.Dependabot) (Contribution, 
 	return c, err
 }
 
+func NewDockerLoginActions(credentials []Credentials) []actions.Step {
+	var s []actions.Step
+
+	for _, c := range credentials {
+		s = append(s, actions.Step{
+			Name: fmt.Sprintf("Docker login %s", c.Registry),
+			Uses: "docker/login-action@v1",
+			With: map[string]interface{}{
+				"registry": c.Registry,
+				"username": c.Username,
+				"password": c.Password,
+			},
+		})
+	}
+
+	return s
+}
+
 func NewDrafterContribution(drafter release.Drafter) (Contribution, error) {
 	var (
 		c   Contribution
@@ -231,6 +255,7 @@ type Descriptor struct {
 	Credentials     []Credentials
 	OfflinePackages []OfflinePackage `yaml:"offline-packages"`
 	Actions         []Action
+	Dependencies    []Dependency
 }
 
 type Action struct {
@@ -247,6 +272,14 @@ type Credentials struct {
 	Registry string
 	Username string
 	Password string
+}
+
+type Dependency struct {
+	Name           string
+	Id             string
+	VersionPattern string `yaml:"version_pattern"`
+	Uses           string
+	With           map[string]interface{}
 }
 
 type OfflinePackage struct {
@@ -277,23 +310,17 @@ func NewDescriptor(path string) (Descriptor, error) {
 		}
 	}
 
-	return d, nil
-}
+	for i, e := range d.Dependencies {
+		if e.Name == "" {
+			e.Name = e.Id
+			d.Dependencies[i] = e
+		}
 
-func NewDockerLoginActions(credentials []Credentials) []actions.Step {
-	var s []actions.Step
-
-	for _, c := range credentials {
-		s = append(s, actions.Step{
-			Name: fmt.Sprintf("Docker login %s", c.Registry),
-			Uses: "docker/login-action@v1",
-			With: map[string]interface{}{
-				"registry": c.Registry,
-				"username": c.Username,
-				"password": c.Password,
-			},
-		})
+		if e.VersionPattern == "" {
+			e.VersionPattern = `[\d]+(?:\.[\d]+(?:\.[\d]+)?)?`
+			d.Dependencies[i] = e
+		}
 	}
 
-	return s
+	return d, nil
 }

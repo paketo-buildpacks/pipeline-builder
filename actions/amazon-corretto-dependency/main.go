@@ -94,5 +94,5 @@ func main() {
 		opt.Page = rsp.NextPage
 	}
 
-	versions.GetLatest().Write(os.Stdout)
+	versions.GetLatest(inputs).Write(os.Stdout)
 }

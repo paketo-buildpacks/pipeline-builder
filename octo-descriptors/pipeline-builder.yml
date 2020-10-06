@@ -22,3 +22,5 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency
 - source: maven-dependency
   target: ghcr.io/paketo-buildpacks/actions/maven-dependency
+- source: npm-dependency
+  target: ghcr.io/paketo-buildpacks/actions/npm-dependency

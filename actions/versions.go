@@ -20,15 +20,25 @@ import (
 	"fmt"
 	"regexp"
 	"sort"
+	"strconv"
 
 	"github.com/Masterminds/semver/v3"
 )
 
 type Versions map[string]string
 
-func (v Versions) GetLatest() Outputs {
+func (v Versions) GetLatest(inputs Inputs) Outputs {
 	if len(v) == 0 {
 		panic(fmt.Errorf("no candidate version"))
+	}
+
+	var err error
+	pr := true
+	if s, ok := inputs["pre_release"]; ok {
+		pr, err = strconv.ParseBool(s)
+		if err != nil {
+			panic(fmt.Errorf("unable to parse %s as a bool\n%w", s, err))
+		}
 	}
 
 	var sv []*semver.Version
@@ -37,7 +47,10 @@ func (v Versions) GetLatest() Outputs {
 		if err != nil {
 			panic(fmt.Errorf("unable to parse %s as semver\n%w", k, err))
 		}
-		sv = append(sv, v)
+
+		if v.Prerelease() == "" || pr {
+			sv = append(sv, v)
+		}
 	}
 
 	sort.Slice(sv, func(i, j int) bool {

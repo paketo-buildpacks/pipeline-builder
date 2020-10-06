@@ -28,25 +28,12 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	t, ok := inputs["type"]
+	p, ok := inputs["package"]
 	if !ok {
-		panic(fmt.Errorf("type must be specified"))
+		panic(fmt.Errorf("package must be specified"))
 	}
 
-	v, ok := inputs["version"]
-	if !ok {
-		panic(fmt.Errorf("version must be specified"))
-	}
-
-	uri := fmt.Sprintf("https://api.bell-sw.com/v1/liberica/releases"+
-		"?arch=x86"+
-		"&bitness=64"+
-		"&bundle-type=%s"+
-		"&os=linux"+
-		"&package-type=tar.gz"+
-		"&version-feature=%s"+
-		"&version-modifier=latest",
-		t, v)
+	uri := fmt.Sprintf("https://registry.npmjs.org/%s", p)
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -58,24 +45,27 @@ func main() {
 		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
 	}
 
-	var raw []Release
+	var raw Package
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
 	versions := make(actions.Versions)
-
-	for _, r := range raw {
-		versions[fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)] = r.DownloadURL
+	for k, v := range raw.Versions {
+		versions[k] = v.Dist.Tarball
 	}
 
 	versions.GetLatest(inputs).Write(os.Stdout)
 }
 
-type Release struct {
-	FeatureVersion int    `json:"featureVersion"`
-	InterimVersion int    `json:"interimVersion"`
-	UpdateVersion  int    `json:"updateVersion"`
-	BuildVersion   int    `json:"buildVersion"`
-	DownloadURL    string `json:"downloadUrl"`
+type Package struct {
+	Versions map[string]Version
+}
+
+type Version struct {
+	Dist Dist
+}
+
+type Dist struct {
+	Tarball string
 }

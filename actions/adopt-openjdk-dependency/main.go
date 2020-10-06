@@ -74,7 +74,7 @@ func main() {
 		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
 	}
 
-	versions.GetLatest().Write(os.Stdout)
+	versions.GetLatest(inputs).Write(os.Stdout)
 }
 
 type Asset struct {

@@ -277,7 +277,7 @@ type Credentials struct {
 type Dependency struct {
 	Name           string
 	Id             string
-	VersionPattern string `yaml:"version-pattern"`
+	VersionPattern string `yaml:"version_pattern"`
 	Uses           string
 	With           map[string]interface{}
 }
@@ -289,7 +289,7 @@ type OfflinePackage struct {
 
 type Package struct {
 	Repository          string
-	IncludeDependencies bool `yaml:"include-dependencies"`
+	IncludeDependencies bool `yaml:"include_dependencies"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {

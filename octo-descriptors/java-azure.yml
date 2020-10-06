@@ -1,7 +1,7 @@
 path: ../../java-azure
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 package:

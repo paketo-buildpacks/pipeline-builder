@@ -15,7 +15,7 @@ credentials:
 dependencies:
 - name: JDK 11
   id: jdk
-  version-pattern: "11\\.[\\d]+\\.[\\d]+"
+  version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
@@ -25,7 +25,7 @@ dependencies:
     token: ${{ secrets.GITHUB_TOKEN }}
 - name: JRE 11
   id: jre
-  version-pattern: "11\\.[\\d]+\\.[\\d]+"
+  version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jre-*_linux-x64_bin.tar.gz
@@ -35,7 +35,7 @@ dependencies:
     token: ${{ secrets.GITHUB_TOKEN }}
 - name: JDK 14
   id: jdk
-  version-pattern: "14\\.[\\d]+\\.[\\d]+"
+  version_pattern: "14\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
@@ -45,7 +45,7 @@ dependencies:
     token: ${{ secrets.GITHUB_TOKEN }}
 - name: JRE 14
   id: jre
-  version-pattern: "14\\.[\\d]+\\.[\\d]+"
+  version_pattern: "14\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jre-*_linux-x64_bin.tar.gz
@@ -55,7 +55,7 @@ dependencies:
     token: ${{ secrets.GITHUB_TOKEN }}
 - name: JDK 15
   id: jdk
-  version-pattern: "15\\.[\\d]+\\.[\\d]+"
+  version_pattern: "15\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
@@ -65,7 +65,7 @@ dependencies:
     token: ${{ secrets.GITHUB_TOKEN }}
 - name: JRE 15
   id: jre
-  version-pattern: "15\\.[\\d]+\\.[\\d]+"
+  version_pattern: "15\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
     glob: sapmachine-jre-*_linux-x64_bin.tar.gz
@@ -73,9 +73,9 @@ dependencies:
     repository: SapMachine
     tag_filter: sapmachine-(15.*)
     token: ${{ secrets.GITHUB_TOKEN }}
-- id: jvmkill
+- id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    owner: cloudfoundry
+    owner:      cloudfoundry
     repository: jvmkill
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token:      ${{ secrets.GITHUB_TOKEN }}

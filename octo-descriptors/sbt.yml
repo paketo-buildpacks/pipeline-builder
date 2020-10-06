@@ -1,7 +1,7 @@
 path: ../../sbt
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 package:
@@ -13,10 +13,10 @@ credentials:
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
 dependencies:
-- id: sbt
+- id:   sbt
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sbt-*.tgz
-    owner: sbt
+    glob:       sbt-*.tgz
+    owner:      sbt
     repository: sbt
-    token: ${{ secrets.GITHUB_TOKEN }}
+    token:      ${{ secrets.GITHUB_TOKEN }}

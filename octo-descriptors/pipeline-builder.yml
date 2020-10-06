@@ -1,7 +1,7 @@
 path: ../
 
 codeowners:
-- path: "*"
+- path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 credentials:
@@ -20,3 +20,5 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/bellsoft-liberica-dependency
 - source: github-release-dependency
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency
+- source: maven-dependency
+  target: ghcr.io/paketo-buildpacks/actions/maven-dependency

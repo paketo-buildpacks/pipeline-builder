@@ -67,9 +67,18 @@ func main() {
 						panic(err)
 					} else if ok {
 						if v := actions.ExtendedVersionPattern.FindStringSubmatch(*r.TagName); v != nil {
-							s := fmt.Sprintf("%s.0.%s+%s", v[1], v[2], v[3])
-							if v[4] != "" {
-								s = fmt.Sprintf("%s-%s", s, v[4])
+							var s string
+
+							if v[1] == "8" {
+								s = fmt.Sprintf("%s.0.%s+%s", v[1], v[2], v[3])
+								if v[4] != "" {
+									s = fmt.Sprintf("%s-%s", s, v[4])
+								}
+							} else {
+								s = fmt.Sprintf("%s.%s.%s", v[1], v[2], v[3])
+								if v[4] != "" {
+									s = fmt.Sprintf("%s+%s", s, v[4])
+								}
 							}
 
 							versions[s] = p[2]

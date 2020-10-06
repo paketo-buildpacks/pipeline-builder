@@ -18,7 +18,7 @@ dependencies:
   version_pattern: "8\\.[\\d]+\\.[\\d]+"
   uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:       graalvm-ce-java8-linux-amd64-*.tar.gz
+    glob:       graalvm-ce-java8-linux-amd64-.+.tar.gz
     owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
@@ -28,7 +28,7 @@ dependencies:
   version_pattern: "8\\.[\\d]+\\.[\\d]+"
   uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:       native-image-installable-svm-java8-linux-amd64-*.jar
+    glob:       native-image-installable-svm-java8-linux-amd64-.+.jar
     owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
@@ -38,7 +38,7 @@ dependencies:
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:       graalvm-ce-java11-linux-amd64-*.tar.gz
+    glob:       graalvm-ce-java11-linux-amd64-.+.tar.gz
     owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)
@@ -48,7 +48,7 @@ dependencies:
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:       native-image-installable-svm-java11-linux-amd64-*.jar
+    glob:       native-image-installable-svm-java11-linux-amd64-.+.jar
     owner:      graalvm
     repository: graalvm-ce-builds
     tag_filter: vm-(.*)

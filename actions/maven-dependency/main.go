@@ -74,7 +74,7 @@ func main() {
 			w = fmt.Sprintf("%s.jar", w)
 		}
 
-		versions[actions.NormalizeVersionWithMetadata(v)] = w
+		versions[actions.NormalizeVersion(v)] = w
 	}
 
 	versions.GetLatest().Write(os.Stdout)

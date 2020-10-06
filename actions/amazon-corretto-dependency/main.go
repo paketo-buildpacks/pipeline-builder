@@ -77,7 +77,7 @@ func main() {
 							} else {
 								s = fmt.Sprintf("%s.%s.%s", v[1], v[2], v[3])
 								if v[4] != "" {
-									s = fmt.Sprintf("%s+%s", s, v[4])
+									s = fmt.Sprintf("%s-%s", s, v[4])
 								}
 							}
 

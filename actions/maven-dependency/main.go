@@ -77,7 +77,7 @@ func main() {
 		versions[actions.NormalizeVersion(v)] = w
 	}
 
-	versions.GetLatest().Write(os.Stdout)
+	versions.GetLatest(inputs).Write(os.Stdout)
 }
 
 type Metadata struct {

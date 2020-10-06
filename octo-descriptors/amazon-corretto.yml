@@ -19,14 +19,14 @@ dependencies:
   uses: docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
   with:
     glob: amazon-corretto-*-linux-x64.tar.gz
-    repository: corretto-jdk-8
+    repository: corretto-8
 - name: JDK 11
   id: jdk
   version-pattern: "11\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
   with:
     glob: amazon-corretto-*-linux-x64.tar.gz
-    repository: corretto-jdk-11
+    repository: corretto-11
 - id: jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:

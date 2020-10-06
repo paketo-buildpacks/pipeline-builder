@@ -16,7 +16,7 @@ dependencies:
 - id:   sbt
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob:       sbt-*.tgz
+    glob:       sbt-.+.tgz
     owner:      sbt
     repository: sbt
     token:      ${{ secrets.GITHUB_TOKEN }}

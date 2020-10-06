@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"path/filepath"
 	"regexp"
 
 	"github.com/google/go-github/v32/github"
@@ -43,9 +42,17 @@ func main() {
 		panic(fmt.Errorf("repository must be specified"))
 	}
 
-	g := "*"
+	var (
+		err error
+		g   *regexp.Regexp
+	)
 	if s, ok := inputs["glob"]; ok {
-		g = s
+		g, err = regexp.Compile(s)
+		if err != nil {
+			panic(fmt.Errorf("unable to compile %s as a regexp\n%w", s, err))
+		}
+	} else {
+		g = regexp.MustCompile(".+")
 	}
 
 	t := `v?([^v].*)`
@@ -76,9 +83,7 @@ func main() {
 		for _, r := range rel {
 			if p := re.FindStringSubmatch(*r.TagName); p != nil {
 				for _, a := range r.Assets {
-					if ok, err := filepath.Match(g, *a.Name); err != nil {
-						panic(err)
-					} else if ok {
+					if g.MatchString(*a.Name) {
 						versions[actions.NormalizeVersion(p[1])] = *a.BrowserDownloadURL
 						break
 					}

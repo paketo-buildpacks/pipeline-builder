@@ -18,7 +18,7 @@ dependencies:
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jdk-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(11.*)
@@ -28,7 +28,7 @@ dependencies:
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jre-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jre-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(11.*)
@@ -38,7 +38,7 @@ dependencies:
   version_pattern: "14\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jdk-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(14.*)
@@ -48,7 +48,7 @@ dependencies:
   version_pattern: "14\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jre-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jre-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(14.*)
@@ -58,7 +58,7 @@ dependencies:
   version_pattern: "15\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jdk-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jdk-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(15.*)
@@ -68,7 +68,7 @@ dependencies:
   version_pattern: "15\\.[\\d]+\\.[\\d]+"
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:
-    glob: sapmachine-jre-*_linux-x64_bin.tar.gz
+    glob: sapmachine-jre-.+_linux-x64_bin.tar.gz
     owner: SAP
     repository: SapMachine
     tag_filter: sapmachine-(15.*)

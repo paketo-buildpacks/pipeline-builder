@@ -12,22 +12,11 @@ credentials:
   username: _json_key
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
-#---
-#name: github.com/paketo-buildpacks/sbt
-#package:
-#  repository: gcr.io/paketo-buildpacks/sbt
-#  username: _json_key
-#  password: ((artifact-gcs-json-key))
-#
-#dependencies:
-#  - name: sbt
-#    type: github-release
-#    icon: github
-#    source:
-#      owner:        sbt
-#      repository:   sbt
-#      access_token: ((github-access-token))
-#    params:
-#      globs:
-#        - sbt-*.tgz
-#        - sbt-*.tgz.sha256
+dependencies:
+- id: sbt
+  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  with:
+    glob: sbt-*.tgz
+    owner: sbt
+    repository: sbt
+    token: ${{ secrets.GITHUB_TOKEN }}

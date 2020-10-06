@@ -33,11 +33,6 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	o, ok := inputs["owner"]
-	if !ok {
-		panic(fmt.Errorf("owner must be specified"))
-	}
-
 	r, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))
@@ -48,11 +43,6 @@ func main() {
 		g = s
 	}
 
-	t := `v?([^v].*)`
-	if s, ok := inputs["tag_filter"]; ok {
-		t = s
-	}
-
 	var c *http.Client
 	if s, ok := inputs["token"]; ok {
 		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
@@ -61,26 +51,29 @@ func main() {
 
 	versions := make(actions.Versions)
 
-	re, err := regexp.Compile(t)
-	if err != nil {
-		panic(fmt.Errorf("%s is not a valid regex", t))
-	}
+	md := regexp.MustCompile(`(?U)\[(.+)]\((.+)\)`)
 
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
+		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "corretto", r, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, r, err))
+			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", "corretto", r, err))
 		}
 
 		for _, r := range rel {
-			if p := re.FindStringSubmatch(*r.TagName); p != nil {
-				for _, a := range r.Assets {
-					if ok, err := filepath.Match(g, *a.Name); err != nil {
+			if l := md.FindAllStringSubmatch(*r.Body, -1); l != nil {
+				for _, p := range l {
+					if ok, err := filepath.Match(g, p[1]); err != nil {
 						panic(err)
 					} else if ok {
-						versions[actions.NormalizeVersionWithMetadata(p[1])] = *a.BrowserDownloadURL
-						break
+						if v := actions.ExtendedVersionPattern.FindStringSubmatch(*r.TagName); v != nil {
+							s := fmt.Sprintf("%s.0.%s+%s", v[1], v[2], v[3])
+							if v[4] != "" {
+								s = fmt.Sprintf("%s-%s", s, v[4])
+							}
+
+							versions[s] = p[2]
+						}
 					}
 				}
 			}

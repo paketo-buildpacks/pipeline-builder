@@ -16,5 +16,7 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency
 - source: azul-zulu-dependency
   target: ghcr.io/paketo-buildpacks/actions/azul-zulu-dependency
+- source: bellsoft-liberica-dependency
+  target: ghcr.io/paketo-buildpacks/actions/bellsoft-liberica-dependency
 - source: github-release-dependency
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 mkdir -p "${HOME}"/bin
-echo "::add-path::${HOME}/bin"
+echo "${HOME}/bin" >> "${GITHUB_PATH}"
 
 curl \
 	--location \

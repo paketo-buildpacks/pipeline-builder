@@ -81,7 +81,7 @@ func ContributeDependencies(descriptor Descriptor) ([]Contribution, error) {
 
 Bumps %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}.`, d.Name),
 								"signoff":       true,
-								"branch":        fmt.Sprintf("update-buildpack/%s", strcase.ToKebab(d.Name)),
+								"branch":        fmt.Sprintf("update/buildpack/%s", strcase.ToKebab(d.Name)),
 								"delete-branch": true,
 								"title":         fmt.Sprintf("Bump %s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}", d.Name),
 								"body":          fmt.Sprintf("Bumps `%[1]s` from `${{ steps.buildpack.outputs.old-version }}` to `${{ steps.buildpack.outputs.new-version }}`.", d.Name),

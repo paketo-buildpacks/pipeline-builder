@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
@@ -47,6 +48,11 @@ func main() {
 		g = s
 	}
 
+	t := `v?([^v].*)`
+	if s, ok := inputs["tag_filter"]; ok {
+		t = s
+	}
+
 	var c *http.Client
 	if s, ok := inputs["token"]; ok {
 		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
@@ -59,6 +65,11 @@ func main() {
 		SemverConverter: actions.MetadataSemverConverter,
 	}
 
+	re, err := regexp.Compile(t)
+	if err != nil {
+		panic(fmt.Errorf("%s is not a valid regex", t))
+	}
+
 	opt := &github.ListOptions{PerPage: 100}
 	for {
 		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
@@ -67,12 +78,14 @@ func main() {
 		}
 
 		for _, r := range rel {
-			for _, a := range r.Assets {
-				if ok, err := filepath.Match(g, *a.Name); err != nil {
-					panic(err)
-				} else if ok {
-					versions.Contents[*r.TagName] = *a.BrowserDownloadURL
-					break
+			if p := re.FindStringSubmatch(*r.TagName); p != nil {
+				for _, a := range r.Assets {
+					if ok, err := filepath.Match(g, *a.Name); err != nil {
+						panic(err)
+					} else if ok {
+						versions.Contents[p[1]] = *a.BrowserDownloadURL
+						break
+					}
 				}
 			}
 		}

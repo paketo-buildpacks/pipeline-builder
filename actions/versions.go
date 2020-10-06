@@ -80,9 +80,15 @@ var IdentitySemverConverter = func(raw string) *semver.Version {
 	return sv
 }
 
-var MetadataVersionPattern = regexp.MustCompile(`^v?([\d]+)\.([\d]+)\.([\d]+)[.-]?(.*)$`)
+var MetadataVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[+-.]?(.*)$`)
 var MetadataSemverConverter = func(raw string) *semver.Version {
 	if p := MetadataVersionPattern.FindStringSubmatch(raw); p != nil {
+		for i := 1; i < 4; i++ {
+			if p[i] == "" {
+				p[i] = "0"
+			}
+		}
+
 		s := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 		if p[4] != "" {
 			s = fmt.Sprintf("%s+%s", s, p[4])

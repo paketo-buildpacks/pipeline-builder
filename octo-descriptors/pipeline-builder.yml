@@ -14,5 +14,7 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
 - source: amazon-corretto-dependency
   target: ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency
+- source: azul-zulu-dependency
+  target: ghcr.io/paketo-buildpacks/actions/azul-zulu-dependency
 - source: github-release-dependency
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency

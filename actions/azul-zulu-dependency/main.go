@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -28,11 +27,6 @@ import (
 
 func main() {
 	inputs := actions.NewInputs()
-
-	i, ok := inputs["implementation"]
-	if !ok {
-		panic(fmt.Errorf("implementation must be specified"))
-	}
 
 	t, ok := inputs["type"]
 	if !ok {
@@ -44,15 +38,14 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	uri := fmt.Sprintf("https://api.adoptopenjdk.net/v3/assets/version/%s"+
-		"?architecture=x64"+
-		"&heap_size=normal"+
-		"&image_type=%s"+
-		"&jvm_impl=%s"+
-		"&os=linux"+
-		"&release_type=ga"+
-		"&vendor=adoptopenjdk",
-		url.PathEscape(v), t, i)
+	uri := fmt.Sprintf("https://api.azul.com/zulu/download/azure-only/v1.0/bundles/latest/"+
+		"?arch=x86"+
+		"&ext=tar.gz"+
+		"&features=%s"+
+		"&hw_bitness=64"+
+		"&jdk_version=%s"+
+		"&os=linux",
+		t, v)
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -64,32 +57,19 @@ func main() {
 		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
 	}
 
-	var raw []Asset
+	var raw Bundle
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
-	versions := make(actions.Versions)
-	for _, r := range raw {
-		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
+	versions := actions.Versions{
+		fmt.Sprintf("%d.%d.%d", raw.JDKVersion[0], raw.JDKVersion[1], raw.JDKVersion[2]): raw.URL,
 	}
 
 	versions.GetLatest().Write(os.Stdout)
 }
 
-type Asset struct {
-	Binaries    []Binary
-	VersionData VersionData `json:"version_data"`
-}
-
-type Binary struct {
-	Package Package
-}
-
-type Package struct {
-	Link string
-}
-
-type VersionData struct {
-	Semver string
+type Bundle struct {
+	JDKVersion []int  `json:"jdk_version"`
+	URL        string `json:"url"`
 }

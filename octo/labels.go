@@ -118,7 +118,6 @@ func ContributeLabels() ([]Contribution, error) {
 		On: map[event.Type]event.Event{
 			event.PullRequestType: event.PullRequest{
 				Types: []event.PullRequestActivityType{
-					event.PullRequestOpened,
 					event.PullRequestSynchronize,
 					event.PullRequestReopened,
 					event.PullRequestLabeled,

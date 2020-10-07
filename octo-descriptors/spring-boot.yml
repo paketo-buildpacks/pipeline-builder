@@ -12,66 +12,10 @@ credentials:
   username: _json_key
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
-#---
-#name: github.com/paketo-buildpacks/spring-boot
-#package:
-#  repository: gcr.io/paketo-buildpacks/spring-boot
-#  username: _json_key
-#  password: ((artifact-gcs-json-key))
-#
-#dependencies:
-#- name: spring-cloud-bindings
-#  type: maven-resource
-#  source:
-#    uri:         https://repo.spring.io/release
-#    group_id:    org.springframework.cloud
-#    artifact_id: spring-cloud-bindings
-#
-#resource_types:
-#- name: cron-resource
-#  type: registry-image
-#  source:
-#    repository: cftoolsmiths/cron-resource
-#- name: spring-generations-resource
-#  type: registry-image
-#  source:
-#    repository: gcr.io/paketo-buildpacks/spring-generations-resource
-#
-#resources:
-#- name: daily-schedule
-#  type: cron-resource
-#  icon: clock-outline
-#  source:
-#    expression:       0 1 * * *
-#    location:         America/Los_Angeles
-#    fire_immediately: true
-#- name:        dependency:spring-generations
-#  type:        spring-generations-resource
-#  icon:        file-document-outline
-#  check_every: 24h
-#  source:
-#    uri: https://staging.spring.io/api
-#
-#groups:
-#- name: buildpack-dependencies
-#  jobs:
-#  - dependency:spring-generations
-#
-#jobs:
-#- name:   dependency:spring-generations
-#  public: true
-#  plan:
-#  - in_parallel:
-#    - get: build-common
-#    - get: daily-schedule
-#      trigger: true
-#    - get: dependency
-#      resource: dependency:spring-generations
-#    - get: source
-#      resource: source:spring-boot
-#  - task: update-spring-generations
-#    file: source/scripts/update-spring-generations.yml
-#  - put: source:spring-boot
-#    params:
-#      rebase: true
-#      repository: source
+dependencies:
+- id:   spring-cloud-bindings
+  uses: docker://ghcr.io/paketo-buildpacks/actions/maven-dependency:main
+  with:
+    uri:         https://repo.spring.io/release
+    group_id:    org.springframework.cloud
+    artifact_id: spring-cloud-bindings

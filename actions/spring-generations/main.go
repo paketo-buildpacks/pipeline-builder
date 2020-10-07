@@ -21,8 +21,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"sort"
+	"strings"
 	"sync"
 
 	"github.com/BurntSushi/toml"
@@ -122,7 +122,10 @@ func main() {
 		panic(fmt.Errorf("unable to marshal content\n%w", err))
 	}
 
-	fmt.Printf("::set-output name=content::%s\n", url.QueryEscape(b.String()))
+	s := b.String()
+	s = strings.ReplaceAll(s, "\n", "%0A")
+
+	fmt.Printf("::set-output name=content::%s\n", s)
 }
 
 type result struct {

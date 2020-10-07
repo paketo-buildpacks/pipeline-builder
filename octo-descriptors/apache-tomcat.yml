@@ -12,47 +12,40 @@ credentials:
   username: _json_key
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
-#---
-#name: github.com/paketo-buildpacks/apache-tomcat
-#package:
-#  repository: gcr.io/paketo-buildpacks/apache-tomcat
-#  username: _json_key
-#  password: ((artifact-gcs-json-key))
-#
-#dependencies:
-#  - name:            tomcat
-#    resource:        tomcat-7
-#    type:            tomcat-resource
-#    version_pattern: "7(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      uri: https://archive.apache.org/dist/tomcat/tomcat-7
-#  - name:            tomcat
-#    resource:        tomcat-8
-#    type:            tomcat-resource
-#    version_pattern: "8(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      uri: https://archive.apache.org/dist/tomcat/tomcat-8
-#  - name:            tomcat
-#    resource:        tomcat-9
-#    type:            tomcat-resource
-#    version_pattern: "9(?:\\.[\\d]+(?:\\.[\\d]+)?)?"
-#    source:
-#      uri: https://archive.apache.org/dist/tomcat/tomcat-9
-#  - name: tomcat-access-logging-support
-#    type: maven-resource
-#    source:
-#      uri:         https://repo.spring.io/release
-#      group_id:    org.cloudfoundry
-#      artifact_id: tomcat-access-logging-support
-#  - name: tomcat-lifecycle-support
-#    type: maven-resource
-#    source:
-#      uri:         https://repo.spring.io/release
-#      group_id:    org.cloudfoundry
-#      artifact_id: tomcat-lifecycle-support
-#  - name: tomcat-logging-support
-#    type: maven-resource
-#    source:
-#      uri:         https://repo.spring.io/release
-#      group_id:    org.cloudfoundry
-#      artifact_id: tomcat-logging-support
+dependencies:
+- name:            Tomcat 7
+  id:              tomcat
+  version_pattern: "7\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
+  with:
+    uri: https://archive.apache.org/dist/tomcat/tomcat-7
+- name:            Tomcat 8
+  id:              tomcat
+  version_pattern: "8\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
+  with:
+    uri: https://archive.apache.org/dist/tomcat/tomcat-8
+- name:            Tomcat 9
+  id:              tomcat
+  version_pattern: "9\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
+  with:
+    uri: https://archive.apache.org/dist/tomcat/tomcat-9
+- id:   tomcat-access-logging-support
+  uses: docker://ghcr.io/paketo-buildpacks/actions/maven-dependency:main
+  with:
+    uri:         https://repo.spring.io/release
+    group_id:    org.cloudfoundry
+    artifact_id: tomcat-access-logging-support
+- id:   tomcat-lifecycle-support
+  uses: docker://ghcr.io/paketo-buildpacks/actions/maven-dependency:main
+  with:
+    uri:         https://repo.spring.io/release
+    group_id:    org.cloudfoundry
+    artifact_id: tomcat-lifecycle-support
+- id:   tomcat-logging-support
+  uses: docker://ghcr.io/paketo-buildpacks/actions/maven-dependency:main
+  with:
+    uri:         https://repo.spring.io/release
+    group_id:    org.cloudfoundry
+    artifact_id: tomcat-logging-support

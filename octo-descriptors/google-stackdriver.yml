@@ -12,39 +12,21 @@ credentials:
   username: _json_key
   password: ${{ secrets.JAVA_GCLOUD_SERVICE_ACCOUNT_KEY }}
 
-#---
-#name: github.com/paketo-buildpacks/google-stackdriver
-#package:
-#  repository: gcr.io/paketo-buildpacks/google-stackdriver
-#  username: _json_key
-#  password: ((artifact-gcs-json-key))
-#
-#dependencies:
-#  - name: google-stackdriver-debugger-java
-#    type: github-release
-#    icon: github
-#    source:
-#      owner:        GoogleCloudPlatform
-#      repository:   cloud-debug-java
-#      access_token: ((github-access-token))
-#    params:
-#      globs:
-#        - compute-java_debian-wheezy_cdbg_java_agent_gce.tar
-#  - name: google-stackdriver-debugger-nodejs
-#    type: npm-resource
-#    icon: npm
-#    source:
-#      package: "@google-cloud/debug-agent"
-#  - name: google-stackdriver-profiler-java
-#    type: stackdriver-profiler-resource
-#    icon: google-cloud
-#  - name: google-stackdriver-debugger-nodejs
-#    type: npm-resource
-#    icon: npm
-#    source:
-#      package: "@google-cloud/debug-agent"
-#  - name: google-stackdriver-profiler-nodejs
-#    type: npm-resource
-#    icon: npm
-#    source:
-#      package: "@google-cloud/profiler"
+dependencies:
+- id:   google-stackdriver-debugger-java
+  uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  with:
+    glob:       compute-java_debian-wheezy_cdbg_java_agent_gce\.tar
+    owner:      GoogleCloudPlatform
+    repository: cloud-debug-java
+    token:      ${{ secrets.GITHUB_TOKEN }}
+- id:   google-stackdriver-debugger-nodejs
+  uses: docker://ghcr.io/paketo-buildpacks/actions/npm-dependency:main
+  with:
+    package: "@google-cloud/debug-agent"
+- id:   google-stackdriver-profiler-java
+  uses: docker://ghcr.io/paketo-buildpacks/actions/google-stackdriver-profiler-dependency:main
+- id:   google-stackdriver-profiler-nodejs
+  uses: docker://ghcr.io/paketo-buildpacks/actions/npm-dependency:main
+  with:
+    package: "@google-cloud/profiler"

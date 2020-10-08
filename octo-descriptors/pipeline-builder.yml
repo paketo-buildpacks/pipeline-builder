@@ -30,6 +30,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/gradle-dependency
 - source: jprofiler-dependency
   target: ghcr.io/paketo-buildpacks/actions/jprofiler-dependency
+- source: jrebel-dependency
+  target: ghcr.io/paketo-buildpacks/actions/jrebel-dependency
 - source: leiningen-dependency
   target: ghcr.io/paketo-buildpacks/actions/leiningen-dependency
 - source: maven-dependency

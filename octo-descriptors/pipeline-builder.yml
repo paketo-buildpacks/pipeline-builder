@@ -36,6 +36,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/leiningen-dependency
 - source: maven-dependency
   target: ghcr.io/paketo-buildpacks/actions/maven-dependency
+- source: new-relic-dependency
+  target: ghcr.io/paketo-buildpacks/actions/new-relic-dependency
 - source: npm-dependency
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
 - source: skywalking-dependency

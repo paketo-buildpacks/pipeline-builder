@@ -47,6 +47,7 @@ func main() {
 	}
 
 	cp := regexp.MustCompile(`^.*/takipi-agent-([\d]+)\.([\d]+)\.([\d]+)\.tar\.gz`)
+
 	versions := make(actions.Versions)
 
 	location := resp.Header.Get("Location")

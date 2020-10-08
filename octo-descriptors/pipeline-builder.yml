@@ -26,6 +26,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency
 - source: google-stackdriver-profiler-dependency
   target: ghcr.io/paketo-buildpacks/actions/google-stackdriver-profiler-dependency
+- source: graalvm-dependency
+  target: ghcr.io/paketo-buildpacks/actions/graalvm-dependency
 - source: gradle-dependency
   target: ghcr.io/paketo-buildpacks/actions/gradle-dependency
 - source: jprofiler-dependency

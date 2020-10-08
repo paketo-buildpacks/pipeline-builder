@@ -16,43 +16,35 @@ dependencies:
 - name:            JDK 8
   id:              jdk
   version_pattern: "8\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/graalvm-dependency:main
   with:
-    glob:       graalvm-ce-java8-linux-amd64-.+.tar.gz
-    owner:      graalvm
-    repository: graalvm-ce-builds
-    tag_filter: vm-(.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
+    glob:    graalvm-ce-java8-linux-amd64-.+.tar.gz
+    token:   ${{ secrets.GITHUB_TOKEN }}
+    version: 8
 - name:            Native Image 8
   id:              native-image-svm
   version_pattern: "8\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/graalvm-dependency:main
   with:
-    glob:       native-image-installable-svm-java8-linux-amd64-.+.jar
-    owner:      graalvm
-    repository: graalvm-ce-builds
-    tag_filter: vm-(.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
+    glob:    native-image-installable-svm-java8-linux-amd64-.+.jar
+    token:   ${{ secrets.GITHUB_TOKEN }}
+    version: 8
 - name:            JDK 11
   id:              jdk
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/graalvm-dependency:main
   with:
-    glob:       graalvm-ce-java11-linux-amd64-.+.tar.gz
-    owner:      graalvm
-    repository: graalvm-ce-builds
-    tag_filter: vm-(.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
+    glob:    graalvm-ce-java11-linux-amd64-.+.tar.gz
+    token:   ${{ secrets.GITHUB_TOKEN }}
+    version: 11
 - name:            Native Image 11
   id:              native-image-svm
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/graalvm-dependency:main
   with:
-    glob:       native-image-installable-svm-java11-linux-amd64-.+.jar
-    owner:      graalvm
-    repository: graalvm-ce-builds
-    tag_filter: vm-(.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
+    glob:    native-image-installable-svm-java11-linux-amd64-.+.jar
+    token:   ${{ secrets.GITHUB_TOKEN }}
+    version: 11
 - id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:

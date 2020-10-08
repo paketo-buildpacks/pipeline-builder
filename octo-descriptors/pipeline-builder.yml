@@ -40,6 +40,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/new-relic-dependency
 - source: npm-dependency
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
+- source: overops-dependency
+  target: ghcr.io/paketo-buildpacks/actions/overops-dependency
 - source: skywalking-dependency
   target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations

@@ -9,6 +9,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.5.1 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.3.3 // indirect
+	github.com/aws/aws-sdk-go v1.35.6
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-github/v30 v30.1.0

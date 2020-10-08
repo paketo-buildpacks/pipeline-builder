@@ -42,6 +42,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
 - source: overops-dependency
   target: ghcr.io/paketo-buildpacks/actions/overops-dependency
+- source: riverbed-dependency
+  target: ghcr.io/paketo-buildpacks/actions/riverbed-dependency
 - source: skywalking-dependency
   target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations

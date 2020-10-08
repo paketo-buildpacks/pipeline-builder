@@ -16,4 +16,4 @@ dependencies:
 - id:   lein
   uses: docker://ghcr.io/paketo-buildpacks/actions/leiningen-dependency:main
   with:
-    token:      ${{ secrets.GITHUB_TOKEN }}
+    token: ${{ secrets.GITHUB_TOKEN }}

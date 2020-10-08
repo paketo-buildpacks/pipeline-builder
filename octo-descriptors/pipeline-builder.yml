@@ -30,6 +30,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/maven-dependency
 - source: npm-dependency
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
+- source: skywalking-dependency
+  target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations
   target: ghcr.io/paketo-buildpacks/actions/spring-generations
 - source: tomcat-dependency

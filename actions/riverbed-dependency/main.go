@@ -22,6 +22,7 @@ import (
 	"regexp"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 
@@ -31,7 +32,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	sess := session.Must(session.NewSession())
+	sess := session.Must(session.NewSession(&aws.Config{Credentials: credentials.AnonymousCredentials}))
 	svc := s3.New(sess, &aws.Config{Region: aws.String("us-east-1")})
 	result, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String("appint-pcf-instrumentation-rpm-master")})
 	if err != nil {

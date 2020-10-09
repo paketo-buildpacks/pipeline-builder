@@ -62,6 +62,18 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c...)
 	}
 
+	if c, err := ContributeBuilderDependencies(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
+	if c, err := ContributeCreateBuilder(descriptor); err != nil {
+		return err
+	} else if c != nil {
+		contributions = append(contributions, *c)
+	}
+
 	if c, err := ContributeCreatePackage(descriptor); err != nil {
 		return err
 	} else if c != nil {
@@ -74,7 +86,7 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c)
 	}
 
-	if c, err := ContributeDependencies(descriptor); err != nil {
+	if c, err := ContributeBuildpackDependencies(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c...)
@@ -251,6 +263,7 @@ func NewLabelsContribution(labels []labels.Label) (Contribution, error) {
 type Descriptor struct {
 	Path            string
 	CodeOwners      []CodeOwner
+	Builder         *Builder
 	Package         *Package
 	Credentials     []Credentials
 	OfflinePackages []OfflinePackage `yaml:"offline-packages"`
@@ -261,6 +274,10 @@ type Descriptor struct {
 type Action struct {
 	Source string
 	Target string
+}
+
+type Builder struct {
+	Repository string
 }
 
 type CodeOwner struct {

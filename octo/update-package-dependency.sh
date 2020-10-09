@@ -2,17 +2,29 @@
 
 set -euo pipefail
 
-OLD_VERSION=$(yj -tj < package.toml | jq -r ".dependencies[].image | select(. | startswith(\"${DEPENDENCY}\"))")
-OLD_VERSION=${OLD_VERSION#*:}
 NEW_VERSION=$(crane ls "${DEPENDENCY}" | grep -v latest | sort -V | tail -n 1)
 
-update-package-dependency \
-  --buildpack-toml buildpack.toml \
-  --package-toml package.toml \
-  --id "${DEPENDENCY}" \
-  --version "${NEW_VERSION}"
+if [[ -e builder.toml ]]; then
+  OLD_VERSION=$(yj -tj < builder.toml | jq -r ".buildpacks[].image | capture(\"${DEPENDENCY}:(?<version>.+)\") | .version")
 
-git add buildpack.toml package.toml
+  update-package-dependency \
+    --builder-toml builder.toml \
+    --id "${DEPENDENCY}" \
+    --version "${NEW_VERSION}"
+
+  git add builder.toml
+elif [[ -e package.toml ]]; then
+  OLD_VERSION=$(yj -tj < package.toml | jq -r ".dependencies[].image | capture(\"${DEPENDENCY}:(?<version>.+)\") | .version")
+
+  update-package-dependency \
+    --buildpack-toml buildpack.toml \
+    --package-toml package.toml \
+    --id "${DEPENDENCY}" \
+    --version "${NEW_VERSION}"
+
+  git add buildpack.toml package.toml
+fi
+
 git checkout -- .
 
 echo "::set-output name=old-version::${OLD_VERSION}"

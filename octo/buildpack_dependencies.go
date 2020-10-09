@@ -26,7 +26,7 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
-func ContributeDependencies(descriptor Descriptor) ([]Contribution, error) {
+func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, error) {
 	var contributions []Contribution
 
 	for _, d := range descriptor.Dependencies {

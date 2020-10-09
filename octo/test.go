@@ -77,6 +77,40 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		}
 	}
 
+	if descriptor.Builder != nil {
+		j := actions.Job{
+			Name:   "Create Builder Test",
+			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
+			Steps: []actions.Step{
+				{
+					Uses: "actions/checkout@v2",
+				},
+				{
+					Name: "Install pack",
+					Run:  internal.StatikString("/install-pack.sh"),
+					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Id:   "version",
+					Name: "Compute Version",
+					Run:  internal.StatikString("/compute-version.sh"),
+				},
+				{
+					Name: "Create Builder",
+					Run:  internal.StatikString("/create-builder.sh"),
+					Env: map[string]string{
+						"BUILDER": "test",
+						"VERSION": "${{ steps.version.outputs.version }}",
+					},
+				},
+			},
+		}
+
+		j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+
+		w.Jobs["create-builder"] = j
+	}
+
 	if descriptor.Package != nil {
 		j := actions.Job{
 			Name:   "Create Package Test",

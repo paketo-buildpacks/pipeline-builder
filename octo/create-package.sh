@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if [[ -n "${INCLUDE_DEPENDENCIES+x}" ]]; then
+if [[ "${INCLUDE_DEPENDENCIES}" == "true" ]]; then
   create-package \
     --cache-location "${HOME}"/carton-cache \
     --destination "${HOME}"/buildpack \

@@ -68,7 +68,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Run:  internal.StatikString("/install-crane.sh"),
 					},
 					{
-						Id:   "next",
+						Id:   "version",
 						Name: "Checkout next version",
 						Run:  internal.StatikString("/checkout-next-version.sh"),
 						Env: map[string]string{
@@ -78,7 +78,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					},
 					{
 						Uses: "actions/cache@v2",
-						If:   "${{ ! steps.next.outputs.skip }}",
+						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{
 							"path": strings.Join([]string{
 								"${{ env.HOME }}/carton-cache",
@@ -89,24 +89,18 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					},
 					{
 						Name: "Install create-package",
-						If:   "${{ ! steps.next.outputs.skip }}",
+						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  internal.StatikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install pack",
-						If:   "${{ ! steps.next.outputs.skip }}",
+						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  internal.StatikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
-						Id:   "version",
-						Name: "Compute Version",
-						If:   "${{ ! steps.next.outputs.skip }}",
-						Run:  internal.StatikString("/compute-version.sh"),
-					},
-					{
 						Name: "Create Package",
-						If:   "${{ ! steps.next.outputs.skip }}",
+						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  internal.StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": "true",
@@ -115,7 +109,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					},
 					{
 						Name: "Package Buildpack",
-						If:   "${{ ! steps.next.outputs.skip }}",
+						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  internal.StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
 							"PACKAGE": offlinePackage.Target,

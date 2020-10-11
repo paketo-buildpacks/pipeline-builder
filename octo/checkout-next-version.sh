@@ -30,5 +30,6 @@ for GIT in $(git tag | sort -V -r ); do
     git checkout -- .
     git checkout "${GIT}"
   echo "::endgroup::"
+  echo "::set-output name=version::${GIT#v}"
   exit
 done

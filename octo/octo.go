@@ -266,7 +266,7 @@ type Descriptor struct {
 	Builder         *Builder
 	Package         *Package
 	Credentials     []Credentials
-	OfflinePackages []OfflinePackage `yaml:"offline-packages"`
+	OfflinePackages []OfflinePackage `yaml:"offline_packages"`
 	Actions         []Action
 	Dependencies    []Dependency
 }

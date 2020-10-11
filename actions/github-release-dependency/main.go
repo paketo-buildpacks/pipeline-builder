@@ -81,6 +81,10 @@ func main() {
 		}
 
 		for _, r := range rel {
+			if *r.Prerelease {
+				continue
+			}
+
 			if p := re.FindStringSubmatch(*r.TagName); p != nil {
 				for _, a := range r.Assets {
 					if g.MatchString(*a.Name) {

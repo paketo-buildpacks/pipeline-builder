@@ -1,6 +1,6 @@
 FROM golang:latest as build-stage
 
-RUN apt-get update && apt-get -y install upx
+RUN apt-get update && apt-get install -y --no-install-recommends upx
 
 WORKDIR /src
 ENV GO111MODULE=on CGO_ENABLED=0
@@ -9,10 +9,8 @@ COPY . .
 
 ARG SOURCE
 RUN go build \
-  -a \
   -trimpath \
   -ldflags "-s -w -extldflags '-static'" \
-  -installsuffix cgo \
   -tags netgo \
   -o /bin/action \
   actions/$SOURCE/main.go

@@ -22,6 +22,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/bellsoft-liberica-dependency
 - source: ca-apm-dependency
   target: ghcr.io/paketo-buildpacks/actions/ca-apm-dependency
+- source: gcs-dependency
+  target: ghcr.io/paketo-buildpacks/actions/gcs-dependency
 - source: github-release-dependency
   target: ghcr.io/paketo-buildpacks/actions/github-release-dependency
 - source: google-stackdriver-profiler-dependency

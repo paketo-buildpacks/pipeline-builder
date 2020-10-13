@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
 	"regexp"
 
 	"cloud.google.com/go/storage"
@@ -49,7 +48,7 @@ func main() {
 	}
 
 	bucket := client.Bucket(b)
-	objects := bucket.Objects(context.Background(), &storage.Query{Prefix: filepath.Dir(g)})
+	objects := bucket.Objects(context.Background(), nil)
 
 	cp, err := regexp.Compile(g)
 	if err != nil {

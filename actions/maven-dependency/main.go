@@ -74,10 +74,19 @@ func main() {
 			w = fmt.Sprintf("%s.jar", w)
 		}
 
-		versions[actions.NormalizeVersion(v)] = w
+		n, err := actions.NormalizeVersion(v)
+		if err != nil {
+			panic(err)
+		}
+
+		versions[n] = w
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 type Metadata struct {
@@ -87,26 +96,3 @@ type Metadata struct {
 type Versioning struct {
 	Versions []string `xml:"versions>version"`
 }
-
-/**
-<?xml version="1.0" encoding="UTF-8"?>
-<metadata modelVersion="1.1.0">
-  <groupId>org.springframework.experimental</groupId>
-  <artifactId>spring-graalvm-native</artifactId>
-  <version>0.8.1</version>
-  <versioning>
-    <latest>0.8.1</latest>
-    <release>0.8.1</release>
-    <versions>
-      <version>0.7.0</version>
-      <version>0.7.1</version>
-      <version>0.8.0-RC1</version>
-      <version>0.8.0</version>
-      <version>0.8.1-RC1</version>
-      <version>0.8.1</version>
-    </versions>
-    <lastUpdated>20200925075534</lastUpdated>
-  </versioning>
-</metadata>
-
-*/

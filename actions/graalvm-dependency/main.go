@@ -75,7 +75,12 @@ func main() {
 			for _, a := range r.Assets {
 				if g.MatchString(*a.Name) {
 					if g := re.FindStringSubmatch(*r.TagName); g != nil {
-						sv, err := semver.NewVersion(actions.NormalizeVersion(g[1]))
+						v, err := actions.NormalizeVersion(g[1])
+						if err != nil {
+							panic(err)
+						}
+
+						sv, err := semver.NewVersion(v)
 						if err != nil {
 							panic(fmt.Errorf("unable to parse %s as semver", g[1]))
 						}
@@ -105,7 +110,11 @@ func main() {
 	h := candidates[sv[len(sv)-1]]
 	versions := actions.Versions{GetVersion(h.Assets, v): h.URI}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 func GetVersion(assets []*github.ReleaseAsset, version string) string {

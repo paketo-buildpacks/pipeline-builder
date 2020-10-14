@@ -50,7 +50,11 @@ func main() {
 		versions[v.Version] = fmt.Sprintf("https://downloads.gradle.org/distributions/gradle-%s-bin.zip", v.Version)
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 type ReleasedVersions struct {

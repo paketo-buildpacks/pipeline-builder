@@ -27,9 +27,9 @@ import (
 
 type Versions map[string]string
 
-func (v Versions) GetLatest(inputs Inputs) Outputs {
+func (v Versions) GetLatest(inputs Inputs, mods ...RequestModifierFunc) (Outputs, error) {
 	if len(v) == 0 {
-		panic(fmt.Errorf("no candidate version"))
+		return nil, fmt.Errorf("no candidate version")
 	}
 
 	var err error
@@ -37,7 +37,7 @@ func (v Versions) GetLatest(inputs Inputs) Outputs {
 	if s, ok := inputs["pre_release"]; ok {
 		pr, err = strconv.ParseBool(s)
 		if err != nil {
-			panic(fmt.Errorf("unable to parse %s as a bool\n%w", s, err))
+			return nil, fmt.Errorf("unable to parse %s as a bool\n%w", s, err)
 		}
 	}
 
@@ -45,7 +45,7 @@ func (v Versions) GetLatest(inputs Inputs) Outputs {
 	for k := range v {
 		v, err := semver.NewVersion(k)
 		if err != nil {
-			panic(fmt.Errorf("unable to parse %s as semver\n%w", k, err))
+			return nil, fmt.Errorf("unable to parse %s as semver\n%w", k, err)
 		}
 
 		if v.Prerelease() == "" || pr {
@@ -59,18 +59,22 @@ func (v Versions) GetLatest(inputs Inputs) Outputs {
 
 	l := sv[len(sv)-1]
 	uri := v[l.Original()]
-	sha256 := SHA256FromURI(uri)
+
+	sha256, err := SHA256FromURI(uri, mods...)
+	if err != nil {
+		return nil, err
+	}
 
 	return Outputs{
 		"sha256":  sha256,
 		"uri":     uri,
 		"version": fmt.Sprintf("%d.%d.%d", l.Major(), l.Minor(), l.Patch()),
-	}
+	}, nil
 }
 
 var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)$`)
 
-func NormalizeVersion(raw string) string {
+func NormalizeVersion(raw string) (string, error) {
 	if p := ExtendedVersionPattern.FindStringSubmatch(raw); p != nil {
 		for i := 1; i < 4; i++ {
 			if p[i] == "" {
@@ -83,8 +87,8 @@ func NormalizeVersion(raw string) string {
 			s = fmt.Sprintf("%s-%s", s, p[4])
 		}
 
-		return s
+		return s, nil
 	}
 
-	panic(fmt.Errorf("unable to parse %s as a extended version (%s)", raw, ExtendedVersionPattern))
+	return "", fmt.Errorf("unable to parse %s as a extended version (%s)", raw, ExtendedVersionPattern)
 }

@@ -24,20 +24,38 @@ import (
 	"net/http"
 )
 
-func SHA256FromURI(uri string) string {
-	resp, err := http.Get(uri)
+type RequestModifierFunc func(request *http.Request) *http.Request
+
+func SHA256FromURI(uri string, mods ...RequestModifierFunc) (string, error) {
+	req, err := http.NewRequest("GET", uri, nil)
 	if err != nil {
-		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+		return "", fmt.Errorf("unable to create GET %s request\n%w", uri, err)
+	}
+
+	for _, m := range mods {
+		req = m(req)
+	}
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("unable to get %s\n%w", uri, err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
+		return "", fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode)
 	}
 
 	s := sha256.New()
 	if _, err := io.Copy(s, resp.Body); err != nil {
-		panic(fmt.Errorf("unable to download %s\n%w", uri, err))
+		return "", fmt.Errorf("unable to download %s\n%w", uri, err)
 	}
-	return hex.EncodeToString(s.Sum(nil))
+	return hex.EncodeToString(s.Sum(nil)), nil
+}
+
+func WithBasicAuth(username, password string) RequestModifierFunc {
+	return func(req *http.Request) *http.Request {
+		req.SetBasicAuth(username, password)
+		return req
+	}
 }

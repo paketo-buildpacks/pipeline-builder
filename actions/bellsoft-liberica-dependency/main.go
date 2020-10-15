@@ -69,7 +69,11 @@ func main() {
 		versions[fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)] = r.DownloadURL
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 type Release struct {

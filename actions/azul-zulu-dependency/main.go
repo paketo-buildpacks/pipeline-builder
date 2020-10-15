@@ -66,7 +66,11 @@ func main() {
 		fmt.Sprintf("%d.%d.%d", raw.JDKVersion[0], raw.JDKVersion[1], raw.JDKVersion[2]): raw.URL,
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 type Bundle struct {

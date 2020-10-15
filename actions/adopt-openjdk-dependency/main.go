@@ -74,7 +74,11 @@ func main() {
 		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }
 
 type Asset struct {

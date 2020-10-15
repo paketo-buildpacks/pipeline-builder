@@ -17,14 +17,10 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"net/http"
 	"os"
-	"regexp"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -32,25 +28,40 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	sess := session.Must(session.NewSession(&aws.Config{Credentials: credentials.AnonymousCredentials}))
-	svc := s3.New(sess, &aws.Config{Region: aws.String("us-east-1")})
-	result, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String("appint-pcf-instrumentation-rpm-master")})
-	if err != nil {
-		panic(err)
+	u, ok := inputs["username"]
+	if !ok {
+		panic(fmt.Errorf("username must be specified"))
 	}
 
-	cp := regexp.MustCompile(`riverbed-appinternals-agent-([\d]+)\.([\d]+)\.([\d]+)_(.+)\.zip`)
+	p, ok := inputs["password"]
+	if !ok {
+		panic(fmt.Errorf("password must be specified"))
+	}
+
+	uri := "https://get.aquasec.com/scanner-releases.txt"
+
+	resp, err := http.Get(uri)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
+	}
 
 	versions := make(actions.Versions)
-	for _, o := range result.Contents {
-		if p := cp.FindStringSubmatch(*o.Key); p != nil {
-			v := fmt.Sprintf("%s.%s.%s-%s", p[1], p[2], p[3], p[4])
 
-			versions[v] = fmt.Sprintf("https://pcf-instrumentation-download.steelcentral.net/%s", *o.Key)
-		}
+	scanner := bufio.NewScanner(resp.Body)
+	for scanner.Scan() {
+		v := scanner.Text()
+		versions[v] = fmt.Sprintf("https://download.aquasec.com/scanner/%s/scannercli", v)
+	}
+	if err := scanner.Err(); err != nil {
+		panic(fmt.Errorf("unable to read index\n%w", err))
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	if o, err := versions.GetLatest(inputs, actions.WithBasicAuth(u, p)); err != nil {
 		panic(err)
 	} else {
 		o.Write(os.Stdout)

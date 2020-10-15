@@ -88,7 +88,12 @@ func main() {
 			if p := re.FindStringSubmatch(*r.TagName); p != nil {
 				for _, a := range r.Assets {
 					if g.MatchString(*a.Name) {
-						versions[actions.NormalizeVersion(p[1])] = *a.BrowserDownloadURL
+						n, err := actions.NormalizeVersion(p[1])
+						if err != nil {
+							panic(err)
+						}
+
+						versions[n] = *a.BrowserDownloadURL
 						break
 					}
 				}
@@ -101,5 +106,9 @@ func main() {
 		opt.Page = rsp.NextPage
 	}
 
-	versions.GetLatest(inputs).Write(os.Stdout)
+	if o, err := versions.GetLatest(inputs); err != nil {
+		panic(err)
+	} else {
+		o.Write(os.Stdout)
+	}
 }

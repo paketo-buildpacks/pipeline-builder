@@ -16,6 +16,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency
 - source: appdynamics-dependency
   target: ghcr.io/paketo-buildpacks/actions/appdynamics-dependency
+- source: aqua-security-dependency
+  target: ghcr.io/paketo-buildpacks/actions/aqua-security-dependency
 - source: azul-zulu-dependency
   target: ghcr.io/paketo-buildpacks/actions/azul-zulu-dependency
 - source: bellsoft-liberica-dependency

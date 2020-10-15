@@ -23,7 +23,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
@@ -66,25 +65,25 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Install crane",
-						Run:  internal.StatikString("/install-crane.sh"),
+						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Name: "Install create-package",
-						Run:  internal.StatikString("/install-create-package.sh"),
+						Run:  statikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install pack",
-						Run:  internal.StatikString("/install-pack.sh"),
+						Run:  statikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
 						Id:   "version",
 						Name: "Compute Version",
-						Run:  internal.StatikString("/compute-version.sh"),
+						Run:  statikString("/compute-version.sh"),
 					},
 					{
 						Name: "Create Package",
-						Run:  internal.StatikString("/create-package.sh"),
+						Run:  statikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": strconv.FormatBool(descriptor.Package.IncludeDependencies),
 							"VERSION":              "${{ steps.version.outputs.version }}",
@@ -93,7 +92,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					{
 						Id:   "package",
 						Name: "Package Buildpack",
-						Run:  internal.StatikString("/package-buildpack.sh"),
+						Run:  statikString("/package-buildpack.sh"),
 						Env: map[string]string{
 							"PACKAGE": descriptor.Package.Repository,
 							"PUBLISH": "true",
@@ -102,7 +101,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Update release with digest",
-						Run:  internal.StatikString("/update-release-digest.sh"),
+						Run:  statikString("/update-release-digest.sh"),
 						Env: map[string]string{
 							"DIGEST":       "${{ steps.package.outputs.digest }}",
 							"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}",

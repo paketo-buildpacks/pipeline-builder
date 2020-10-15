@@ -2,23 +2,47 @@
 
 set -euo pipefail
 
-PAYLOAD=$(yj -tj < buildpack.toml | jq '{ primary: . }')
+PAYLOAD="{}"
+
+if [[ -e buildpack.toml ]]; then
+  PAYLOAD=$(jq -n -r \
+    --argjson PAYLOAD "${PAYLOAD}" \
+    --argjson BUILDPACK "$(yj -tj < buildpack.toml)" \
+      '$PAYLOAD | .primary = $BUILDPACK')
+fi
+
+if [[ -e builder.toml ]]; then
+  PAYLOAD=$(jq -n -r \
+    --argjson PAYLOAD "${PAYLOAD}" \
+    --argjson BUILDER "$(yj -tj < builder.toml)" \
+      '$PAYLOAD | .primary = $BUILDER')
+
+  for BUILDPACK in $(
+    jq -n -r \
+      --argjson PAYLOAD "${PAYLOAD}" \
+      '$PAYLOAD.primary.buildpacks[].image'
+  ); do
+    crane export "${BUILDPACK}" - | tar xf - --absolute-names  --strip-components 1 --wildcards "/cnb/buildpacks/*/*/buildpack.toml"
+  done
+fi
 
 if [[ -e package.toml ]]; then
   for PACKAGE in $(yj -t < package.toml | jq -r '.dependencies[].image'); do
-    PAYLOAD=$(jq -n -r \
-      --argjson PAYLOAD "${PAYLOAD}" \
-      --argjson BUILDPACK "$(crane export "${PACKAGE}" - \
-        | tar xOf - --absolute-names --wildcards "/cnb/buildpacks/*/*/buildpack.toml" \
-        | yj -tj)" \
-      '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
+    crane export "${PACKAGE}" - | tar xf - --absolute-names  --strip-components 1 --wildcards "/cnb/buildpacks/*/*/buildpack.toml"
   done
 fi
+
+while IFS= read -r -d '' FILE; do
+  PAYLOAD=$(jq -n -r \
+    --argjson PAYLOAD "${PAYLOAD}" \
+    --argjson BUILDPACK "$(yj -tj < "${FILE}")" \
+    '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
+done < <(find buildpacks -name buildpack.toml -print0)
 
 jq -n -r \
   --argjson PAYLOAD "${PAYLOAD}" \
   --arg RELEASE_NAME "${RELEASE_NAME}" \
-  '"\($PAYLOAD.primary.buildpack.name) \($RELEASE_NAME)"' \
+  '( select($PAYLOAD.primary.buildpack.name) | "\($PAYLOAD.primary.buildpack.name) \($RELEASE_NAME)" ) // "\($RELEASE_NAME)"' \
   > "${HOME}"/name
 
 jq -n -r \
@@ -26,7 +50,7 @@ jq -n -r \
   --arg RELEASE_BODY "${RELEASE_BODY}" \
   '
 def id(b):
-  "**ID**: `\(b.buildpack.id)`"
+  select(b.buildpack.id) | "**ID**: `\(b.buildpack.id)`"
 ;
 
 def included_buildpackages(b): [
@@ -55,7 +79,7 @@ def dependencies(d): [
   "#### Dependencies:",
   "Name | Version | SHA256",
   ":--- | :------ | :-----",
-  ( d | sort_by(.name | ascii_downcase) | map("\(.name) | `\(.version)` | `\(.sha256)`")),
+  ( d | sort_by(.name // .id | ascii_downcase) | map("\(.name // .id) | `\(.version)` | `\(.sha256)`")),
   ""
 ];
 
@@ -66,7 +90,7 @@ def order_groupings(o): [
   ( o | map([
     "ID | Version | Optional",
     ":- | :------ | :-------",
-    ( .group | map([ "`\(.id)` | `\(.version)`", ( select(.optional) | "| `\(.optional)`" ) ] | join(" ")) ),
+    ( .group | map([ "`\(.id)` | ", (select(.version) | "`\(.version)`"), ( select(.optional) | "| `\(.optional)`" ) ] | join(" ")) ),
     ""
   ])),
   "</details>",

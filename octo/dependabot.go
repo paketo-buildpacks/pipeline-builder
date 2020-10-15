@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/dependabot"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
@@ -38,7 +37,7 @@ func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
 	}
 
 	file := filepath.Join(descriptor.Path, "go.mod")
-	if e, err := internal.Exists(file); err != nil {
+	if e, err := exists(file); err != nil {
 		return Contribution{}, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
 	} else if e {
 		d.Updates = append(d.Updates, dependabot.Update{

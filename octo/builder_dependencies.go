@@ -25,12 +25,11 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error) {
 	file := filepath.Join(descriptor.Path, "builder.toml")
-	if e, err := internal.Exists(file); err != nil {
+	if e, err := exists(file); err != nil {
 		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
 	} else if !e {
 		return nil, nil
@@ -93,21 +92,21 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					},
 					{
 						Name: "Install crane",
-						Run:  internal.StatikString("/install-crane.sh"),
+						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Name: "Install update-build-image-dependency",
-						Run:  internal.StatikString("/install-update-build-image-dependency.sh"),
+						Run:  statikString("/install-update-build-image-dependency.sh"),
 					},
 					{
 						Name: "Install yj",
-						Run:  internal.StatikString("/install-yj.sh"),
+						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
 						Id:   "build-image",
 						Name: "Update Build Image Dependency",
-						Run:  internal.StatikString("/update-build-image-dependency.sh"),
+						Run:  statikString("/update-build-image-dependency.sh"),
 						Env: map[string]string{
 							"IMAGE":      image,
 							"CLASSIFIER": classifier,
@@ -161,11 +160,11 @@ func contributeLifecycle() (Contribution, error) {
 					},
 					{
 						Name: "Install update-lifecycle-dependency",
-						Run:  internal.StatikString("/install-update-lifecycle-dependency.sh"),
+						Run:  statikString("/install-update-lifecycle-dependency.sh"),
 					},
 					{
 						Name: "Install yj",
-						Run:  internal.StatikString("/install-yj.sh"),
+						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
@@ -181,7 +180,7 @@ func contributeLifecycle() (Contribution, error) {
 					{
 						Id:   "lifecycle",
 						Name: "Update Lifecycle Dependency",
-						Run:  internal.StatikString("/update-lifecycle-dependency.sh"),
+						Run:  statikString("/update-lifecycle-dependency.sh"),
 						Env: map[string]string{
 							"VERSION": "${{ steps.dependency.outputs.version }}",
 						},

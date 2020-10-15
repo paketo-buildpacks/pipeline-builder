@@ -23,7 +23,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeOfflinePackages(descriptor Descriptor) ([]Contribution, error) {
@@ -65,12 +64,12 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					},
 					{
 						Name: "Install crane",
-						Run:  internal.StatikString("/install-crane.sh"),
+						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Id:   "version",
 						Name: "Checkout next version",
-						Run:  internal.StatikString("/checkout-next-version.sh"),
+						Run:  statikString("/checkout-next-version.sh"),
 						Env: map[string]string{
 							"SOURCE": offlinePackage.Source,
 							"TARGET": offlinePackage.Target,
@@ -90,18 +89,18 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Name: "Install create-package",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  internal.StatikString("/install-create-package.sh"),
+						Run:  statikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install pack",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  internal.StatikString("/install-pack.sh"),
+						Run:  statikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
 						Name: "Create Package",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  internal.StatikString("/create-package.sh"),
+						Run:  statikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": "true",
 							"VERSION":              "${{ steps.version.outputs.version }}",
@@ -110,7 +109,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Name: "Package Buildpack",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  internal.StatikString("/package-buildpack.sh"),
+						Run:  statikString("/package-buildpack.sh"),
 						Env: map[string]string{
 							"PACKAGE": offlinePackage.Target,
 							"PUBLISH": "true",

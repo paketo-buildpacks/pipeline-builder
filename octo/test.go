@@ -23,7 +23,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeTest(descriptor Descriptor) (*Contribution, error) {
@@ -42,7 +41,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		Jobs: map[string]actions.Job{},
 	}
 
-	if f, err := internal.Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
+	if f, err := find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
 		return nil, fmt.Errorf("unable to find .go files in %s\n%w", descriptor.Path, err)
 	} else if len(f) > 0 {
 		w.Jobs["unit"] = actions.Job{
@@ -66,11 +65,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Install richgo",
-					Run:  internal.StatikString("/install-richgo.sh"),
+					Run:  statikString("/install-richgo.sh"),
 				},
 				{
 					Name: "Run Tests",
-					Run:  internal.StatikString("/run-tests.sh"),
+					Run:  statikString("/run-tests.sh"),
 					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
 				},
 			},
@@ -87,17 +86,17 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Install pack",
-					Run:  internal.StatikString("/install-pack.sh"),
+					Run:  statikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
 					Id:   "version",
 					Name: "Compute Version",
-					Run:  internal.StatikString("/compute-version.sh"),
+					Run:  statikString("/compute-version.sh"),
 				},
 				{
 					Name: "Create Builder",
-					Run:  internal.StatikString("/create-builder.sh"),
+					Run:  statikString("/create-builder.sh"),
 					Env: map[string]string{
 						"BUILDER": "test",
 						"VERSION": "${{ steps.version.outputs.version }}",
@@ -136,21 +135,21 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Install create-package",
-					Run:  internal.StatikString("/install-create-package.sh"),
+					Run:  statikString("/install-create-package.sh"),
 				},
 				{
 					Name: "Install pack",
-					Run:  internal.StatikString("/install-pack.sh"),
+					Run:  statikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
 					Id:   "version",
 					Name: "Compute Version",
-					Run:  internal.StatikString("/compute-version.sh"),
+					Run:  statikString("/compute-version.sh"),
 				},
 				{
 					Name: "Create Package",
-					Run:  internal.StatikString("/create-package.sh"),
+					Run:  statikString("/create-package.sh"),
 					Env: map[string]string{
 						"INCLUDE_DEPENDENCIES": "true",
 						"VERSION":              "${{ steps.version.outputs.version }}",
@@ -158,7 +157,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Package Buildpack",
-					Run:  internal.StatikString("/package-buildpack.sh"),
+					Run:  statikString("/package-buildpack.sh"),
 					Env: map[string]string{
 						"PACKAGE": "test",
 						"VERSION": "${{ steps.version.outputs.version }}",

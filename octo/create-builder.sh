@@ -7,6 +7,8 @@ if [[ -n "${PUBLISH+x}" ]]; then
     "${BUILDER}:${VERSION}" \
     --config builder.toml \
     --publish
+
+    echo "::set-output name=digest::$(crane digest "${BUILDER}:${VERSION}")"
 else
   pack create-builder \
     "${BUILDER}:${VERSION}" \

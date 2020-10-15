@@ -21,7 +21,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
@@ -59,11 +58,11 @@ func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
 						{
 							Id:   "version",
 							Name: "Compute Version",
-							Run:  internal.StatikString("/compute-version.sh"),
+							Run:  statikString("/compute-version.sh"),
 						},
 						{
 							Name: "Create Action",
-							Run:  internal.StatikString("/create-action.sh"),
+							Run:  statikString("/create-action.sh"),
 							Env: map[string]string{
 								"PUSH":    "${{ github.event_name != 'pull_request' }}",
 								"SOURCE":  a.Source,

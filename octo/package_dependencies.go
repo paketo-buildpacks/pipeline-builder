@@ -25,13 +25,12 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 	_package "github.com/paketo-buildpacks/pipeline-builder/octo/package"
 )
 
 func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error) {
 	file := filepath.Join(descriptor.Path, "package.toml")
-	if e, err := internal.Exists(file); err != nil {
+	if e, err := exists(file); err != nil {
 		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
 	} else if !e {
 		return nil, nil
@@ -83,21 +82,21 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 					},
 					{
 						Name: "Install crane",
-						Run:  internal.StatikString("/install-crane.sh"),
+						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Name: "Install update-package-dependency",
-						Run:  internal.StatikString("/install-update-package-dependency.sh"),
+						Run:  statikString("/install-update-package-dependency.sh"),
 					},
 					{
 						Name: "Install yj",
-						Run:  internal.StatikString("/install-yj.sh"),
+						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
 						Id:   "package",
 						Name: "Update Package Dependency",
-						Run:  internal.StatikString("/update-package-dependency.sh"),
+						Run:  statikString("/update-package-dependency.sh"),
 						Env:  map[string]string{"DEPENDENCY": name},
 					},
 					{

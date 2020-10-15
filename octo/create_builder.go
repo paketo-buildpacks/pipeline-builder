@@ -19,7 +19,6 @@ package octo
 import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
@@ -46,21 +45,30 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Install pack",
-						Run:  internal.StatikString("/install-pack.sh"),
+						Run:  statikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
 						Id:   "version",
 						Name: "Compute Version",
-						Run:  internal.StatikString("/compute-version.sh"),
+						Run:  statikString("/compute-version.sh"),
 					},
 					{
+						Id:   "builder",
 						Name: "Create Builder",
-						Run:  internal.StatikString("/create-builder.sh"),
+						Run:  statikString("/create-builder.sh"),
 						Env: map[string]string{
 							"BUILDER": descriptor.Builder.Repository,
 							"PUBLISH": "true",
 							"VERSION": "${{ steps.version.outputs.version }}",
+						},
+					},
+					{
+						Name: "Update release with digest",
+						Run:  statikString("/update-release-digest.sh"),
+						Env: map[string]string{
+							"DIGEST":       "${{ steps.builder.outputs.digest }}",
+							"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
 						},
 					},
 				},

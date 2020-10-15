@@ -14,13 +14,19 @@
  * limitations under the License.
  */
 
-package internal
+package octo
 
 import (
+	"io/ioutil"
 	"os"
+	"path/filepath"
+
+	"github.com/rakyll/statik/fs"
+
+	_ "github.com/paketo-buildpacks/pipeline-builder/octo/statik"
 )
 
-func Exists(path string) (bool, error) {
+func exists(path string) (bool, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false, nil
 	} else if err != nil {
@@ -28,4 +34,41 @@ func Exists(path string) (bool, error) {
 	} else {
 		return true, nil
 	}
+}
+
+type predicate func(string) bool
+
+func find(path string, predicate predicate) ([]string, error) {
+	var matches []string
+
+	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if predicate(path) {
+			matches = append(matches, path)
+		}
+
+		return nil
+	})
+
+	return matches, err
+}
+
+var statik, _ = fs.New()
+
+func statikString(path string) string {
+	in, err := statik.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer in.Close()
+
+	b, err := ioutil.ReadAll(in)
+	if err != nil {
+		panic(err)
+	}
+
+	return string(b)
 }

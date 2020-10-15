@@ -23,7 +23,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 )
 
 func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, error) {
@@ -50,11 +49,11 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 						},
 						{
 							Name: "Install update-buildpack-dependency",
-							Run:  internal.StatikString("/install-update-buildpack-dependency.sh"),
+							Run:  statikString("/install-update-buildpack-dependency.sh"),
 						},
 						{
 							Name: "Install yj",
-							Run:  internal.StatikString("/install-yj.sh"),
+							Run:  statikString("/install-yj.sh"),
 							Env:  map[string]string{"YJ_VERSION": YJVersion},
 						},
 						{
@@ -65,7 +64,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 						{
 							Id:   "buildpack",
 							Name: "Update Buildpack Dependency",
-							Run:  internal.StatikString("/update-buildpack-dependency.sh"),
+							Run:  statikString("/update-buildpack-dependency.sh"),
 							Env: map[string]string{
 								"ID":              d.Id,
 								"SHA256":          "${{ steps.dependency.outputs.sha256 }}",

@@ -22,7 +22,6 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/release"
 )
 
@@ -96,18 +95,30 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 		},
 	}
 
-	file := filepath.Join(descriptor.Path, "buildpack.toml")
-	if e, err := internal.Exists(file); err != nil {
+	file := filepath.Join(descriptor.Path, "builder.toml")
+	builderExists, err := exists(file)
+	if err != nil {
 		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
-	} else if e {
+	}
+
+	file = filepath.Join(descriptor.Path, "buildpack.toml")
+	buildpackExists, err := exists(file)
+	if err != nil {
+		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+	}
+
+	file = filepath.Join(descriptor.Path, "package.toml")
+	packageExists, err := exists(file)
+	if err != nil {
+		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+	}
+
+	if builderExists || buildpackExists {
 		j := w.Jobs["update"]
 
-		j.Steps = append(j.Steps, NewDockerCredentialActions(descriptor.DockerCredentials)...)
+		if builderExists || packageExists {
+			j.Steps = append(j.Steps, NewDockerCredentialActions(descriptor.DockerCredentials)...)
 
-		file := filepath.Join(descriptor.Path, "package.toml")
-		if e, err := internal.Exists(file); err != nil {
-			return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
-		} else if e {
 			j.Steps = append(j.Steps,
 				actions.Step{
 					Uses: "actions/setup-go@v2",
@@ -115,7 +126,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 				},
 				actions.Step{
 					Name: "Install crane",
-					Run:  internal.StatikString("/install-crane.sh"),
+					Run:  statikString("/install-crane.sh"),
 				},
 			)
 		}
@@ -126,12 +137,12 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			},
 			actions.Step{
 				Name: "Install yj",
-				Run:  internal.StatikString("/install-yj.sh"),
+				Run:  statikString("/install-yj.sh"),
 				Env:  map[string]string{"YJ_VERSION": YJVersion},
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",
-				Run:  internal.StatikString("/update-draft-release-buildpack.sh"),
+				Run:  statikString("/update-draft-release-buildpack.sh"),
 				Env: map[string]string{
 					"GITHUB_TOKEN":     "${{ secrets.GITHUB_TOKEN }}",
 					"RELEASE_ID":       "${{ steps.release-drafter.outputs.id }}",

@@ -123,7 +123,8 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 	}
 
 	j := w.Jobs["offline-package"]
-	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 	w.Jobs["offline-package"] = j
 
 	return NewActionContribution(w)

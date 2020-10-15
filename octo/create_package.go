@@ -50,7 +50,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Uses: "actions/cache@v2",
-						If: fmt.Sprintf("${{ %t }}", descriptor.Package.IncludeDependencies),
+						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.IncludeDependencies),
 						With: map[string]interface{}{
 							"path": strings.Join([]string{
 								"${{ env.HOME }}/.pack",
@@ -114,7 +114,8 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	}
 
 	j := w.Jobs["create-package"]
-	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 	w.Jobs["create-package"] = j
 
 	c, err := NewActionContribution(w)

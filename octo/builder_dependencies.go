@@ -134,7 +134,7 @@ Bumps %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build
 	}
 
 	j := w.Jobs["update"]
-	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	w.Jobs["update"] = j
 
 	return NewActionContribution(w)

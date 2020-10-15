@@ -102,7 +102,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 	} else if e {
 		j := w.Jobs["update"]
 
-		j.Steps = append(j.Steps, NewDockerLoginActions(descriptor.Credentials)...)
+		j.Steps = append(j.Steps, NewDockerCredentialActions(descriptor.DockerCredentials)...)
 
 		file := filepath.Join(descriptor.Path, "package.toml")
 		if e, err := internal.Exists(file); err != nil {

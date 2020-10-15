@@ -4,7 +4,7 @@ codeowners:
 - path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
-credentials:
+docker_credentials:
 - registry: ghcr.io
   username: ${{ secrets.JAVA_GHCR_USERNAME }}
   password: ${{ secrets.JAVA_GHCR_TOKEN }}

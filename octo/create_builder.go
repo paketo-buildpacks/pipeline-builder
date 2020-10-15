@@ -69,7 +69,7 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 	}
 
 	j := w.Jobs["create-builder"]
-	j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	w.Jobs["create-builder"] = j
 
 	c, err := NewActionContribution(w)

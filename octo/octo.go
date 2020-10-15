@@ -30,6 +30,7 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/dependabot"
+	"github.com/paketo-buildpacks/pipeline-builder/octo/internal"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/labels"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/release"
 )
@@ -202,18 +203,37 @@ func NewDependabotContribution(dependabot dependabot.Dependabot) (Contribution, 
 	return c, err
 }
 
-func NewDockerLoginActions(credentials []Credentials) []actions.Step {
+func NewDockerCredentialActions(credentials []DockerCredentials) []actions.Step {
 	var s []actions.Step
 
 	for _, c := range credentials {
 		s = append(s, actions.Step{
 			Name: fmt.Sprintf("Docker login %s", c.Registry),
-			If: "${{ github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork }}",
+			If:   "${{ github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork }}",
 			Uses: "docker/login-action@v1",
 			With: map[string]interface{}{
 				"registry": c.Registry,
 				"username": c.Username,
 				"password": c.Password,
+			},
+		})
+	}
+
+	return s
+}
+
+func NewHttpCredentialActions(credentials []HTTPCredentials) []actions.Step {
+	var s []actions.Step
+
+	for _, c := range credentials {
+		s = append(s, actions.Step{
+			Name: fmt.Sprintf("HTTP login %s", c.Host),
+			If:   "${{ github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork }}",
+			Run:  internal.StatikString("/update-netrc.sh"),
+			Env: map[string]string{
+				"HOST":     c.Host,
+				"USERNAME": c.Username,
+				"PASSWORD": c.Password,
 			},
 		})
 	}
@@ -262,14 +282,15 @@ func NewLabelsContribution(labels []labels.Label) (Contribution, error) {
 }
 
 type Descriptor struct {
-	Path            string
-	CodeOwners      []CodeOwner
-	Builder         *Builder
-	Package         *Package
-	Credentials     []Credentials
-	OfflinePackages []OfflinePackage `yaml:"offline_packages"`
-	Actions         []Action
-	Dependencies    []Dependency
+	Path              string
+	CodeOwners        []CodeOwner
+	Builder           *Builder
+	Package           *Package
+	DockerCredentials []DockerCredentials `yaml:"docker_credentials"`
+	HttpCredentials   []HTTPCredentials   `yaml:"http_credentials"`
+	OfflinePackages   []OfflinePackage    `yaml:"offline_packages"`
+	Actions           []Action
+	Dependencies      []Dependency
 }
 
 type Action struct {
@@ -286,8 +307,14 @@ type CodeOwner struct {
 	Owner string
 }
 
-type Credentials struct {
+type DockerCredentials struct {
 	Registry string
+	Username string
+	Password string
+}
+
+type HTTPCredentials struct {
+	Host     string
 	Username string
 	Password string
 }

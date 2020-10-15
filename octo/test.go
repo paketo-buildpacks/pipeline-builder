@@ -106,7 +106,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			},
 		}
 
-		j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+		j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 
 		w.Jobs["create-builder"] = j
 	}
@@ -167,7 +167,8 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			},
 		}
 
-		j.Steps = append(NewDockerLoginActions(descriptor.Credentials), j.Steps...)
+		j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+		j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 
 		w.Jobs["create-package"] = j
 	}

@@ -44,6 +44,14 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 						Uses: "actions/checkout@v2",
 					},
 					{
+						Uses: "actions/setup-go@v2",
+						With: map[string]interface{}{"go-version": GoVersion},
+					},
+					{
+						Name: "Install crane",
+						Run:  statikString("/install-crane.sh"),
+					},
+					{
 						Name: "Install pack",
 						Run:  statikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},

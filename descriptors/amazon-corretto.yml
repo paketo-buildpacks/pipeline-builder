@@ -27,6 +27,13 @@ dependencies:
   with:
     glob:       amazon-corretto-[\d.-]+-linux-x64.tar.gz
     repository: corretto-11
+- name:            JDK 15
+  id:              jdk
+  version_pattern: "15\\.[\\d]+\\.[\\d]+"
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
+  with:
+    glob:       amazon-corretto-15\.[\d.-]+-linux-x64.tar.gz
+    repository: corretto-11
 - id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:

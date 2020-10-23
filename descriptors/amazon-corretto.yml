@@ -33,7 +33,7 @@ dependencies:
   uses:            docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main
   with:
     glob:       amazon-corretto-15\.[\d.-]+-linux-x64.tar.gz
-    repository: corretto-11
+    repository: corretto-jdk
 - id:   jvmkill
   uses: docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
   with:

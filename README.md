@@ -1,5 +1,5 @@
 # Pipeline Builder
-The Pipeline Builder is a collection of tools related to GitHub Actions and other GitHub-related concerns for Paketo-style buildpacks.  This collection includes GitHub actions, a CLI that configuration pipelines for repositories, and a collection of descriptors for existing repositories.
+The Pipeline Builder is a collection of tools related to GitHub Actions and other GitHub-related concerns for Paketo-style buildpacks.  This collection includes GitHub actions, a CLI that configures pipelines for repositories, and a collection of descriptors for existing repositories.
 
 ## Octo Pipelines
 Octo Pipelines is a CLI that generates a collection of GitHub Workflows and other Github-related artifacts in a repository.  The pipeline generator takes a simplified descriptor as input and transforms it into more complicated workflows and artifacts.
@@ -116,7 +116,7 @@ dependencies:
 
 * [Example `update-*.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-jre-11.yml)
 
-`dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, a `users` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
+`dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
 
 #### `offline_packages` (optional)
 ```yaml

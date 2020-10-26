@@ -22,6 +22,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -71,7 +72,11 @@ func main() {
 
 	versions := make(actions.Versions)
 	for _, r := range raw {
-		versions[r.VersionData.Semver] = r.Binaries[0].Package.Link
+		versions[strings.ReplaceAll(r.VersionData.Semver, "+", "-")] = r.Binaries[0].Package.Link
+	}
+
+	for k, _ := range versions {
+		fmt.Println(k)
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

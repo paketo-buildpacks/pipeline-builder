@@ -33,26 +33,6 @@ dependencies:
     repository: SapMachine
     tag_filter: sapmachine-(11.*)
     token:      ${{ secrets.GITHUB_TOKEN }}
-- name:            JDK 14
-  id:              jdk
-  version_pattern: "14\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
-  with:
-    glob:       sapmachine-jdk-.+_linux-x64_bin.tar.gz
-    owner:      SAP
-    repository: SapMachine
-    tag_filter: sapmachine-(14.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
-- name:            JRE 14
-  id:              jre
-  version_pattern: "14\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/github-release-dependency:main
-  with:
-    glob:       sapmachine-jre-.+_linux-x64_bin.tar.gz
-    owner:      SAP
-    repository: SapMachine
-    tag_filter: sapmachine-(14.*)
-    token:      ${{ secrets.GITHUB_TOKEN }}
 - name:            JDK 15
   id:              jdk
   version_pattern: "15\\.[\\d]+\\.[\\d]+"

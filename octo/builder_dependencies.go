@@ -75,7 +75,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 	w := actions.Workflow{
 		Name: "Update Build Image",
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "15"}},
+			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "5", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{
@@ -143,7 +143,7 @@ func contributeLifecycle() (Contribution, error) {
 	w := actions.Workflow{
 		Name: "Update Lifecycle",
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "15"}},
+			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "5", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{

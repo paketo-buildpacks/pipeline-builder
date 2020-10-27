@@ -65,7 +65,7 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 	w := actions.Workflow{
 		Name: fmt.Sprintf("Update %s", filepath.Base(name)),
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "0"}},
+			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "12-23", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{

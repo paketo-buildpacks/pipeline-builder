@@ -18,10 +18,12 @@ package octo
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 
-	"github.com/BurntSushi/toml"
+	"github.com/pelletier/go-toml"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
@@ -29,21 +31,21 @@ import (
 
 func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error) {
 	file := filepath.Join(descriptor.Path, "builder.toml")
-	if e, err := exists(file); err != nil {
-		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
-	} else if !e {
+	b, err := ioutil.ReadFile(file)
+	if os.IsNotExist(err) {
 		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
-
-	var b RawBuilder
-	if _, err := toml.DecodeFile(file, &b); err != nil {
+	var r RawBuilder
+	if err := toml.Unmarshal(b, &r); err != nil {
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
 
 	var contributions []Contribution
 
 	re := regexp.MustCompile(`(.+):[^:]+`)
-	for _, b := range b.Buildpacks {
+	for _, b := range r.Buildpacks {
 		if g := re.FindStringSubmatch(b.Image); g != nil {
 			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
 				return nil, err
@@ -54,7 +56,7 @@ func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error
 	}
 
 	re = regexp.MustCompile(`(.+):[\d.]+-(.+)`)
-	if g := re.FindStringSubmatch(b.Stack.BuildImage); g != nil {
+	if g := re.FindStringSubmatch(r.Stack.BuildImage); g != nil {
 		if c, err := contributeBuildImage(descriptor, g[1], g[2]); err != nil {
 			return nil, err
 		} else {

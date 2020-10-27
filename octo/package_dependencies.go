@@ -18,10 +18,12 @@ package octo
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"regexp"
 
-	"github.com/BurntSushi/toml"
+	"github.com/pelletier/go-toml"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
@@ -29,19 +31,17 @@ import (
 )
 
 func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error) {
-	file := filepath.Join(descriptor.Path, "package.toml")
-	if e, err := exists(file); err != nil {
-		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
-	} else if !e {
-		return nil, nil
-	}
-
 	var contributions []Contribution
 
+	file := filepath.Join(descriptor.Path, "package.toml")
+	b, err := ioutil.ReadFile(file)
+	if os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
+	}
 	var p _package.Package
-
-	file = filepath.Join(descriptor.Path, "package.toml")
-	if _, err := toml.DecodeFile(file, &p); err != nil {
+	if err := toml.Unmarshal(b, &p); err != nil {
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
 

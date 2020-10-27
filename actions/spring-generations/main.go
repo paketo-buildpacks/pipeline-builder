@@ -17,7 +17,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -25,7 +24,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/BurntSushi/toml"
+	"github.com/pelletier/go-toml"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -117,15 +116,12 @@ func main() {
 		return content.Projects[i].Slug < content.Projects[j].Slug
 	})
 
-	b := &bytes.Buffer{}
-	if err := toml.NewEncoder(b).Encode(content); err != nil {
+	b, err := toml.Marshal(content)
+	if err != nil {
 		panic(fmt.Errorf("unable to marshal content\n%w", err))
 	}
 
-	s := b.String()
-	s = strings.ReplaceAll(s, "\n", "%0A")
-
-	fmt.Printf("::set-output name=content::%s\n", s)
+	fmt.Printf("::set-output name=content::%s\n", strings.ReplaceAll(string(b), "\n", "%0A"))
 }
 
 type result struct {

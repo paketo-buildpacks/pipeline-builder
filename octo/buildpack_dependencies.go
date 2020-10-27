@@ -32,7 +32,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 		w := actions.Workflow{
 			Name: fmt.Sprintf("Update %s", d.Name),
 			On: map[event.Type]event.Event{
-				event.ScheduleType:         event.Schedule{{Minute: "30"}},
+				event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "5", DayOfWeek: "1-5"}},
 				event.WorkflowDispatchType: event.WorkflowDispatch{},
 			},
 			Jobs: map[string]actions.Job{

@@ -43,7 +43,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 	w := actions.Workflow{
 		Name: fmt.Sprintf("Create Package %s", filepath.Base(offlinePackage.Target)),
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "45"}},
+			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "12-23", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{

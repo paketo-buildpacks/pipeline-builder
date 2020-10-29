@@ -1,0 +1,5 @@
+path: ../../../buildpacks/github-actions
+
+codeowners:
+- path:  "*"
+  owner: "@buildpacks/distribution-maintainers"

@@ -63,12 +63,14 @@ codeowners:
 package:
   repository:           gcr.io/paketo-buildpacks/adopt-openjdk
   include_dependencies: false
+  register:             true
+  registry_token:       ${{ secrets.JAVA_REGISTRY_TOKEN }}
 ```
 
 * [Example `create-package.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/create-package.yml)
 * [Example `test.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/tests.yml)
 
-`package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.
+`package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the a package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
 #### `builder` (optional)
 ```yaml

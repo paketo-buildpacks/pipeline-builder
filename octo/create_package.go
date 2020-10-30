@@ -18,8 +18,13 @@ package octo
 
 import (
 	"fmt"
+	"io/ioutil"
+	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/BurntSushi/toml"
+	"github.com/buildpacks/libcnb"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
@@ -115,6 +120,30 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	j := w.Jobs["create-package"]
 	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
+
+	if descriptor.Package.Register {
+		file := filepath.Join(descriptor.Path, "buildpack.toml")
+		s, err := ioutil.ReadFile(file)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read %s\n%w", file, err)
+		}
+
+		var b libcnb.Buildpack
+		if err := toml.Unmarshal(s, &b); err != nil {
+			return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
+		}
+
+		j.Steps = append(j.Steps, actions.Step{
+			Uses: "docker://ghcr.io/buildpacks/actions/registry:main",
+			With: map[string]interface{}{
+				"token":   descriptor.Package.RegistryToken,
+				"id":      b.Info.ID,
+				"version": "${{ steps.version.outputs.version }}",
+				"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
+			},
+		})
+	}
+
 	w.Jobs["create-package"] = j
 
 	c, err := NewActionContribution(w)

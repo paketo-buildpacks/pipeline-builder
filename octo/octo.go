@@ -334,6 +334,8 @@ type OfflinePackage struct {
 type Package struct {
 	Repository          string
 	IncludeDependencies bool `yaml:"include_dependencies"`
+	Register            bool
+	RegistryToken       string `yaml:"registry_token"`
 }
 
 func NewDescriptor(path string) (Descriptor, error) {

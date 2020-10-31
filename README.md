@@ -76,9 +76,9 @@ A [Dependendabot configuration file](https://docs.github.com/en/free-pro-team@la
 In order to facilitate the automated creation of draft releases and notes, a set of semver-scope labels (`semver:major`, `semver:minor`, and `semver:patch`) and type labels (`type:bug`, `type:dependency-upgrade`, `type:documentation`, `type:enhancement`, `type:question`, `type:task`) are added to the repository.  In addition, a workflow that enforces exactly one of each label is attached to every PR.
 
 #### Pipeline Updater
-* [Example `update-pipelines.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-pipelines.yml)
+* [Example `update-pipeline.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-pipeline.yml)
 
-A pipeline-updating workflow is added to the repository to ensure that workflows are kept up to date as the `pipeline-builder` evolves.  
+A pipeline-updating workflow is added to the repository to ensure that workflows are kept up to date as the `pipeline-builder` evolves.
 
 #### Release Drafter
 * [Example Release Notes](https://github.com/paketo-buildpacks/adopt-openjdk/releases/tag/v4.1.0)

@@ -42,6 +42,8 @@ const (
 	YJVersion   = "5.0.0"
 )
 
+var RemovedFiles []string
+
 type Octo struct {
 	DescriptorPath string
 }
@@ -122,7 +124,30 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, *c)
 	}
 
+	if c, err := ContributeUpdatePipeline(); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c)
+	}
+
+	if err := o.Remove(descriptor, RemovedFiles); err != nil {
+		return err
+	}
+
 	return o.Write(descriptor, contributions)
+}
+
+func (Octo) Remove(descriptor Descriptor, removals []string) error {
+	for _, r := range removals {
+		file := filepath.Join(descriptor.Path, r)
+		fmt.Printf("Removing %s\n", r)
+
+		if err := os.Remove(file); err != nil && !os.IsNotExist(err) {
+			return fmt.Errorf("unable to remove %s\n%w", r, err)
+		}
+	}
+
+	return nil
 }
 
 func (Octo) Write(descriptor Descriptor, contributions []Contribution) error {
@@ -166,7 +191,7 @@ func NewActionContribution(workflow actions.Workflow) (Contribution, error) {
 	c.Permissions = 0644
 
 	var t []event.Type
-	for k, _ := range workflow.On {
+	for k := range workflow.On {
 		t = append(t, k)
 	}
 
@@ -348,6 +373,10 @@ func NewDescriptor(path string) (Descriptor, error) {
 	var d Descriptor
 	if err := yaml.NewDecoder(in).Decode(&d); err != nil {
 		return Descriptor{}, fmt.Errorf("unable to decode descriptor from %s\n%w", path, err)
+	}
+
+	if d.Path == "" {
+		d.Path = ".."
 	}
 
 	if !filepath.IsAbs(d.Path) {

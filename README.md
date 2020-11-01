@@ -8,13 +8,13 @@ Octo Pipelines is a CLI that generates a collection of GitHub Workflows and othe
 The command line can either be built or run directly using Go.
 
 ```shell
-$: go run github.com/paketo-buildpacks/pipeline-builder/octo/cmd --descriptor <DESCRIPTOR>
+$: go run github.com/paketo-buildpacks/pipeline-builder/cmd/octo --descriptor <DESCRIPTOR>
 ```
 
-The input is a YAML-based descriptor, examples of which can be found in [`descriptors/`](descriptors/).
+The input is a YAML-based descriptor, examples of which can be found in `.github/pipeline-descriptor.yml` in other repositories.
 
 ### Common Workflows
-Regardless of the contents of the descriptor a minimal set of workflows and artifacts are created.
+Regardless of the contents of the descriptor the pipeline builder creates a minimal set of workflows and artifacts.
 
 #### Dependendabot
 * [Example `dependabot.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/dependabot.yml)
@@ -27,7 +27,12 @@ A [Dependendabot configuration file](https://docs.github.com/en/free-pro-team@la
 * [Example `synchronize-labels.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/synchronize-labels.yml)
 * [Example `minimal-labels.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/minimal-labels.yml)
 
-In order to facilitate the automated creation of draft releases and notes, a set of semver-scope labels (`semver:major`, `semver:minor`, and `semver:patch`) and type labels (`type:bug`, `type:dependency-upgrade`, `type:documentation`, `type:enhancement`, `type:question`, `type:task`) are added to the repository.  In addition a workflow that enforces exactly one of each label is attached to every PR.
+In order to facilitate the automated creation of draft releases and notes, a set of semver-scope labels (`semver:major`, `semver:minor`, and `semver:patch`) and type labels (`type:bug`, `type:dependency-upgrade`, `type:documentation`, `type:enhancement`, `type:question`, `type:task`) are added to the repository.  In addition, a workflow that enforces exactly one of each label is attached to every PR.
+
+#### Pipeline Updater
+* [Example `update-pipelines.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-pipelines.yml)
+
+A pipeline-updating workflow is added to the repository to ensure that workflows are kept up to date as the `pipeline-builder` evolves.  
 
 #### Release Drafter
 * [Example Release Notes](https://github.com/paketo-buildpacks/adopt-openjdk/releases/tag/v4.1.0)
@@ -37,15 +42,14 @@ In order to facilitate the automated creation of draft releases and notes, a set
 Draft release notes are created on every commit to `main`.  These notes take into account every PR since the previous release in order to create a division of the types of changes that were made and the semver scope of the change to work out the next release number.
 
 ### Descriptor
-The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.
+The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys are optional.
 
-
-#### `path` (required)
+#### `path`
 ```yaml
-path: ../../adopt-openjdk
+path: ..
 ```
 
-`path` is a pointer to a Git repository, on your local filesystem, where files will be created.
+`path` is a pointer to a Git repository, on your local filesystem, where files will be created.  If unspecified, the default is `..`.
 
 #### `codeowners` (optional)
 ```yaml
@@ -70,7 +74,7 @@ package:
 * [Example `create-package.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/create-package.yml)
 * [Example `test.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/tests.yml)
 
-`package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the a package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
+`package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
 #### `builder` (optional)
 ```yaml
@@ -81,7 +85,7 @@ builder:
 * [Example `create-builder.yml`](https://github.com/projectriff/builder/blob/main/.github/workflows/create-builder.yml)
 * [Example `test.yml`](https://github.com/projectriff/builder/blob/main/.github/workflows/tests.yml)
 
-`builder` is an object that describes the `repository` a builder should be published to.  If defined, a `create-builder` workflow is created thats creates and publishes a new builder when a release is published as well as adds a `create-builder` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the builder in the published release notes.  Finally it will add update workflows for the lifecyle and builder image elements of the `builder.toml` file.
+`builder` is an object that describes the `repository` a builder should be published to.  If defined, a `create-builder` workflow is created that's creates and publishes a new builder when a release is published as well as adds a `create-builder` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the builder in the published release notes.  Finally it will add update workflows for the lifecycle and builder image elements of the `builder.toml` file.
 
 #### `docker_credentials` (optional)
 ```yaml
@@ -157,7 +161,7 @@ with:
 ```
 
 ### Amazon Corretto Dependency
-The Amazon Corretto Dependency watches [Amazon Correto repositories](https://github.com/corretto/) for new versions.
+The Amazon Corretto Dependency watches [Amazon Corretto repositories](https://github.com/corretto/) for new versions.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency:main

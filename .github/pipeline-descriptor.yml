@@ -1,5 +1,3 @@
-path: ../
-
 codeowners:
 - path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"

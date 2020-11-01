@@ -1,5 +1,0 @@
-path: ../../libpak
-
-codeowners:
-- path:  "*"
-  owner: "@paketo-buildpacks/java-buildpacks"

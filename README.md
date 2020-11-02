@@ -1,6 +1,52 @@
 # Pipeline Builder
 The Pipeline Builder is a collection of tools related to GitHub Actions and other GitHub-related concerns for Paketo-style buildpacks.  This collection includes GitHub actions, a CLI that configures pipelines for repositories, and a collection of descriptors for existing repositories.
 
+- [Pipeline Builder](#pipeline-builder)
+  - [Octo Pipelines](#octo-pipelines)
+    - [Getting Started](#getting-started)
+    - [Common Workflows](#common-workflows)
+      - [Dependendabot](#dependendabot)
+      - [Labels](#labels)
+      - [Pipeline Updater](#pipeline-updater)
+      - [Release Drafter](#release-drafter)
+    - [Descriptor](#descriptor)
+      - [`codeowners`](#codeowners)
+      - [`package`](#package)
+      - [`builder`](#builder)
+      - [`docker_credentials`](#docker_credentials)
+      - [`http_credentials`](#http_credentials)
+      - [`dependencies`](#dependencies)
+      - [`test`](#test)
+      - [`path`](#path)
+      - [`offline_packages`](#offline_packages)
+      - [`actions`](#actions)
+  - [Actions](#actions-1)
+    - [AdoptOpenJDK Dependency](#adoptopenjdk-dependency)
+    - [Amazon Corretto Dependency](#amazon-corretto-dependency)
+    - [AppDynamics Dependency](#appdynamics-dependency)
+    - [Aqua Security Dependency](#aqua-security-dependency)
+    - [Azul Zulu Dependency](#azul-zulu-dependency)
+    - [Bellsoft Liberica Dependency](#bellsoft-liberica-dependency)
+    - [CA APM Dependency](#ca-apm-dependency)
+    - [GCS Dependency](#gcs-dependency)
+    - [GitHub Release Dependency](#github-release-dependency)
+    - [Google Stackdriver Profiler Dependency](#google-stackdriver-profiler-dependency)
+    - [GraalVM Dependency](#graalvm-dependency)
+    - [Gradle Dependency](#gradle-dependency)
+    - [JProfiler Dependency](#jprofiler-dependency)
+    - [JRebel Dependency](#jrebel-dependency)
+    - [Leiningen Dependency](#leiningen-dependency)
+    - [Maven Dependency](#maven-dependency)
+    - [New Relic Dependency](#new-relic-dependency)
+    - [NPM Dependency](#npm-dependency)
+    - [OverOps Dependency](#overops-dependency)
+    - [Riverbed Dependency](#riverbed-dependency)
+    - [Skywalking Dependency](#skywalking-dependency)
+    - [Spring Generations](#spring-generations)
+    - [Tomcat Dependency](#tomcat-dependency)
+    - [YourKit Dependency](#yourkit-dependency)
+  - [License](#license)
+
 ## Octo Pipelines
 Octo Pipelines is a CLI that generates a collection of GitHub Workflows and other Github-related artifacts in a repository.  The pipeline generator takes a simplified descriptor as input and transforms it into more complicated workflows and artifacts.
 
@@ -44,14 +90,7 @@ Draft release notes are created on every commit to `main`.  These notes take int
 ### Descriptor
 The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys are optional.
 
-#### `path`
-```yaml
-path: ..
-```
-
-`path` is a pointer to a Git repository, on your local filesystem, where files will be created.  If unspecified, the default is `..`.
-
-#### `codeowners` (optional)
+#### `codeowners`
 ```yaml
 codeowners:
 - path:  "*"
@@ -62,7 +101,7 @@ codeowners:
 
 `codeowners` is a list of objects test describe a `path` and `owner`.  Each of these objects corresponds to a line in [`CODEOWNERS`](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-code-owners) file.
 
-#### `package` (optional)
+#### `package`
 ```yaml
 package:
   repository:           gcr.io/paketo-buildpacks/adopt-openjdk
@@ -76,7 +115,7 @@ package:
 
 `package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
-#### `builder` (optional)
+#### `builder`
 ```yaml
 builder:
   repository: gcr.io/projectriff/builder
@@ -87,7 +126,7 @@ builder:
 
 `builder` is an object that describes the `repository` a builder should be published to.  If defined, a `create-builder` workflow is created that's creates and publishes a new builder when a release is published as well as adds a `create-builder` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the builder in the published release notes.  Finally it will add update workflows for the lifecycle and builder image elements of the `builder.toml` file.
 
-#### `docker_credentials` (optional)
+#### `docker_credentials`
 ```yaml
 docker_credentials:
 - registry: gcr.io
@@ -97,7 +136,7 @@ docker_credentials:
 
 `docker_credentials` is a list of objects that describes a `registry`, `username`, and `password` for authenticating against a Docker registry.  In every job that registry access is required, a [Docker Login Action](https://github.com/marketplace/actions/docker-login) is created and conditionalized so that it will only run on pushes to `main` and on PRs that come from the same repository (to protect the secrets).
 
-#### `http_credentials` (optional)
+#### `http_credentials`
 ```yaml
 http_credentials:
 - host:     download.aquasec.com
@@ -107,7 +146,7 @@ http_credentials:
 
 `http_credentials` is a list of objects that describe a `host`, `username`, and `password` for authenticating requests against an HTTP endpoint.  In every job that HTTP access is required a [`.netrc` file](https://www.gnu.org/software/inetutils/manual/html_node/The-_002enetrc-file.html) is written and conditionalized so that it will only be written on pushes to `main` and on PRs that come from the same repository (to protect the secrets).
 
-#### `dependencies` (optional)
+#### `dependencies`
 ```yaml
 dependencies:
 - name:            JRE 11
@@ -124,7 +163,40 @@ dependencies:
 
 `dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
 
-#### `offline_packages` (optional)
+#### `test`
+```yaml
+test:
+  steps:
+  - name: Install richgo
+    run: |
+      #!/usr/bin/env bash
+
+      set -euo pipefail
+
+      GO111MODULE=on go get -u -ldflags="-s -w" github.com/kyoh86/richgo
+  - name: Run Tests
+    run: |
+      #!/usr/bin/env bash
+
+      set -euo pipefail
+
+      richgo test ./...
+    env:
+      RICHGO_FORCE_COLOR: "1"
+```
+
+`test` is an object that allows you to override the default test configuration by specifying a list of `steps` as defined by the [GitHub Actions reference documentation][gha].  The default value is described in the example above.
+
+[gha]: https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-syntax-for-github-actions#jobsjob_idsteps
+
+#### `path`
+```yaml
+path: ..
+```
+
+`path` is a pointer to a Git repository, on your local filesystem, where files will be created.  If unspecified, the default is `..`.
+
+#### `offline_packages`
 ```yaml
 offline_packages:
 - source: paketo-buildpacks/adopt-openjdk
@@ -133,7 +205,7 @@ offline_packages:
 
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
 
-#### `actions` (optional)
+#### `actions`
 ```yaml
 actions:
 - source: adopt-openjdk-dependency

@@ -94,7 +94,7 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c...)
 	}
 
-	if c, err := ContributeLabels(); err != nil {
+	if c, err := ContributeLabels(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c...)
@@ -118,7 +118,7 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, *c)
 	}
 
-	if c, err := ContributeUpdatePipeline(); err != nil {
+	if c, err := ContributeUpdatePipeline(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c)

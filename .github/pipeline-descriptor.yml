@@ -1,11 +1,13 @@
+github_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
+
 codeowners:
 - path:  "*"
   owner: "@paketo-buildpacks/java-buildpacks"
 
 docker_credentials:
 - registry: ghcr.io
-  username: ${{ secrets.JAVA_GHCR_USERNAME }}
-  password: ${{ secrets.JAVA_GHCR_TOKEN }}
+  username: ${{ secrets.JAVA_GITHUB_USERNAME }}
+  password: ${{ secrets.JAVA_GITHUB_TOKEN }}
 
 actions:
 - source: adopt-openjdk-dependency

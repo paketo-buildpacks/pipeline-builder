@@ -103,7 +103,7 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": "${{ secrets.GITHUB_TOKEN }}",
+							"token": descriptor.GitHubToken,
 							"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.outputs.new-version }}
 
 Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.outputs.new-version }}.`, name),

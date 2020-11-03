@@ -88,7 +88,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 					{
 						Id:   "release-drafter",
 						Uses: "release-drafter/release-drafter@v5",
-						Env:  map[string]string{"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"},
+						Env:  map[string]string{"GITHUB_TOKEN": descriptor.GitHubToken},
 					},
 				},
 			},
@@ -141,7 +141,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 				Name: "Update draft release with buildpack information",
 				Run:  statikString("/update-draft-release-buildpack.sh"),
 				Env: map[string]string{
-					"GITHUB_TOKEN":     "${{ secrets.GITHUB_TOKEN }}",
+					"GITHUB_TOKEN":     descriptor.GitHubToken,
 					"RELEASE_ID":       "${{ steps.release-drafter.outputs.id }}",
 					"RELEASE_TAG_NAME": "${{ steps.release-drafter.outputs.tag_name }}",
 					"RELEASE_NAME":     "${{ steps.release-drafter.outputs.name }}",

@@ -23,9 +23,9 @@ jobs:
               name: Docker login ghcr.io
               uses: docker/login-action@v1
               with:
-                password: ${{ secrets.JAVA_GHCR_TOKEN }}
+                password: ${{ secrets.JAVA_GITHUB_TOKEN }}
                 registry: ghcr.io
-                username: ${{ secrets.JAVA_GHCR_USERNAME }}
+                username: ${{ secrets.JAVA_GITHUB_USERNAME }}
             - uses: actions/checkout@v2
             - id: version
               name: Compute Version

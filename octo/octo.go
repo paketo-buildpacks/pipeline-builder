@@ -38,7 +38,7 @@ import (
 
 const (
 	GoVersion   = "1.15"
-	PackVersion = "0.14.1"
+	PackVersion = "0.14.2"
 	YJVersion   = "5.0.0"
 )
 

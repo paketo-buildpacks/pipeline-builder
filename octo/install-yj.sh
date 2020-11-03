@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+echo "Installing yj ${YJ_VERSION}"
+
 mkdir -p "${HOME}"/bin
 echo "${HOME}/bin" >> "${GITHUB_PATH}"
 

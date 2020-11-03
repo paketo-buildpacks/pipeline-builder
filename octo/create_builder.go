@@ -41,20 +41,21 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/checkout@v2",
-					},
-					{
 						Uses: "actions/setup-go@v2",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
 						Name: "Install crane",
 						Run:  statikString("/install-crane.sh"),
+						Env:  map[string]string{"CraneVersion": CraneVersion},
 					},
 					{
 						Name: "Install pack",
 						Run:  statikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
+					},
+					{
+						Uses: "actions/checkout@v2",
 					},
 					{
 						Id:   "version",

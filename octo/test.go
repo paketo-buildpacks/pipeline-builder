@@ -77,12 +77,12 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/checkout@v2",
-				},
-				{
 					Name: "Install pack",
 					Run:  statikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Uses: "actions/checkout@v2",
 				},
 				{
 					Id:   "version",
@@ -111,6 +111,19 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
+					Name: "Install create-package",
+					Run:  statikString("/install-create-package.sh"),
+				},
+				{
+					Name: "Install pack",
+					Run:  statikString("/install-pack.sh"),
+					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Uses: "actions/setup-go@v2",
+					With: map[string]interface{}{"go-version": GoVersion},
+				},
+				{
 					Uses: "actions/checkout@v2",
 				},
 				{
@@ -123,19 +136,6 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 						"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}",
 						"restore-keys": "${{ runner.os }}-go-",
 					},
-				},
-				{
-					Uses: "actions/setup-go@v2",
-					With: map[string]interface{}{"go-version": GoVersion},
-				},
-				{
-					Name: "Install create-package",
-					Run:  statikString("/install-create-package.sh"),
-				},
-				{
-					Name: "Install pack",
-					Run:  statikString("/install-pack.sh"),
-					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
 					Id:   "version",

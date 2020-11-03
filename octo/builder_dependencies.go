@@ -86,24 +86,25 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/checkout@v2",
-					},
-					{
 						Uses: "actions/setup-go@v2",
 						With: map[string]interface{}{"go-version": GoVersion},
-					},
-					{
-						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Name: "Install update-build-image-dependency",
 						Run:  statikString("/install-update-build-image-dependency.sh"),
 					},
 					{
+						Name: "Install crane",
+						Run:  statikString("/install-crane.sh"),
+						Env:  map[string]string{"CraneVersion": CraneVersion},
+					},
+					{
 						Name: "Install yj",
 						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
+					},
+					{
+						Uses: "actions/checkout@v2",
 					},
 					{
 						Id:   "build-image",
@@ -154,9 +155,6 @@ func contributeLifecycle() (Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/checkout@v2",
-					},
-					{
 						Uses: "actions/setup-go@v2",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
@@ -168,6 +166,9 @@ func contributeLifecycle() (Contribution, error) {
 						Name: "Install yj",
 						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
+					},
+					{
+						Uses: "actions/checkout@v2",
 					},
 					{
 						Id:   "dependency",

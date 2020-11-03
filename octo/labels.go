@@ -25,7 +25,7 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/labels"
 )
 
-func ContributeLabels() ([]Contribution, error) {
+func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 	var contributions []Contribution
 
 	l := []labels.Label{
@@ -100,7 +100,7 @@ func ContributeLabels() ([]Contribution, error) {
 					},
 					{
 						Uses: "micnncim/action-label-syncer@v1",
-						Env:  map[string]string{"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}"},
+						Env:  map[string]string{"GITHUB_TOKEN": descriptor.GitHubToken},
 					},
 				},
 			},

@@ -64,7 +64,7 @@ func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error
 		}
 	}
 
-	if c, err := contributeLifecycle(); err != nil {
+	if c, err := contributeLifecycle(descriptor); err != nil {
 		return nil, err
 	} else {
 		contributions = append(contributions, c)
@@ -118,7 +118,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": "${{ secrets.GITHUB_TOKEN }}",
+							"token": descriptor.GitHubToken,
 							"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build-image.outputs.new-version }}
 
 Bumps %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build-image.outputs.new-version }}.`, image),
@@ -142,7 +142,7 @@ Bumps %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build
 	return NewActionContribution(w)
 }
 
-func contributeLifecycle() (Contribution, error) {
+func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 	w := actions.Workflow{
 		Name: "Update Lifecycle",
 		On: map[event.Type]event.Event{
@@ -177,7 +177,7 @@ func contributeLifecycle() (Contribution, error) {
 							"glob":       `lifecycle-v[^+]+\+linux\.x86-64\.tgz`,
 							"owner":      "buildpacks",
 							"repository": "lifecycle",
-							"token":      "${{ secrets.GITHUB_TOKEN }}",
+							"token":      descriptor.GitHubToken,
 						},
 					},
 					{
@@ -191,7 +191,7 @@ func contributeLifecycle() (Contribution, error) {
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": "${{ secrets.GITHUB_TOKEN }}",
+							"token": descriptor.GitHubToken,
 							"commit-message": `Bump lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lifecycle.outputs.new-version }}
 
 Bumps lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lifecycle.outputs.new-version }}.`,

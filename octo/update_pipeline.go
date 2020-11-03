@@ -23,7 +23,7 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
 
-func ContributeUpdatePipeline() (Contribution, error) {
+func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 	w := actions.Workflow{
 		Name: "Update Pipeline",
 		On: map[event.Type]event.Event{
@@ -51,14 +51,14 @@ func ContributeUpdatePipeline() (Contribution, error) {
 						Name: "Update Pipeline",
 						Run:  statikString("/update-pipeline.sh"),
 						Env: map[string]string{
-							"GITHUB_TOKEN": "${{ secrets.GITHUB_TOKEN }}",
+							"GITHUB_TOKEN": descriptor.GitHubToken,
 							"DESCRIPTOR":   filepath.Join(".github", "pipeline-descriptor.yml"),
 						},
 					},
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": "${{ secrets.GITHUB_TOKEN }}",
+							"token": descriptor.GitHubToken,
 							"commit-message": `Bump pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}
 
 Bumps pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}.`,

@@ -27,6 +27,7 @@ import (
 )
 
 type Descriptor struct {
+	GitHubToken       string `yaml:"github_token"`
 	Path              string
 	CodeOwners        []CodeOwner
 	Builder           *Builder
@@ -99,6 +100,10 @@ func NewDescriptor(path string) (Descriptor, error) {
 	var d Descriptor
 	if err := yaml.NewDecoder(in).Decode(&d); err != nil {
 		return Descriptor{}, fmt.Errorf("unable to decode descriptor from %s\n%w", path, err)
+	}
+
+	if d.GitHubToken == "" {
+		return Descriptor{}, fmt.Errorf("github_token is required")
 	}
 
 	if d.Path == "" {

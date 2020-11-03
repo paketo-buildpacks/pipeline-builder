@@ -32,12 +32,14 @@ if [[ -e package.toml ]]; then
   done
 fi
 
-while IFS= read -r -d '' FILE; do
-  PAYLOAD=$(jq -n -r \
-    --argjson PAYLOAD "${PAYLOAD}" \
-    --argjson BUILDPACK "$(yj -tj < "${FILE}")" \
-    '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
-done < <(find buildpacks -name buildpack.toml -print0)
+if [[ -d buildpacks ]]; then
+  while IFS= read -r -d '' FILE; do
+    PAYLOAD=$(jq -n -r \
+      --argjson PAYLOAD "${PAYLOAD}" \
+      --argjson BUILDPACK "$(yj -tj < "${FILE}")" \
+      '$PAYLOAD | .buildpacks += [ $BUILDPACK ]')
+  done < <(find buildpacks -name buildpack.toml -print0)
+fi
 
 jq -n -r \
   --argjson PAYLOAD "${PAYLOAD}" \

@@ -52,19 +52,16 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
+						Name: "Install crane",
+						Run:  statikString("/install-crane.sh"),
+						Env:  map[string]string{"CraneVersion": CraneVersion},
+					},
+					{
 						Uses: "actions/checkout@v2",
 						With: map[string]interface{}{
 							"repository":  offlinePackage.Source,
 							"fetch-depth": 0,
 						},
-					},
-					{
-						Uses: "actions/setup-go@v2",
-						With: map[string]interface{}{"go-version": GoVersion},
-					},
-					{
-						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Id:   "version",
@@ -74,6 +71,11 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 							"SOURCE": offlinePackage.Source,
 							"TARGET": offlinePackage.Target,
 						},
+					},
+					{
+						Uses: "actions/setup-go@v2",
+						If:   "${{ ! steps.version.outputs.skip }}",
+						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
 						Uses: "actions/cache@v2",

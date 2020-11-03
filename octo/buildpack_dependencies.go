@@ -41,9 +41,6 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
-							Uses: "actions/checkout@v2",
-						},
-						{
 							Uses: "actions/setup-go@v2",
 							With: map[string]interface{}{"go-version": GoVersion},
 						},
@@ -55,6 +52,9 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							Name: "Install yj",
 							Run:  statikString("/install-yj.sh"),
 							Env:  map[string]string{"YJ_VERSION": YJVersion},
+						},
+						{
+							Uses: "actions/checkout@v2",
 						},
 						{
 							Id:   "dependency",

@@ -29,9 +29,11 @@ import (
 //go:generate statik -src . -include *.sh
 
 const (
-	GoVersion   = "1.15"
-	PackVersion = "0.14.2"
-	YJVersion   = "5.0.0"
+	CraneVersion  = "0.1.4"
+	GoVersion     = "1.15"
+	PackVersion   = "0.14.2"
+	RichGoVersion = "0.3.3"
+	YJVersion     = "5.0.0"
 )
 
 var RemovedFiles []string

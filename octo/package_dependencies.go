@@ -74,24 +74,25 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/checkout@v2",
-					},
-					{
 						Uses: "actions/setup-go@v2",
 						With: map[string]interface{}{"go-version": GoVersion},
-					},
-					{
-						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
 					},
 					{
 						Name: "Install update-package-dependency",
 						Run:  statikString("/install-update-package-dependency.sh"),
 					},
 					{
+						Name: "Install crane",
+						Run:  statikString("/install-crane.sh"),
+						Env:  map[string]string{"CraneVersion": CraneVersion},
+					},
+					{
 						Name: "Install yj",
 						Run:  statikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
+					},
+					{
+						Uses: "actions/checkout@v2",
 					},
 					{
 						Id:   "package",

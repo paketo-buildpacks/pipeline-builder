@@ -121,24 +121,21 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 
 			j.Steps = append(j.Steps,
 				actions.Step{
-					Uses: "actions/setup-go@v2",
-					With: map[string]interface{}{"go-version": GoVersion},
-				},
-				actions.Step{
 					Name: "Install crane",
 					Run:  statikString("/install-crane.sh"),
+					Env:  map[string]string{"CraneVersion": CraneVersion},
 				},
 			)
 		}
 
 		j.Steps = append(j.Steps,
 			actions.Step{
-				Uses: "actions/checkout@v2",
-			},
-			actions.Step{
 				Name: "Install yj",
 				Run:  statikString("/install-yj.sh"),
 				Env:  map[string]string{"YJ_VERSION": YJVersion},
+			},
+			actions.Step{
+				Uses: "actions/checkout@v2",
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",

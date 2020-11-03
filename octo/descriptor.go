@@ -128,6 +128,7 @@ func NewDescriptor(path string) (Descriptor, error) {
 			{
 				Name: "Install richgo",
 				Run:  statikString("/install-richgo.sh"),
+				Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
 			},
 			{
 				Name: "Run Tests",

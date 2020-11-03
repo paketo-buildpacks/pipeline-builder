@@ -44,7 +44,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	if f, err := find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
 		return nil, fmt.Errorf("unable to find .go files in %s\n%w", descriptor.Path, err)
 	} else if len(f) > 0 {
-		w.Jobs["unit"] = actions.Job{
+		j := actions.Job{
 			Name:   "Unit Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
@@ -63,17 +63,12 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Uses: "actions/setup-go@v2",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
-				{
-					Name: "Install richgo",
-					Run:  statikString("/install-richgo.sh"),
-				},
-				{
-					Name: "Run Tests",
-					Run:  statikString("/run-tests.sh"),
-					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
-				},
 			},
 		}
+
+		j.Steps = append(j.Steps, descriptor.Test.Steps...)
+
+		w.Jobs["unit"] = j
 	}
 
 	if descriptor.Builder != nil {

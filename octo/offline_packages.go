@@ -54,7 +54,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Name: "Install crane",
 						Run:  statikString("/install-crane.sh"),
-						Env:  map[string]string{"CraneVersion": CraneVersion},
+						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Uses: "actions/checkout@v2",

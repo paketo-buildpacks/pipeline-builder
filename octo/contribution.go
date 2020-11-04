@@ -110,7 +110,7 @@ func NewHttpCredentialActions(credentials []HTTPCredentials) []actions.Step {
 		s = append(s, actions.Step{
 			Name: fmt.Sprintf("HTTP login %s", c.Host),
 			If:   "${{ github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork }}",
-			Run:  statikString("/update-netrc.sh"),
+			Run:  StatikString("/update-netrc.sh"),
 			Env: map[string]string{
 				"HOST":     c.Host,
 				"USERNAME": c.Username,

@@ -41,8 +41,8 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		Jobs: map[string]actions.Job{},
 	}
 
-	if f, err := find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
-		return nil, fmt.Errorf("unable to find .go files in %s\n%w", descriptor.Path, err)
+	if f, err := Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
+		return nil, fmt.Errorf("unable to Find .go files in %s\n%w", descriptor.Path, err)
 	} else if len(f) > 0 {
 		j := actions.Job{
 			Name:   "Unit Test",
@@ -78,7 +78,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			Steps: []actions.Step{
 				{
 					Name: "Install pack",
-					Run:  statikString("/install-pack.sh"),
+					Run:  StatikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
@@ -87,11 +87,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				{
 					Id:   "version",
 					Name: "Compute Version",
-					Run:  statikString("/compute-version.sh"),
+					Run:  StatikString("/compute-version.sh"),
 				},
 				{
 					Name: "Create Builder",
-					Run:  statikString("/create-builder.sh"),
+					Run:  StatikString("/create-builder.sh"),
 					Env: map[string]string{
 						"BUILDER": "test",
 						"VERSION": "${{ steps.version.outputs.version }}",
@@ -112,11 +112,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			Steps: []actions.Step{
 				{
 					Name: "Install create-package",
-					Run:  statikString("/install-create-package.sh"),
+					Run:  StatikString("/install-create-package.sh"),
 				},
 				{
 					Name: "Install pack",
-					Run:  statikString("/install-pack.sh"),
+					Run:  StatikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
@@ -140,11 +140,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				{
 					Id:   "version",
 					Name: "Compute Version",
-					Run:  statikString("/compute-version.sh"),
+					Run:  StatikString("/compute-version.sh"),
 				},
 				{
 					Name: "Create Package",
-					Run:  statikString("/create-package.sh"),
+					Run:  StatikString("/create-package.sh"),
 					Env: map[string]string{
 						"INCLUDE_DEPENDENCIES": "true",
 						"VERSION":              "${{ steps.version.outputs.version }}",
@@ -152,7 +152,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Package Buildpack",
-					Run:  statikString("/package-buildpack.sh"),
+					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
 						"PACKAGE": "test",
 						"VERSION": "${{ steps.version.outputs.version }}",
@@ -172,5 +172,5 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		return nil, err
 	}
 
-	return &c, err
+	return &c, nil
 }

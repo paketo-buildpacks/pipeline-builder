@@ -46,11 +46,11 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 						},
 						{
 							Name: "Install update-buildpack-dependency",
-							Run:  statikString("/install-update-buildpack-dependency.sh"),
+							Run:  StatikString("/install-update-buildpack-dependency.sh"),
 						},
 						{
 							Name: "Install yj",
-							Run:  statikString("/install-yj.sh"),
+							Run:  StatikString("/install-yj.sh"),
 							Env:  map[string]string{"YJ_VERSION": YJVersion},
 						},
 						{
@@ -64,7 +64,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 						{
 							Id:   "buildpack",
 							Name: "Update Buildpack Dependency",
-							Run:  statikString("/update-buildpack-dependency.sh"),
+							Run:  StatikString("/update-buildpack-dependency.sh"),
 							Env: map[string]string{
 								"ID":              d.Id,
 								"SHA256":          "${{ steps.dependency.outputs.sha256 }}",

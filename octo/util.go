@@ -26,7 +26,7 @@ import (
 	_ "github.com/paketo-buildpacks/pipeline-builder/octo/statik"
 )
 
-func exists(path string) (bool, error) {
+func Exists(path string) (bool, error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false, nil
 	} else if err != nil {
@@ -36,9 +36,9 @@ func exists(path string) (bool, error) {
 	}
 }
 
-type predicate func(string) bool
+type Predicate func(string) bool
 
-func find(path string, predicate predicate) ([]string, error) {
+func Find(path string, predicate Predicate) ([]string, error) {
 	var matches []string
 
 	err := filepath.Walk(path, func(path string, info os.FileInfo, err error) error {
@@ -58,7 +58,7 @@ func find(path string, predicate predicate) ([]string, error) {
 
 var statik, _ = fs.New()
 
-func statikString(path string) string {
+func StatikString(path string) string {
 	in, err := statik.Open(path)
 	if err != nil {
 		panic(err)

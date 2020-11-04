@@ -46,12 +46,12 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
+						Run:  StatikString("/install-crane.sh"),
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Name: "Install pack",
-						Run:  statikString("/install-pack.sh"),
+						Run:  StatikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
@@ -60,12 +60,12 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 					{
 						Id:   "version",
 						Name: "Compute Version",
-						Run:  statikString("/compute-version.sh"),
+						Run:  StatikString("/compute-version.sh"),
 					},
 					{
 						Id:   "builder",
 						Name: "Create Builder",
-						Run:  statikString("/create-builder.sh"),
+						Run:  StatikString("/create-builder.sh"),
 						Env: map[string]string{
 							"BUILDER": descriptor.Builder.Repository,
 							"PUBLISH": "true",
@@ -74,7 +74,7 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Update release with digest",
-						Run:  statikString("/update-release-digest.sh"),
+						Run:  StatikString("/update-release-digest.sh"),
 						Env: map[string]string{
 							"DIGEST":       "${{ steps.builder.outputs.digest }}",
 							"GITHUB_TOKEN": descriptor.GitHubToken,

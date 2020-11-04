@@ -53,7 +53,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 				Steps: []actions.Step{
 					{
 						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
+						Run:  StatikString("/install-crane.sh"),
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
@@ -66,7 +66,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Id:   "version",
 						Name: "Checkout next version",
-						Run:  statikString("/checkout-next-version.sh"),
+						Run:  StatikString("/checkout-next-version.sh"),
 						Env: map[string]string{
 							"SOURCE": offlinePackage.Source,
 							"TARGET": offlinePackage.Target,
@@ -91,18 +91,18 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Name: "Install create-package",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  statikString("/install-create-package.sh"),
+						Run:  StatikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install pack",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  statikString("/install-pack.sh"),
+						Run:  StatikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
 						Name: "Create Package",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  statikString("/create-package.sh"),
+						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": "true",
 							"VERSION":              "${{ steps.version.outputs.version }}",
@@ -111,7 +111,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					{
 						Name: "Package Buildpack",
 						If:   "${{ ! steps.version.outputs.skip }}",
-						Run:  statikString("/package-buildpack.sh"),
+						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
 							"PACKAGE": offlinePackage.Target,
 							"PUBLISH": "true",

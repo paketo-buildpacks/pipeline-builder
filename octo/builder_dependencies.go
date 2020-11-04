@@ -91,16 +91,16 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					},
 					{
 						Name: "Install update-build-image-dependency",
-						Run:  statikString("/install-update-build-image-dependency.sh"),
+						Run:  StatikString("/install-update-build-image-dependency.sh"),
 					},
 					{
 						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
+						Run:  StatikString("/install-crane.sh"),
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Name: "Install yj",
-						Run:  statikString("/install-yj.sh"),
+						Run:  StatikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
@@ -109,7 +109,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					{
 						Id:   "build-image",
 						Name: "Update Build Image Dependency",
-						Run:  statikString("/update-build-image-dependency.sh"),
+						Run:  StatikString("/update-build-image-dependency.sh"),
 						Env: map[string]string{
 							"IMAGE":      image,
 							"CLASSIFIER": classifier,
@@ -160,11 +160,11 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 					},
 					{
 						Name: "Install update-lifecycle-dependency",
-						Run:  statikString("/install-update-lifecycle-dependency.sh"),
+						Run:  StatikString("/install-update-lifecycle-dependency.sh"),
 					},
 					{
 						Name: "Install yj",
-						Run:  statikString("/install-yj.sh"),
+						Run:  StatikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
@@ -183,7 +183,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 					{
 						Id:   "lifecycle",
 						Name: "Update Lifecycle Dependency",
-						Run:  statikString("/update-lifecycle-dependency.sh"),
+						Run:  StatikString("/update-lifecycle-dependency.sh"),
 						Env: map[string]string{
 							"VERSION": "${{ steps.dependency.outputs.version }}",
 						},

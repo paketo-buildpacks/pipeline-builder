@@ -41,7 +41,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 					},
 					{
 						Name: "Install octo",
-						Run:  statikString("/install-octo.sh"),
+						Run:  StatikString("/install-octo.sh"),
 					},
 					{
 						Uses: "actions/checkout@v2",
@@ -49,7 +49,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 					{
 						Id:   "pipeline",
 						Name: "Update Pipeline",
-						Run:  statikString("/update-pipeline.sh"),
+						Run:  StatikString("/update-pipeline.sh"),
 						Env: map[string]string{
 							"GITHUB_TOKEN": descriptor.GitHubToken,
 							"DESCRIPTOR":   filepath.Join(".github", "pipeline-descriptor.yml"),

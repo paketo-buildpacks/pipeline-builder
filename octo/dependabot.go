@@ -37,8 +37,8 @@ func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
 	}
 
 	file := filepath.Join(descriptor.Path, "go.mod")
-	if e, err := exists(file); err != nil {
-		return Contribution{}, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+	if e, err := Exists(file); err != nil {
+		return Contribution{}, fmt.Errorf("unable to determine if %s Exists\n%w", file, err)
 	} else if e {
 		d.Updates = append(d.Updates, dependabot.Update{
 			PackageEcosystem: dependabot.GoModulesPackageEcosystem,

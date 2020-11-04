@@ -55,16 +55,16 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Install create-package",
-						Run:  statikString("/install-create-package.sh"),
+						Run:  StatikString("/install-create-package.sh"),
 					},
 					{
 						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
+						Run:  StatikString("/install-crane.sh"),
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Name: "Install pack",
-						Run:  statikString("/install-pack.sh"),
+						Run:  StatikString("/install-pack.sh"),
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
@@ -85,11 +85,11 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					{
 						Id:   "version",
 						Name: "Compute Version",
-						Run:  statikString("/compute-version.sh"),
+						Run:  StatikString("/compute-version.sh"),
 					},
 					{
 						Name: "Create Package",
-						Run:  statikString("/create-package.sh"),
+						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": strconv.FormatBool(descriptor.Package.IncludeDependencies),
 							"VERSION":              "${{ steps.version.outputs.version }}",
@@ -98,7 +98,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					{
 						Id:   "package",
 						Name: "Package Buildpack",
-						Run:  statikString("/package-buildpack.sh"),
+						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
 							"PACKAGE": descriptor.Package.Repository,
 							"PUBLISH": "true",
@@ -107,7 +107,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Name: "Update release with digest",
-						Run:  statikString("/update-release-digest.sh"),
+						Run:  StatikString("/update-release-digest.sh"),
 						Env: map[string]string{
 							"DIGEST":       "${{ steps.package.outputs.digest }}",
 							"GITHUB_TOKEN": descriptor.GitHubToken,

@@ -27,20 +27,18 @@ import (
 )
 
 func main() {
-	w := octo.Octo{}
-
 	flagSet := pflag.NewFlagSet("octo", pflag.ExitOnError)
-	flagSet.StringVar(&w.DescriptorPath, "descriptor", "", "path to input descriptor")
+	descriptor := flagSet.String("descriptor", "", "path to input descriptor")
 
 	if err := flagSet.Parse(os.Args[1:]); err != nil {
 		log.Fatal(fmt.Errorf("unable to parse flags\n%w", err))
 	}
 
-	if w.DescriptorPath == "" {
+	if descriptor == nil {
 		log.Fatal("--descriptor is required")
 	}
 
-	if err := w.Contribute(); err != nil {
+	if err := octo.Contribute(*descriptor); err != nil {
 		log.Fatal(fmt.Errorf("unable to build\n%w", err))
 	}
 }

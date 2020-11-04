@@ -60,7 +60,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					{
 						Name: "Install crane",
 						Run:  statikString("/install-crane.sh"),
-						Env:  map[string]string{"CraneVersion": CraneVersion},
+						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Name: "Install pack",

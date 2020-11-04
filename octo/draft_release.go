@@ -96,21 +96,21 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 	}
 
 	file := filepath.Join(descriptor.Path, "builder.toml")
-	builderExists, err := exists(file)
+	builderExists, err := Exists(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+		return nil, fmt.Errorf("unable to determine if %s Exists\n%w", file, err)
 	}
 
 	file = filepath.Join(descriptor.Path, "buildpack.toml")
-	buildpackExists, err := exists(file)
+	buildpackExists, err := Exists(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+		return nil, fmt.Errorf("unable to determine if %s Exists\n%w", file, err)
 	}
 
 	file = filepath.Join(descriptor.Path, "package.toml")
-	packageExists, err := exists(file)
+	packageExists, err := Exists(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to determine if %s exists\n%w", file, err)
+		return nil, fmt.Errorf("unable to determine if %s Exists\n%w", file, err)
 	}
 
 	if builderExists || buildpackExists {
@@ -122,7 +122,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			j.Steps = append(j.Steps,
 				actions.Step{
 					Name: "Install crane",
-					Run:  statikString("/install-crane.sh"),
+					Run:  StatikString("/install-crane.sh"),
 					Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 				},
 			)
@@ -131,7 +131,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 		j.Steps = append(j.Steps,
 			actions.Step{
 				Name: "Install yj",
-				Run:  statikString("/install-yj.sh"),
+				Run:  StatikString("/install-yj.sh"),
 				Env:  map[string]string{"YJ_VERSION": YJVersion},
 			},
 			actions.Step{
@@ -139,7 +139,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",
-				Run:  statikString("/update-draft-release-buildpack.sh"),
+				Run:  StatikString("/update-draft-release-buildpack.sh"),
 				Env: map[string]string{
 					"GITHUB_TOKEN":     descriptor.GitHubToken,
 					"RELEASE_ID":       "${{ steps.release-drafter.outputs.id }}",

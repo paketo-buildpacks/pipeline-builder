@@ -79,16 +79,16 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 					},
 					{
 						Name: "Install update-package-dependency",
-						Run:  statikString("/install-update-package-dependency.sh"),
+						Run:  StatikString("/install-update-package-dependency.sh"),
 					},
 					{
 						Name: "Install crane",
-						Run:  statikString("/install-crane.sh"),
+						Run:  StatikString("/install-crane.sh"),
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
 						Name: "Install yj",
-						Run:  statikString("/install-yj.sh"),
+						Run:  StatikString("/install-yj.sh"),
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
@@ -97,7 +97,7 @@ func contributePackageDependency(descriptor Descriptor, name string) (Contributi
 					{
 						Id:   "package",
 						Name: "Update Package Dependency",
-						Run:  statikString("/update-package-dependency.sh"),
+						Run:  StatikString("/update-package-dependency.sh"),
 						Env:  map[string]string{"DEPENDENCY": name},
 					},
 					{

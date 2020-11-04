@@ -38,14 +38,10 @@ const (
 
 var RemovedFiles []string
 
-type Octo struct {
-	DescriptorPath string
-}
-
-func (o Octo) Contribute() error {
-	descriptor, err := NewDescriptor(o.DescriptorPath)
+func Contribute(path string) error {
+	descriptor, err := NewDescriptor(path)
 	if err != nil {
-		return fmt.Errorf("unable to read descriptor\n%w", err)
+		return fmt.Errorf("unable to read descriptor %s\n%w", path, err)
 	}
 
 	var contributions []Contribution
@@ -124,14 +120,14 @@ func (o Octo) Contribute() error {
 		contributions = append(contributions, c)
 	}
 
-	if err := o.Remove(descriptor, RemovedFiles); err != nil {
+	if err := Remove(descriptor, RemovedFiles); err != nil {
 		return err
 	}
 
-	return o.Write(descriptor, contributions)
+	return Write(descriptor, contributions)
 }
 
-func (Octo) Remove(descriptor Descriptor, removals []string) error {
+func Remove(descriptor Descriptor, removals []string) error {
 	for _, r := range removals {
 		file := filepath.Join(descriptor.Path, r)
 		fmt.Printf("Removing %s\n", r)
@@ -144,7 +140,7 @@ func (Octo) Remove(descriptor Descriptor, removals []string) error {
 	return nil
 }
 
-func (Octo) Write(descriptor Descriptor, contributions []Contribution) error {
+func Write(descriptor Descriptor, contributions []Contribution) error {
 	t := gotree.New(descriptor.Path)
 
 	sort.Slice(contributions, func(i, j int) bool {

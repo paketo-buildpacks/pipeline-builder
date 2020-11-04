@@ -58,11 +58,11 @@ func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
 						{
 							Id:   "version",
 							Name: "Compute Version",
-							Run:  statikString("/compute-version.sh"),
+							Run:  StatikString("/compute-version.sh"),
 						},
 						{
 							Name: "Create Action",
-							Run:  statikString("/create-action.sh"),
+							Run:  StatikString("/create-action.sh"),
 							Env: map[string]string{
 								"PUSH":    "${{ github.event_name != 'pull_request' }}",
 								"SOURCE":  a.Source,

@@ -112,7 +112,7 @@ func NewDescriptor(path string) (Descriptor, error) {
 
 	if !filepath.IsAbs(d.Path) {
 		if d.Path, err = filepath.Abs(filepath.Join(filepath.Dir(path), d.Path)); err != nil {
-			return Descriptor{}, fmt.Errorf("unable to find absolute path\n%w", err)
+			return Descriptor{}, fmt.Errorf("unable to Find absolute path\n%w", err)
 		}
 	}
 
@@ -132,12 +132,12 @@ func NewDescriptor(path string) (Descriptor, error) {
 		d.Test.Steps = []actions.Step{
 			{
 				Name: "Install richgo",
-				Run:  statikString("/install-richgo.sh"),
+				Run:  StatikString("/install-richgo.sh"),
 				Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
 			},
 			{
 				Name: "Run Tests",
-				Run:  statikString("/run-tests.sh"),
+				Run:  StatikString("/run-tests.sh"),
 				Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
 			},
 		}

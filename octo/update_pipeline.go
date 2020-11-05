@@ -51,14 +51,14 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 						Name: "Update Pipeline",
 						Run:  StatikString("/update-pipeline.sh"),
 						Env: map[string]string{
-							"GITHUB_TOKEN": descriptor.GitHubToken,
+							"GITHUB_TOKEN": descriptor.GitHub.Token,
 							"DESCRIPTOR":   filepath.Join(".github", "pipeline-descriptor.yml"),
 						},
 					},
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": descriptor.GitHubToken,
+							"token": descriptor.GitHub.Token,
 							"commit-message": `Bump pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}
 
 Bumps pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}.`,

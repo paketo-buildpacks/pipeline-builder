@@ -110,7 +110,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  StatikString("/update-release-digest.sh"),
 						Env: map[string]string{
 							"DIGEST":       "${{ steps.package.outputs.digest }}",
-							"GITHUB_TOKEN": descriptor.GitHubToken,
+							"GITHUB_TOKEN": descriptor.GitHub.Token,
 						},
 					},
 				},

@@ -100,7 +100,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 					},
 					{
 						Uses: "micnncim/action-label-syncer@v1",
-						Env:  map[string]string{"GITHUB_TOKEN": descriptor.GitHubToken},
+						Env:  map[string]string{"GITHUB_TOKEN": descriptor.GitHub.Token},
 					},
 				},
 			},

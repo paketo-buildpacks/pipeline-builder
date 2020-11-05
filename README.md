@@ -91,11 +91,13 @@ Draft release notes are created on every commit to `main`.  These notes take int
 ### Descriptor
 The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys except `github_token` are optional.
 
-#### `github_token` (REQUIRED)
+#### `github` (REQUIRED)
 ```yaml
-github_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
+github:
+  username: ${{ secrets.JAVA_GITHUB_USERNAME }}
+  token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
 ```
-`github_token` represents the token to be used in the many places where the GitHub API access is required.  The token must be granted the `repo`, `write:packages`, and `workflow` scopes.
+`github` is an object the describes the GitHub identity that the pipeline should use in the many places that GitHub API access is required.  The token must be granted the `repo`, `write:packages`, and `workflow` scopes.
 
 ![Token Scopes](token-scopes.png)
 

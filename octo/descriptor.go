@@ -108,7 +108,7 @@ func NewDescriptor(path string) (Descriptor, error) {
 	}
 
 	if d.GitHub == nil {
-		return Descriptor{}, fmt.Errorf("github_token is required")
+		return Descriptor{}, fmt.Errorf("github is required")
 	}
 
 	if d.Path == "" {

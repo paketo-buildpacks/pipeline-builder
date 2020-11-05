@@ -10,7 +10,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
       - [Pipeline Updater](#pipeline-updater)
       - [Release Drafter](#release-drafter)
     - [Descriptor](#descriptor)
-      - [`github_token` (REQUIRED)](#github_token-required)
+      - [`github` (REQUIRED)](#github-required)
       - [`codeowners`](#codeowners)
       - [`package`](#package)
       - [`builder`](#builder)
@@ -89,7 +89,7 @@ A pipeline-updating workflow is added to the repository to ensure that workflows
 Draft release notes are created on every commit to `main`.  These notes take into account every PR since the previous release in order to create a division of the types of changes that were made and the semver scope of the change to work out the next release number.
 
 ### Descriptor
-The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys except `github_token` are optional.
+The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys except `github` are optional.
 
 #### `github` (REQUIRED)
 ```yaml

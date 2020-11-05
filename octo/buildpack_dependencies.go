@@ -75,7 +75,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 						}, {
 							Uses: "peter-evans/create-pull-request@v3",
 							With: map[string]interface{}{
-								"token": descriptor.GitHubToken,
+								"token": descriptor.GitHub.Token,
 								"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}
 
 Bumps %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}.`, d.Name),

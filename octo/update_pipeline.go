@@ -27,6 +27,10 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 	w := actions.Workflow{
 		Name: "Update Pipeline",
 		On: map[event.Type]event.Event{
+			event.PushType: event.Push{
+				Branches: []string{"main"},
+				Paths:    []string{filepath.Join(".github", "pipeline-descriptor.yml")},
+			},
 			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "5", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},

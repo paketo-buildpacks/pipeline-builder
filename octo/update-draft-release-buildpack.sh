@@ -20,14 +20,14 @@ if [[ -e builder.toml ]]; then
   for BUILDPACK in $(
     jq -n -r \
       --argjson PAYLOAD "${PAYLOAD}" \
-      '$PAYLOAD.primary.buildpacks[].image'
+      '$PAYLOAD.primary.buildpacks[].uri | capture("(?:.+://)?(?<image>.+)") | .image'
   ); do
     crane export "${BUILDPACK}" - | tar xf - --absolute-names  --strip-components 1 --wildcards "/cnb/buildpacks/*/*/buildpack.toml"
   done
 fi
 
 if [[ -e package.toml ]]; then
-  for PACKAGE in $(yj -t < package.toml | jq -r '.dependencies[].image'); do
+  for PACKAGE in $(yj -t < package.toml | jq -r '.dependencies[].uri | capture("(?:.+://)?(?<image>.+)") | .image'); do
     crane export "${PACKAGE}" - | tar xf - --absolute-names  --strip-components 1 --wildcards "/cnb/buildpacks/*/*/buildpack.toml"
   done
 fi

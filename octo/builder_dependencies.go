@@ -27,6 +27,7 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/octo/builder"
 )
 
 func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error) {
@@ -37,16 +38,16 @@ func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error
 	} else if err != nil {
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
-	var r RawBuilder
+	var r builder.Builder
 	if err := toml.Unmarshal(b, &r); err != nil {
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
 
 	var contributions []Contribution
 
-	re := regexp.MustCompile(`(.+):[^:]+`)
+	re := regexp.MustCompile(`^(?:.+://)?(.+):[^:]+$`)
 	for _, b := range r.Buildpacks {
-		if g := re.FindStringSubmatch(b.Image); g != nil {
+		if g := re.FindStringSubmatch(b.URI); g != nil {
 			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
 				return nil, err
 			} else {
@@ -209,17 +210,4 @@ Bumps lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lif
 	}
 
 	return NewActionContribution(w)
-}
-
-type RawBuilder struct {
-	Buildpacks []RawBuildpack
-	Stack      RawStack
-}
-
-type RawBuildpack struct {
-	Image string
-}
-
-type RawStack struct {
-	BuildImage string `toml:"build-image"`
 }

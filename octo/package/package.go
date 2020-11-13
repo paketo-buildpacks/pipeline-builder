@@ -19,3 +19,7 @@ package _package
 type Package struct {
 	Dependencies []Dependency
 }
+
+type Dependency struct {
+	URI string
+}

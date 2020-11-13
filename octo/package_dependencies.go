@@ -45,10 +45,10 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
 
-	re := regexp.MustCompile(`^(.+):[^:]+$`)
+	re := regexp.MustCompile(`^(?:.+://)?(.+):[^:]+$`)
 	for _, d := range p.Dependencies {
-		if g := re.FindStringSubmatch(d.Image); g == nil {
-			return nil, fmt.Errorf("unable to parse image coordinates from %s", d.Image)
+		if g := re.FindStringSubmatch(d.URI); g == nil {
+			return nil, fmt.Errorf("unable to parse image coordinates from %s", d.URI)
 		} else {
 			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
 				return nil, err

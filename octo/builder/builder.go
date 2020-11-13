@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package _package
+package builder
 
-type Dependency struct {
-	Image string
+type Builder struct {
+	Buildpacks []Buildpack
+	Stack      Stack
+}
+
+type Buildpack struct {
+	URI string
+}
+
+type Stack struct {
+	BuildImage string `toml:"build-image"`
 }

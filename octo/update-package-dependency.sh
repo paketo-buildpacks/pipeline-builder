@@ -5,7 +5,7 @@ set -euo pipefail
 NEW_VERSION=$(crane ls "${DEPENDENCY}" | grep -v latest | sort -V | tail -n 1)
 
 if [[ -e builder.toml ]]; then
-  OLD_VERSION=$(yj -tj < builder.toml | jq -r ".buildpacks[].image | capture(\"${DEPENDENCY}:(?<version>.+)\") | .version")
+  OLD_VERSION=$(yj -tj < builder.toml | jq -r ".buildpacks[].uri | capture(\".*${DEPENDENCY}:(?<version>.+)\") | .version")
 
   update-package-dependency \
     --builder-toml builder.toml \
@@ -14,7 +14,7 @@ if [[ -e builder.toml ]]; then
 
   git add builder.toml
 elif [[ -e package.toml ]]; then
-  OLD_VERSION=$(yj -tj < package.toml | jq -r ".dependencies[].image | capture(\"${DEPENDENCY}:(?<version>.+)\") | .version")
+  OLD_VERSION=$(yj -tj < package.toml | jq -r ".dependencies[].uri | capture(\".*${DEPENDENCY}:(?<version>.+)\") | .version")
 
   update-package-dependency \
     --buildpack-toml buildpack.toml \

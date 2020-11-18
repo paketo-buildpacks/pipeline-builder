@@ -15,4 +15,4 @@ else
 fi
 
 [[ -e package.toml ]] && cp package.toml "${HOME}"/package.toml
-printf '[buildpack]\nuri = "%s"' "${HOME}"/buildpack >> "${HOME}"/package.toml
+printf '[buildpack]\nuri = "%s"\n\n[platform]\nos = "%s"\n' "${HOME}"/buildpack "${OS}" >> "${HOME}"/package.toml

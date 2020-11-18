@@ -13,5 +13,6 @@ if [[ -n "${PUBLISH+x}" ]]; then
 else
   pack package-buildpack \
     "${PACKAGE}:${VERSION}" \
-    --config "${HOME}"/package.toml
+    --config "${HOME}"/package.toml \
+    --format "${FORMAT}"
 fi

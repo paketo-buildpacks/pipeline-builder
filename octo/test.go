@@ -25,6 +25,11 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
 
+const (
+	FormatFile  = "file"
+	FormatImage = "image"
+)
+
 func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	if descriptor.OfflinePackages != nil {
 		return nil, nil
@@ -106,6 +111,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	}
 
 	if descriptor.Package != nil {
+		format := FormatImage
+		if descriptor.Package.Platform.OS == PlatformWindows {
+			format = FormatFile
+		}
+
 		j := actions.Job{
 			Name:   "Create Package Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
@@ -118,6 +128,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Install pack",
 					Run:  StatikString("/install-pack.sh"),
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Name: "Enable pack Experimental",
+					If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
+					Run:  StatikString("/enable-pack-experimental.sh"),
 				},
 				{
 					Uses: "actions/setup-go@v2",
@@ -147,6 +162,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/create-package.sh"),
 					Env: map[string]string{
 						"INCLUDE_DEPENDENCIES": "true",
+						"OS":                   descriptor.Package.Platform.OS,
 						"VERSION":              "${{ steps.version.outputs.version }}",
 					},
 				},
@@ -154,6 +170,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
+						"FORMAT":  format,
 						"PACKAGE": "test",
 						"VERSION": "${{ steps.version.outputs.version }}",
 					},

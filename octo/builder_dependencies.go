@@ -119,7 +119,8 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": descriptor.GitHub.Token,
+							"token":  descriptor.GitHub.Token,
+							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
 							"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build-image.outputs.new-version }}
 
 Bumps %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build-image.outputs.new-version }}.`, image),
@@ -192,7 +193,8 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": descriptor.GitHub.Token,
+							"token":  descriptor.GitHub.Token,
+							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
 							"commit-message": `Bump lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lifecycle.outputs.new-version }}
 
 Bumps lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lifecycle.outputs.new-version }}.`,

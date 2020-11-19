@@ -17,6 +17,7 @@
 package octo
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
@@ -62,7 +63,8 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 					{
 						Uses: "peter-evans/create-pull-request@v3",
 						With: map[string]interface{}{
-							"token": descriptor.GitHub.Token,
+							"token":  descriptor.GitHub.Token,
+							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
 							"commit-message": `Bump pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}
 
 Bumps pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipeline.outputs.new-version }}.`,

@@ -119,12 +119,16 @@ package:
   include_dependencies: false
   register:             true
   registry_token:       ${{ secrets.JAVA_REGISTRY_TOKEN }}
+  platform:
+    os: linux
 ```
 
 * [Example `create-package.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/create-package.yml)
 * [Example `test.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/tests.yml)
 
 `package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
+
+`platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
 
 #### `builder`
 ```yaml
@@ -212,9 +216,13 @@ path: ..
 offline_packages:
 - source: paketo-buildpacks/adopt-openjdk
   target: gcr.io/tanzu-buildpacks/adopt-openjdk
+  platform:
+    os: linux
 ```
 
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
+
+`platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
 
 #### `actions`
 ```yaml

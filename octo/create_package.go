@@ -35,6 +35,17 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
+	file := filepath.Join(descriptor.Path, "buildpack.toml")
+	s, err := ioutil.ReadFile(file)
+	if err != nil {
+		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
+	}
+
+	var b libcnb.Buildpack
+	if err := toml.Unmarshal(s, &b); err != nil {
+		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
+	}
+
 	w := actions.Workflow{
 		Name: "Create Package",
 		On: map[event.Type]event.Event{
@@ -68,6 +79,11 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
+						Name: "Enable pack Experimental",
+						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
+						Run:  StatikString("/enable-pack-experimental.sh"),
+					},
+					{
 						Uses: "actions/checkout@v2",
 					},
 					{
@@ -92,6 +108,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": strconv.FormatBool(descriptor.Package.IncludeDependencies),
+							"OS":                   descriptor.Package.Platform.OS,
 							"VERSION":              "${{ steps.version.outputs.version }}",
 						},
 					},
@@ -113,6 +130,16 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 							"GITHUB_TOKEN": descriptor.GitHub.Token,
 						},
 					},
+					{
+						Uses: "docker://ghcr.io/buildpacks/actions/registry:main",
+						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Register),
+						With: map[string]interface{}{
+							"token":   descriptor.Package.RegistryToken,
+							"id":      b.Info.ID,
+							"version": "${{ steps.version.outputs.version }}",
+							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
+						},
+					},
 				},
 			},
 		},
@@ -121,30 +148,6 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	j := w.Jobs["create-package"]
 	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
-
-	if descriptor.Package.Register {
-		file := filepath.Join(descriptor.Path, "buildpack.toml")
-		s, err := ioutil.ReadFile(file)
-		if err != nil {
-			return nil, fmt.Errorf("unable to read %s\n%w", file, err)
-		}
-
-		var b libcnb.Buildpack
-		if err := toml.Unmarshal(s, &b); err != nil {
-			return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
-		}
-
-		j.Steps = append(j.Steps, actions.Step{
-			Uses: "docker://ghcr.io/buildpacks/actions/registry:main",
-			With: map[string]interface{}{
-				"token":   descriptor.Package.RegistryToken,
-				"id":      b.Info.ID,
-				"version": "${{ steps.version.outputs.version }}",
-				"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
-			},
-		})
-	}
-
 	w.Jobs["create-package"] = j
 
 	c, err := NewActionContribution(w)

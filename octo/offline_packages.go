@@ -100,11 +100,17 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
+						Name: "Enable pack Experimental",
+						If:   fmt.Sprintf("${{ %t }}", offlinePackage.Platform.OS == PlatformWindows),
+						Run:  StatikString("/enable-pack-experimental.sh"),
+					},
+					{
 						Name: "Create Package",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": "true",
+							"OS":                   descriptor.Package.Platform.OS,
 							"VERSION":              "${{ steps.version.outputs.version }}",
 						},
 					},

@@ -80,8 +80,9 @@ type Dependency struct {
 }
 
 type OfflinePackage struct {
-	Source string
-	Target string
+	Source   string
+	Target   string
+	Platform Platform
 }
 
 type Package struct {
@@ -89,6 +90,16 @@ type Package struct {
 	IncludeDependencies bool `yaml:"include_dependencies"`
 	Register            bool
 	RegistryToken       string `yaml:"registry_token"`
+	Platform            Platform
+}
+
+const (
+	PlatformLinux   = "linux"
+	PlatformWindows = "windows"
+)
+
+type Platform struct {
+	OS string
 }
 
 type Test struct {
@@ -130,6 +141,17 @@ func NewDescriptor(path string) (Descriptor, error) {
 		if e.VersionPattern == "" {
 			e.VersionPattern = `[\d]+\.[\d]+\.[\d]+`
 			d.Dependencies[i] = e
+		}
+	}
+
+	if d.Package != nil && d.Package.Platform.OS == "" {
+		d.Package.Platform.OS = PlatformLinux
+	}
+
+	for i, o := range d.OfflinePackages {
+		if o.Platform.OS == "" {
+			o.Platform.OS = PlatformLinux
+			d.OfflinePackages[i] = o
 		}
 	}
 

@@ -23,6 +23,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
-	google.golang.org/api v0.37.0
+	google.golang.org/api v0.38.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

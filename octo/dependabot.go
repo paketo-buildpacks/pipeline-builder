@@ -26,14 +26,6 @@ import (
 func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
 	d := dependabot.Dependabot{
 		Version: dependabot.Version,
-		Updates: []dependabot.Update{
-			{
-				PackageEcosystem: dependabot.GitHubActionsPackageEcosystem,
-				Directory:        "/",
-				Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
-				Labels:           []string{"semver:patch", "type:dependency-upgrade"},
-			},
-		},
 	}
 
 	file := filepath.Join(descriptor.Path, "go.mod")

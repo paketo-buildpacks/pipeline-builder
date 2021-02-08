@@ -10,7 +10,7 @@ require (
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.3.3 // indirect
 	github.com/aws/aws-sdk-go v1.37.6
-	github.com/buildpacks/libcnb v1.18.1
+	github.com/buildpacks/libcnb v1.19.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.2.0

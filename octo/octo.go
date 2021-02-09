@@ -74,8 +74,8 @@ func Contribute(path string) error {
 
 	if c, err := ContributeDependabot(descriptor); err != nil {
 		return err
-	} else {
-		contributions = append(contributions, c)
+	} else if c != nil {
+		contributions = append(contributions, *c)
 	}
 
 	if c, err := ContributeBuildpackDependencies(descriptor); err != nil {

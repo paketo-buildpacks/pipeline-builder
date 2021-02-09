@@ -18,27 +18,32 @@ package octo
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/dependabot"
 )
 
-func ContributeDependabot(descriptor Descriptor) (Contribution, error) {
-	d := dependabot.Dependabot{
+func ContributeDependabot(descriptor Descriptor) (*Contribution, error) {
+	if _, err := os.Stat(filepath.Join(descriptor.Path, "go.mod")); os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("unable to determine if %s exists\n%w", filepath.Join(descriptor.Path, "go.mod"), err)
+	}
+
+	contrib, err := NewDependabotContribution(dependabot.Dependabot{
 		Version: dependabot.Version,
+		Updates: []dependabot.Update{
+			{
+				PackageEcosystem: dependabot.GoModulesPackageEcosystem,
+				Directory:        "/",
+				Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
+				Labels:           []string{"semver:patch", "type:dependency-upgrade"},
+			},
+		},
+	})
+	if err != nil {
+		return nil, err
 	}
-
-	file := filepath.Join(descriptor.Path, "go.mod")
-	if e, err := Exists(file); err != nil {
-		return Contribution{}, fmt.Errorf("unable to determine if %s Exists\n%w", file, err)
-	} else if e {
-		d.Updates = append(d.Updates, dependabot.Update{
-			PackageEcosystem: dependabot.GoModulesPackageEcosystem,
-			Directory:        "/",
-			Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
-			Labels:           []string{"semver:patch", "type:dependency-upgrade"},
-		})
-	}
-
-	return NewDependabotContribution(d)
+	return &contrib, err
 }

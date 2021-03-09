@@ -28,7 +28,6 @@ import (
 	"regexp"
 	"sort"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
 
@@ -53,7 +52,7 @@ func main() {
 
 	v, ok := inputs["version"]
 	if !ok {
-		panic(fmt.Errorf("repository must be specified"))
+		panic(fmt.Errorf("version must be specified"))
 	}
 
 	var c *http.Client
@@ -62,7 +61,8 @@ func main() {
 	}
 	gh := github.NewClient(c)
 
-	candidates := make(map[*semver.Version]Holder)
+	candidates := make(map[string]Holder)
+	var candidateVersions []string
 	re := regexp.MustCompile(`vm-(.+)`)
 	opt := &github.ListOptions{PerPage: 100}
 	for {
@@ -75,17 +75,9 @@ func main() {
 			for _, a := range r.Assets {
 				if g.MatchString(*a.Name) {
 					if g := re.FindStringSubmatch(*r.TagName); g != nil {
-						v, err := actions.NormalizeVersion(g[1])
-						if err != nil {
-							panic(err)
-						}
-
-						sv, err := semver.NewVersion(v)
-						if err != nil {
-							panic(fmt.Errorf("unable to parse %s as semver", g[1]))
-						}
-
-						candidates[sv] = Holder{Assets: r.Assets, URI: *a.BrowserDownloadURL}
+						ver := g[1]
+						candidateVersions = append(candidateVersions, ver)
+						candidates[ver] = Holder{Assets: r.Assets, URI: *a.BrowserDownloadURL}
 						break
 					}
 				}
@@ -98,16 +90,9 @@ func main() {
 		opt.Page = rsp.NextPage
 	}
 
-	var sv []*semver.Version
-	for k := range candidates {
-		sv = append(sv, k)
-	}
+	sort.Strings(candidateVersions)
 
-	sort.Slice(sv, func(i, j int) bool {
-		return sv[i].LessThan(sv[j])
-	})
-
-	h := candidates[sv[len(sv)-1]]
+	h := candidates[candidateVersions[len(candidateVersions)-1]]
 	versions := actions.Versions{GetVersion(h.Assets, v): h.URI}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

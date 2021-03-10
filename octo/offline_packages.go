@@ -110,7 +110,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
 							"INCLUDE_DEPENDENCIES": "true",
-							"OS":                   descriptor.Package.Platform.OS,
+							"OS":                   offlinePackage.Platform.OS,
 							"VERSION":              "${{ steps.version.outputs.version }}",
 						},
 					},

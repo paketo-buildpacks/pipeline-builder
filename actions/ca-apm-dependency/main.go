@@ -34,7 +34,7 @@ func main() {
 		panic(fmt.Errorf("type must be specified"))
 	}
 
-	uri := "https://ca.bintray.com/apm-agents"
+	uri := "https://packages.broadcom.com/artifactory/apm-agents"
 
 	c := colly.NewCollector()
 	versions := make(actions.Versions)

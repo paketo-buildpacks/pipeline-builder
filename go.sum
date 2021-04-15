@@ -55,8 +55,8 @@ github.com/antchfx/xmlquery v1.3.3/go.mod h1:64w0Xesg2sTaawIdNqMB+7qaW/bSqkQm+ss
 github.com/antchfx/xpath v1.1.6/go.mod h1:Yee4kTMuNiPYJ7nSNorELQMr1J33uOpXDMByNYhvtNk=
 github.com/antchfx/xpath v1.1.10 h1:cJ0pOvEdN/WvYXxvRrzQH9x5QWKpzHacYO8qzCcDYAg=
 github.com/antchfx/xpath v1.1.10/go.mod h1:Yee4kTMuNiPYJ7nSNorELQMr1J33uOpXDMByNYhvtNk=
-github.com/aws/aws-sdk-go v1.38.18 h1:Y5W5siOHoiZbCHQcoEiih267L21sbw1FW+2Vdlq9dlU=
-github.com/aws/aws-sdk-go v1.38.18/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
+github.com/aws/aws-sdk-go v1.38.20 h1:QbzNx/tdfATbdKfubBpkt84OM6oBkxQZRw6+bW2GyeA=
+github.com/aws/aws-sdk-go v1.38.20/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/buildpacks/libcnb v1.20.0 h1:BpqAgWLmSbu2/IHMsO+BdqwDejP8jw3EDTx4vN1INvA=
 github.com/buildpacks/libcnb v1.20.0/go.mod h1:q+nl2Cg76musVOM5CRFeasdbY23FNEz4kvOkZeEUyaM=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

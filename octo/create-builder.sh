@@ -3,14 +3,14 @@
 set -euo pipefail
 
 if [[ -n "${PUBLISH+x}" ]]; then
-  pack create-builder \
+  pack builder create \
     "${BUILDER}:${VERSION}" \
     --config builder.toml \
     --publish
 
     echo "::set-output name=digest::$(crane digest "${BUILDER}:${VERSION}")"
 else
-  pack create-builder \
+  pack builder create \
     "${BUILDER}:${VERSION}" \
     --config builder.toml
 fi

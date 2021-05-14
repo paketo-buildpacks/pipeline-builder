@@ -3,7 +3,7 @@
 set -euo pipefail
 
 if [[ -n "${PUBLISH+x}" ]]; then
-  pack package-buildpack \
+  pack buildpack package \
     "${PACKAGE}:${VERSION}" \
     --config "${HOME}"/package.toml \
     --publish
@@ -11,7 +11,7 @@ if [[ -n "${PUBLISH+x}" ]]; then
   crane tag "${PACKAGE}:${VERSION}" latest
   echo "::set-output name=digest::$(crane digest "${PACKAGE}:${VERSION}")"
 else
-  pack package-buildpack \
+  pack buildpack package \
     "${PACKAGE}:${VERSION}" \
     --config "${HOME}"/package.toml \
     --format "${FORMAT}"

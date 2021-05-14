@@ -32,7 +32,7 @@ const (
 	CraneVersion  = "0.4.1"
 	GoVersion     = "1.16"
 	PackVersion   = "0.18.0"
-	RichGoVersion = "0.3.3"
+	RichGoVersion = "0.3.6"
 	YJVersion     = "5.0.0"
 )
 

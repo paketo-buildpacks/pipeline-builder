@@ -216,6 +216,7 @@ path: ..
 offline_packages:
 - source: paketo-buildpacks/adopt-openjdk
   target: gcr.io/tanzu-buildpacks/adopt-openjdk
+  image_version_suffix: "-linux"
   platform:
     os: linux
 ```
@@ -223,6 +224,8 @@ offline_packages:
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
 
 `platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
+
+`image_version_suffix` describes what suffix should be appended to version tags in published buildpackages. (For instance, to push buildpackages to `:latest-windows` and `:1.2.3-windows`, set `image_version_suffix: "-windows"`.)
 
 #### `actions`
 ```yaml

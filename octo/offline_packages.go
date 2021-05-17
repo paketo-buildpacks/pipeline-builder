@@ -41,7 +41,7 @@ func ContributeOfflinePackages(descriptor Descriptor) ([]Contribution, error) {
 
 func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePackage) (Contribution, error) {
 	w := actions.Workflow{
-		Name: fmt.Sprintf("Create Package %s", filepath.Base(offlinePackage.Target)),
+		Name: fmt.Sprintf("Create Package %s%s", filepath.Base(offlinePackage.Target), offlinePackage.ImageVersionSuffix),
 		On: map[event.Type]event.Event{
 			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "12-23", DayOfWeek: "1-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
@@ -70,6 +70,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Env: map[string]string{
 							"SOURCE": offlinePackage.Source,
 							"TARGET": offlinePackage.Target,
+							"SUFFIX": offlinePackage.ImageVersionSuffix,
 						},
 					},
 					{
@@ -121,6 +122,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Env: map[string]string{
 							"PACKAGE": offlinePackage.Target,
 							"PUBLISH": "true",
+							"SUFFIX":  offlinePackage.ImageVersionSuffix,
 							"VERSION": "${{ steps.version.outputs.version }}",
 						},
 					},

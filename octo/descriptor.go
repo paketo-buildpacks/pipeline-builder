@@ -80,9 +80,10 @@ type Dependency struct {
 }
 
 type OfflinePackage struct {
-	Source   string
-	Target   string
-	Platform Platform
+	Source             string
+	Target             string
+	Platform           Platform
+	ImageVersionSuffix string `yaml:"image_version_suffix"`
 }
 
 type Package struct {

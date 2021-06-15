@@ -17,7 +17,7 @@ require (
 	github.com/google/go-github/v32 v32.1.0
 	github.com/iancoleman/strcase v0.1.3
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/pelletier/go-toml v1.9.2
+	github.com/pelletier/go-toml v1.9.3
 	github.com/rakyll/statik v0.1.7
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/spf13/pflag v1.0.5

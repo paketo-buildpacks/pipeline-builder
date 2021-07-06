@@ -62,7 +62,7 @@ func (v Versions) GetLatest(inputs Inputs, mods ...RequestModifierFunc) (Outputs
 
 	sha256, err := SHA256FromURI(uri, mods...)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unable to calculate sha256\n%w", err)
 	}
 
 	return Outputs{

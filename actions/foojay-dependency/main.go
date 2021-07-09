@@ -43,7 +43,7 @@ func main() {
 		panic(fmt.Errorf("type must be specified"))
 	}
 
-	// version regex filter
+	// major version number, like 8 or 11
 	s, ok := inputs["version"]
 	if !ok {
 		panic(fmt.Errorf("version must be specified"))

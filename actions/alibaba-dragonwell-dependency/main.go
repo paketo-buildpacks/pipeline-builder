@@ -41,6 +41,7 @@ func main() {
 		err error
 		g   *regexp.Regexp
 	)
+	// regex to match asset names from github releases
 	if s, ok := inputs["glob"]; ok {
 		g, err = regexp.Compile(s)
 		if err != nil {
@@ -50,6 +51,7 @@ func main() {
 		g = regexp.MustCompile(".+")
 	}
 
+	// github repo under the `alibaba` org to watch
 	r, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))

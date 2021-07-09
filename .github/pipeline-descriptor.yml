@@ -16,6 +16,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
 - source: amazon-corretto-dependency
   target: ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency
+- source: alibaba-dragonwell-dependency
+  target: ghcr.io/paketo-buildpacks/actions/alibaba-dragonwell-dependency
 - source: appdynamics-dependency
   target: ghcr.io/paketo-buildpacks/actions/appdynamics-dependency
 - source: aqua-security-dependency
@@ -26,6 +28,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/bellsoft-liberica-dependency
 - source: ca-apm-dependency
   target: ghcr.io/paketo-buildpacks/actions/ca-apm-dependency
+- source: foojay-dependency
+  target: ghcr.io/paketo-buildpacks/actions/foojay-dependency
 - source: gcs-dependency
   target: ghcr.io/paketo-buildpacks/actions/gcs-dependency
 - source: github-release-dependency

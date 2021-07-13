@@ -15,7 +15,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-github/v32 v32.1.0
-	github.com/iancoleman/strcase v0.1.3
+	github.com/iancoleman/strcase v0.2.0
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/pelletier/go-toml v1.9.3
 	github.com/rakyll/statik v0.1.7

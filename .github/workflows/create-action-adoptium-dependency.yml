@@ -1,15 +1,15 @@
-name: Create Action adopt-openjdk-dependency
+name: Create Action adoptium-dependency
 "on":
     pull_request:
         paths:
             - actions/*
-            - actions/adopt-openjdk-dependency/*
+            - actions/adoptium-dependency/*
     push:
         branches:
             - main
         paths:
             - actions/*
-            - actions/adopt-openjdk-dependency/*
+            - actions/adoptium-dependency/*
     release:
         types:
             - published
@@ -70,6 +70,6 @@ jobs:
                 fi
               env:
                 PUSH: ${{ github.event_name != 'pull_request' }}
-                SOURCE: adopt-openjdk-dependency
-                TARGET: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
+                SOURCE: adoptium-dependency
+                TARGET: ghcr.io/paketo-buildpacks/actions/adoptium-dependency
                 VERSION: ${{ steps.version.outputs.version }}

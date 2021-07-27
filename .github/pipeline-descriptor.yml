@@ -12,8 +12,8 @@ docker_credentials:
   password: ${{ secrets.JAVA_GITHUB_TOKEN }}
 
 actions:
-- source: adopt-openjdk-dependency
-  target: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
+- source: adoptium-dependency
+  target: ghcr.io/paketo-buildpacks/actions/adoptium-dependency
 - source: amazon-corretto-dependency
   target: ghcr.io/paketo-buildpacks/actions/amazon-corretto-dependency
 - source: alibaba-dragonwell-dependency

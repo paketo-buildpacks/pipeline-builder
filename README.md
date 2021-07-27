@@ -22,7 +22,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
       - [`offline_packages`](#offline_packages)
       - [`actions`](#actions)
   - [Actions](#actions-1)
-    - [AdoptOpenJDK Dependency](#adoptopenjdk-dependency)
+    - [Adoptium Dependency](#adoptium-dependency)
     - [Amazon Corretto Dependency](#amazon-corretto-dependency)
     - [AppDynamics Dependency](#appdynamics-dependency)
     - [Aqua Security Dependency](#aqua-security-dependency)
@@ -64,27 +64,27 @@ The input is a YAML-based descriptor, examples of which can be found in `.github
 Regardless of the contents of the descriptor the pipeline builder creates a minimal set of workflows and artifacts.
 
 #### Dependendabot
-* [Example `dependabot.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/dependabot.yml)
+* [Example `dependabot.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/dependabot.yml)
 
 A [Dependendabot configuration file](https://docs.github.com/en/free-pro-team@latest/github/administering-a-repository/enabling-and-disabling-version-updates) is added to all repositories.  It will always add an update for `github-actions`, and if the repository contains a `go.mod` file, it will also add an update for `gomod`.
 
 #### Labels
-* [Example Labels](https://github.com/paketo-buildpacks/adopt-openjdk/labels)
-* [Example `labels.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/labels.yml)
-* [Example `synchronize-labels.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/synchronize-labels.yml)
-* [Example `minimal-labels.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/minimal-labels.yml)
+* [Example Labels](https://github.com/paketo-buildpacks/adoptium/labels)
+* [Example `labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/labels.yml)
+* [Example `synchronize-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/synchronize-labels.yml)
+* [Example `minimal-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/minimal-labels.yml)
 
 In order to facilitate the automated creation of draft releases and notes, a set of semver-scope labels (`semver:major`, `semver:minor`, and `semver:patch`) and type labels (`type:bug`, `type:dependency-upgrade`, `type:documentation`, `type:enhancement`, `type:question`, `type:task`) are added to the repository.  In addition, a workflow that enforces exactly one of each label is attached to every PR.
 
 #### Pipeline Updater
-* [Example `update-pipeline.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-pipeline.yml)
+* [Example `update-pipeline.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-pipeline.yml)
 
 A pipeline-updating workflow is added to the repository to ensure that workflows are kept up to date as the `pipeline-builder` evolves.
 
 #### Release Drafter
-* [Example Release Notes](https://github.com/paketo-buildpacks/adopt-openjdk/releases/tag/v4.1.0)
-* [Example `release-drafter.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/release-drafter.yml)
-* [Example `update-draft-release.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-draft-release.yml)
+* [Example Release Notes](https://github.com/paketo-buildpacks/adoptium/releases/tag/v4.1.0)
+* [Example `release-drafter.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/release-drafter.yml)
+* [Example `update-draft-release.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-draft-release.yml)
 
 Draft release notes are created on every commit to `main`.  These notes take into account every PR since the previous release in order to create a division of the types of changes that were made and the semver scope of the change to work out the next release number.
 
@@ -108,14 +108,14 @@ codeowners:
   owner: "@paketo-buildpacks/java-buildpacks"
 ```
 
-* [Example `CODEOWNERS`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/CODEOWNERS)
+* [Example `CODEOWNERS`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/CODEOWNERS)
 
 `codeowners` is a list of objects test describe a `path` and `owner`.  Each of these objects corresponds to a line in [`CODEOWNERS`](https://docs.github.com/en/free-pro-team@latest/github/creating-cloning-and-archiving-repositories/about-code-owners) file.
 
 #### `package`
 ```yaml
 package:
-  repository:           gcr.io/paketo-buildpacks/adopt-openjdk
+  repository:           gcr.io/paketo-buildpacks/adoptium
   include_dependencies: false
   register:             true
   registry_token:       ${{ secrets.JAVA_REGISTRY_TOKEN }}
@@ -123,8 +123,8 @@ package:
     os: linux
 ```
 
-* [Example `create-package.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/create-package.yml)
-* [Example `test.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/tests.yml)
+* [Example `create-package.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/create-package.yml)
+* [Example `test.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/tests.yml)
 
 `package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
@@ -167,14 +167,14 @@ dependencies:
 - name:            JRE 11
   id:              jre
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
-  uses:            docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+  uses:            docker://ghcr.io/paketo-buildpacks/actions/adoptium-dependency:main
   with:
     implementation: hotspot
     type:           jre
     version:        "[11,12)"
 ```
 
-* [Example `update-*.yml`](https://github.com/paketo-buildpacks/adopt-openjdk/blob/main/.github/workflows/update-jre-11.yml)
+* [Example `update-*.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-jre-11.yml)
 
 `dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
 
@@ -214,8 +214,8 @@ path: ..
 #### `offline_packages`
 ```yaml
 offline_packages:
-- source: paketo-buildpacks/adopt-openjdk
-  target: gcr.io/tanzu-buildpacks/adopt-openjdk
+- source: paketo-buildpacks/adoptium
+  target: gcr.io/tanzu-buildpacks/adoptium
   platform:
     os: linux
 ```
@@ -227,11 +227,11 @@ offline_packages:
 #### `actions`
 ```yaml
 actions:
-- source: adopt-openjdk-dependency
-  target: ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency
+- source: adoptium-dependency
+  target: ghcr.io/paketo-buildpacks/actions/adoptium-dependency
 ```
 
-* [Example `create-action-*.yml`](https://github.com/paketo-buildpacks/pipeline-builder/blob/main/.github/workflows/create-action-adopt-openjdk-dependency.yml)
+* [Example `create-action-*.yml`](https://github.com/paketo-buildpacks/pipeline-builder/blob/main/.github/workflows/create-action-adoptium-dependency.yml)
 
 `actions` is a list of objects that describe a `source` directory within this repository's `actions/` directory, and a `target` Docker registry location.  If defined, each object will create a `create-action` workflow that is responsible for building and publishing new versions of the action.
 
@@ -240,11 +240,11 @@ This repository contains the source code and build pipelines for a collection of
 
 All the of the dependency actions also accept a `pre_release` configuration option (`true` by default) of whether to return pre-release versions.
 
-### AdoptOpenJDK Dependency
-The AdoptOpenJDK Dependency queries the [AdoptOpenJDK API](https://api.adoptopenjdk.net/swagger-ui/) for new versions.
+### Adoptium Dependency
+The Adoptium Dependency queries the [Adoptium API](https://api.adoptium.net/swagger-ui/) for new versions.
 
 ```yaml
-uses: docker://ghcr.io/paketo-buildpacks/actions/adopt-openjdk-dependency:main
+uses: docker://ghcr.io/paketo-buildpacks/actions/adoptium-dependency:main
 with:
   implementation: hotspot
   type:           jre

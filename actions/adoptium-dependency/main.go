@@ -45,14 +45,14 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	uri := fmt.Sprintf("https://api.adoptopenjdk.net/v3/assets/version/%s"+
+	uri := fmt.Sprintf("https://api.adoptium.net/v3/assets/version/%s"+
 		"?architecture=x64"+
 		"&heap_size=normal"+
 		"&image_type=%s"+
 		"&jvm_impl=%s"+
 		"&os=linux"+
 		"&release_type=ga"+
-		"&vendor=adoptopenjdk",
+		"&vendor=adoptium",
 		url.PathEscape(v), t, i)
 
 	resp, err := http.Get(uri)

@@ -121,6 +121,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
+					Uses: "actions/setup-go@v2",
+					With: map[string]interface{}{"go-version": GoVersion},
+				},
+				{
 					Name: "Install create-package",
 					Run:  StatikString("/install-create-package.sh"),
 				},
@@ -133,10 +137,6 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Enable pack Experimental",
 					If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
 					Run:  StatikString("/enable-pack-experimental.sh"),
-				},
-				{
-					Uses: "actions/setup-go@v2",
-					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
 					Uses: "actions/checkout@v2",

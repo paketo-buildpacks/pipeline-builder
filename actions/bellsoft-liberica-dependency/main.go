@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -38,7 +39,13 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	uri := fmt.Sprintf("https://api.bell-sw.com/v1/liberica/releases"+
+	// should be `liberica` (OpenJDK) or `nik` (Native Image)
+	p, ok := inputs["product"]
+	if !ok {
+		panic(fmt.Errorf("product must be specified"))
+	}
+
+	uri := fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 		"?arch=x86"+
 		"&bitness=64"+
 		"&bundle-type=%s"+
@@ -46,7 +53,18 @@ func main() {
 		"&package-type=tar.gz"+
 		"&version-feature=%s"+
 		"&version-modifier=latest",
-		t, v)
+		p, t, v)
+	if p == "nik" {
+		uri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
+			"?arch=x86"+
+			"&bitness=64"+
+			"&bundle-type=%s"+
+			"&os=linux"+
+			"&package-type=tar.gz"+
+			"&component-version=liberica%%40%s"+
+			"&version-modifier=latest",
+			p, t, v)
+	}
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -66,7 +84,11 @@ func main() {
 	versions := make(actions.Versions)
 
 	for _, r := range raw {
-		versions[fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)] = r.DownloadURL
+		key := fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)
+		if p == "nik" {
+			key = strings.SplitN(r.Components[0].Version, "+", 2)[0]
+		}
+		versions[key] = r.DownloadURL
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {
@@ -82,4 +104,7 @@ type Release struct {
 	UpdateVersion  int    `json:"updateVersion"`
 	BuildVersion   int    `json:"buildVersion"`
 	DownloadURL    string `json:"downloadUrl"`
+	Components     []struct {
+		Version string `json:"version"`
+	}
 }

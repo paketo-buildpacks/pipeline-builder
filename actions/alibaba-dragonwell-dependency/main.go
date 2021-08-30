@@ -65,7 +65,7 @@ func main() {
 
 	candidates := make(map[string]Holder)
 	var candidateVersions []string
-	re := regexp.MustCompile(`dragonwell-(.+)_.+-ga`)
+	re := regexp.MustCompile(`(dragonwell-)?(\d+\.\d+\.\d+\.?\d*).*-(ga|GA)`)
 	opt := &github.ListOptions{PerPage: 100}
 	for {
 		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "alibaba", r, opt)
@@ -77,7 +77,7 @@ func main() {
 			for _, a := range r.Assets {
 				if g.MatchString(*a.Name) {
 					if g := re.FindStringSubmatch(*r.TagName); g != nil {
-						ver := g[1]
+						ver := g[2]
 						candidateVersions = append(candidateVersions, ver)
 						candidates[ver] = Holder{Assets: r.Assets, URI: *a.BrowserDownloadURL}
 						break
@@ -158,7 +158,7 @@ func GetVersion(assets []*github.ReleaseAsset) string {
 
 		var v string
 
-		re = regexp.MustCompile(`JAVA_VERSION="([\d]+)\.([\d]+)\.([\d]+)[_]?([\d]+)?"`)
+		re = regexp.MustCompile(`JAVA_VERSION="([\d]+)\.([\d]+)\.([\d]+)[\._]?([\d]+)?"`)
 		if g := re.FindStringSubmatch(string(b)); g != nil {
 			if g[2] == "8" {
 				v = fmt.Sprintf("8.0.%s", g[4])

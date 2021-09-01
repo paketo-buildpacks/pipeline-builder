@@ -22,7 +22,7 @@ require (
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/spf13/pflag v1.0.5
 	github.com/temoto/robotstxt v1.1.1 // indirect
-	golang.org/x/oauth2 v0.0.0-20210805134026-6f1e6394065a
-	google.golang.org/api v0.54.0
+	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
+	google.golang.org/api v0.56.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

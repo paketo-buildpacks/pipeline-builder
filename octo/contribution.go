@@ -90,7 +90,7 @@ func NewDockerCredentialActions(credentials []DockerCredentials) []actions.Step 
 	for _, c := range credentials {
 		s = append(s, actions.Step{
 			Name: fmt.Sprintf("Docker login %s", c.Registry),
-			If:   "${{ github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork }}",
+			If:   "${{ (github.event_name != 'pull_request' || ! github.event.pull_request.head.repo.fork) && (github.actor != 'dependabot[bot]') }}",
 			Uses: "docker/login-action@v1",
 			With: map[string]interface{}{
 				"registry": c.Registry,

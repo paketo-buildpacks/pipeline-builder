@@ -178,6 +178,9 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			},
 		}
 
+		if !strings.Contains(descriptor.Package.Repository, "paketo-buildpacks") {
+			j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+		}
 		j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 
 		w.Jobs["create-package"] = j

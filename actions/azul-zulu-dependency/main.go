@@ -38,7 +38,7 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	uri := fmt.Sprintf("https://api.azul.com/zulu/download/azure-only/v1.0/bundles/latest/"+
+	uri := fmt.Sprintf("https://api.azul.com/zulu/download/community/v1.0/bundles/latest/"+
 		"?arch=x86"+
 		"&ext=tar.gz"+
 		"&features=%s"+

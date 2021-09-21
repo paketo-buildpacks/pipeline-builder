@@ -40,6 +40,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/graalvm-dependency
 - source: gradle-dependency
   target: ghcr.io/paketo-buildpacks/actions/gradle-dependency
+- source: ibm-semeru-dependency
+  target: ghcr.io/paketo-buildpacks/actions/ibm-semeru-dependency
 - source: jprofiler-dependency
   target: ghcr.io/paketo-buildpacks/actions/jprofiler-dependency
 - source: jrebel-dependency

@@ -127,7 +127,7 @@ func getReleaseJSON(jsonURI string) ReleaseJSON {
 	if resp.StatusCode != 200 {
 		panic(fmt.Errorf("unable to download %s: %d", jsonURI, resp.StatusCode))
 	}
-
+	// Decode JSON file to get semver data
 	var raw ReleaseJSON
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))

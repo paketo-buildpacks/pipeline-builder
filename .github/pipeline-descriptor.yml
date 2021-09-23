@@ -28,6 +28,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/bellsoft-liberica-dependency
 - source: ca-apm-dependency
   target: ghcr.io/paketo-buildpacks/actions/ca-apm-dependency
+- source: cf-java-index-dependency
+  target: ghcr.io/paketo-buildpacks/actions/cf-java-index-dependency
 - source: foojay-dependency
   target: ghcr.io/paketo-buildpacks/actions/foojay-dependency
 - source: gcs-dependency
@@ -56,8 +58,12 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
 - source: overops-dependency
   target: ghcr.io/paketo-buildpacks/actions/overops-dependency
+- source: paketo-deps-dependency
+  target: ghcr.io/paketo-buildpacks/actions/paketo-deps-dependency
 - source: riverbed-dependency
   target: ghcr.io/paketo-buildpacks/actions/riverbed-dependency
+- source: rustup-init-dependency
+  target: ghcr.io/paketo-buildpacks/actions/rustup-dependency
 - source: skywalking-dependency
   target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations

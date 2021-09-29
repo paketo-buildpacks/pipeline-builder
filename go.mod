@@ -9,7 +9,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.6.0 // indirect
 	github.com/antchfx/htmlquery v1.2.3 // indirect
 	github.com/antchfx/xmlquery v1.3.3 // indirect
-	github.com/aws/aws-sdk-go v1.40.48
+	github.com/aws/aws-sdk-go v1.40.51
 	github.com/buildpacks/libcnb v1.23.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gobwas/glob v0.2.3 // indirect
@@ -23,6 +23,6 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/temoto/robotstxt v1.1.1 // indirect
 	golang.org/x/oauth2 v0.0.0-20210819190943-2bc19b11175f
-	google.golang.org/api v0.57.0
+	google.golang.org/api v0.58.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776
 )

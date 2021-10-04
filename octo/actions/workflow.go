@@ -34,6 +34,7 @@ type Job struct {
 	RunsOn          []VirtualEnvironment `yaml:"runs-on,omitempty"`
 	Outputs         map[string]string    `yaml:",omitempty"`
 	Env             map[string]string    `yaml:",omitempty"`
+	Environment     map[string]string    `yaml:",omitempty"`
 	Defaults        Defaults             `yaml:",omitempty"`
 	If              string               `yaml:",omitempty"`
 	Steps           []Step               `yaml:",omitempty"`

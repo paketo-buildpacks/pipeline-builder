@@ -28,6 +28,8 @@ type Workflow struct {
 	Jobs     map[string]Job             `yaml:",omitempty"`
 }
 
+// The ordering of the struct fields is intentional for better YAML readability after the marshalling
+// Read more: https://github.com/paketo-buildpacks/pipeline-builder/pull/399
 type Job struct {
 	Name            string               `yaml:",omitempty"`
 	If              string               `yaml:",omitempty"`

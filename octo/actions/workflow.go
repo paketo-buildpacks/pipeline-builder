@@ -30,12 +30,12 @@ type Workflow struct {
 
 type Job struct {
 	Name            string               `yaml:",omitempty"`
+	If              string               `yaml:",omitempty"`
 	Needs           []string             `yaml:",omitempty"`
 	RunsOn          []VirtualEnvironment `yaml:"runs-on,omitempty"`
 	Outputs         map[string]string    `yaml:",omitempty"`
 	Env             map[string]string    `yaml:",omitempty"`
 	Defaults        Defaults             `yaml:",omitempty"`
-	If              string               `yaml:",omitempty"`
 	Steps           []Step               `yaml:",omitempty"`
 	TimeoutMinutes  int                  `yaml:",omitempty"`
 	Strategy        Strategy             `yaml:",omitempty"`
@@ -50,9 +50,9 @@ type Run struct {
 }
 
 type Step struct {
-	Id               string            `yaml:",omitempty"`
-	If               string            `yaml:",omitempty"`
 	Name             string            `yaml:",omitempty"`
+	If               string            `yaml:",omitempty"`
+	Id               string            `yaml:",omitempty"`
 	Uses             string            `yaml:",omitempty"`
 	Run              string            `yaml:",omitempty"`
 	WorkingDirectory string            `yaml:"working-directory,omitempty"`

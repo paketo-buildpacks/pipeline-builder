@@ -63,7 +63,7 @@ actions:
 - source: riverbed-dependency
   target: ghcr.io/paketo-buildpacks/actions/riverbed-dependency
 - source: rustup-init-dependency
-  target: ghcr.io/paketo-buildpacks/actions/rustup-dependency
+  target: ghcr.io/paketo-buildpacks/actions/rustup-init-dependency
 - source: skywalking-dependency
   target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations

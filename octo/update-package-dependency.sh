@@ -13,13 +13,19 @@ if [[ -e builder.toml ]]; then
     --version "${NEW_VERSION}"
 
   git add builder.toml
-elif [[ -e package.toml ]]; then
+fi
+
+if [[ -e package.toml ]]; then
   OLD_VERSION=$(yj -tj < package.toml | jq -r ".dependencies[].uri | capture(\".*${DEPENDENCY}:(?<version>.+)\") | .version")
 
   update-package-dependency \
     --buildpack-toml buildpack.toml \
+    --id "${BP_DEPENDENCY:-$DEPENDENCY}" \
+    --version "${NEW_VERSION}"
+
+  update-package-dependency \
     --package-toml package.toml \
-    --id "${DEPENDENCY}" \
+    --id "${PKG_DEPENDENCY:-$DEPENDENCY}" \
     --version "${NEW_VERSION}"
 
   git add buildpack.toml package.toml

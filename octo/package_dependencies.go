@@ -22,6 +22,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"strings"
 
 	"github.com/pelletier/go-toml"
 
@@ -45,23 +46,83 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
 	}
 
-	re := regexp.MustCompile(`^(?:.+://)?(.+):[^:]+$`)
+	file = filepath.Join(descriptor.Path, "buildpack.toml")
+	b, err = ioutil.ReadFile(file)
+	if os.IsNotExist(err) {
+		return nil, nil
+	} else if err != nil {
+		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
+	}
+	var bpGroups _package.BuildpackOrderGroups
+	if err := toml.Unmarshal(b, &bpGroups); err != nil {
+		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
+	}
+
 	for _, d := range p.Dependencies {
-		if g := re.FindStringSubmatch(d.URI); g == nil {
-			return nil, fmt.Errorf("unable to parse image coordinates from %s", d.URI)
+		pkgId, bpId, err := findIds(bpGroups, d)
+		if err != nil {
+			return nil, err
+		}
+
+		if c, err := contributePackageDependency(descriptor, pkgId, bpId); err != nil {
+			return nil, err
 		} else {
-			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
-				return nil, err
-			} else {
-				contributions = append(contributions, c)
-			}
+			contributions = append(contributions, c)
 		}
 	}
 
 	return contributions, nil
 }
 
-func contributePackageDependency(descriptor Descriptor, name string) (Contribution, error) {
+// findIds will return the pkg group id (used in package.toml) and the buildpack id (used in buildpack.toml)
+//   it will do some fuzzy matching because there is not a strict relationship between the two
+//     - often pkg group id is `repo.io/buildpack/id:version`, so you can extract `buildpack/id`
+//     - if that does not exist as a build pack id, then we search for just the last part of
+//         buildpack id and a matching version
+//
+//         for example, `gcr.io/tanzu-buildpacks/bellsoft-liberica:1.2.3`, we'll look for `bellsoft-liberica`
+//            and version `1.2.3` in buildpack.toml
+//
+//            if there is a match, then we return the found buildpack id, let's say it finds `paketo-buildpacks/bellsoft-liberica`
+//			  then we return `gcr.io/paketo-buildpacks/bellsoft-liberica:1.2.3`
+func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (string, string, error) {
+	re := regexp.MustCompile(`^(?:.+://)?(.+?)/(.+):([^:]+)$`)
+	if g := re.FindStringSubmatch(dep.URI); g == nil {
+		return "", "", fmt.Errorf("unable to parse image coordinates from %s", dep.URI)
+	} else {
+		registry := g[1]
+		possibleBpId := g[2]
+		version := g[3]
+
+		// search for a direct match
+		for _, order := range bpOrders.Orders {
+			for _, group := range order.Groups {
+				if group.ID == possibleBpId && group.Version == version {
+					foundId := fmt.Sprintf("%s/%s", registry, possibleBpId)
+					return foundId, foundId, nil
+				}
+			}
+		}
+
+		// search for a fuzzy match
+		for _, order := range bpOrders.Orders {
+			for _, group := range order.Groups {
+				endOfId := strings.Split(possibleBpId, "/")[1]
+				fmt.Println("group.Id", group.ID, "endOfId", endOfId, "group.Version", group.Version, "version", version)
+				if strings.HasSuffix(group.ID, endOfId) && group.Version == version {
+					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
+					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
+					fmt.Println("pkgId", pkgId, "bpId", bpId)
+					return pkgId, bpId, nil
+				}
+			}
+		}
+
+		return "", "", fmt.Errorf("unable to match image coordinates from [%s, %s, %s]", registry, possibleBpId, version)
+	}
+}
+
+func contributePackageDependency(descriptor Descriptor, name string, bpId string) (Contribution, error) {
 	w := actions.Workflow{
 		Name: fmt.Sprintf("Update %s", filepath.Base(name)),
 		On: map[event.Type]event.Event{
@@ -124,6 +185,15 @@ Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.o
 	j := w.Jobs["update"]
 	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	w.Jobs["update"] = j
+
+	if name != bpId {
+		for i := 0; i < len(w.Jobs["update"].Steps); i++ {
+			if w.Jobs["update"].Steps[i].Id == "package" {
+				w.Jobs["update"].Steps[i].Env["BP_DEPENDENCY"] = bpId
+				break
+			}
+		}
+	}
 
 	return NewActionContribution(w)
 }

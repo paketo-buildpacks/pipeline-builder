@@ -48,7 +48,7 @@ func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error
 	re := regexp.MustCompile(`^(?:.+://)?(.+):[^:]+$`)
 	for _, b := range r.Buildpacks {
 		if g := re.FindStringSubmatch(b.URI); g != nil {
-			if c, err := contributePackageDependency(descriptor, g[1]); err != nil {
+			if c, err := contributePackageDependency(descriptor, g[1], g[1]); err != nil {
 				return nil, err
 			} else {
 				contributions = append(contributions, c)

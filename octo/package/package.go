@@ -16,10 +16,16 @@
 
 package _package
 
+import "github.com/buildpacks/libcnb"
+
 type Package struct {
 	Dependencies []Dependency
 }
 
 type Dependency struct {
 	URI string
+}
+
+type BuildpackOrderGroups struct {
+	Orders []libcnb.BuildpackOrder `toml:"order"`
 }

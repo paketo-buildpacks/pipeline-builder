@@ -23,17 +23,22 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
       - [`actions`](#actions)
   - [Actions](#actions-1)
     - [Adoptium Dependency](#adoptium-dependency)
+    - [Alibaba Dragonwell Dependency](#alibaba-dragonwell-dependency)
     - [Amazon Corretto Dependency](#amazon-corretto-dependency)
     - [AppDynamics Dependency](#appdynamics-dependency)
     - [Aqua Security Dependency](#aqua-security-dependency)
     - [Azul Zulu Dependency](#azul-zulu-dependency)
     - [Bellsoft Liberica Dependency](#bellsoft-liberica-dependency)
     - [CA APM Dependency](#ca-apm-dependency)
+    - [CF Java Index Dependency](#cf-java-index-dependency)
+    - [Clojure Tools Dependency](#clojure-tools-dependency)
+    - [Foojay Dependency](#foojay-dependency)
     - [GCS Dependency](#gcs-dependency)
     - [GitHub Release Dependency](#github-release-dependency)
     - [Google Stackdriver Profiler Dependency](#google-stackdriver-profiler-dependency)
     - [GraalVM Dependency](#graalvm-dependency)
     - [Gradle Dependency](#gradle-dependency)
+    - [IBM Semeru Dependency](#ibm-semeru-dependency)
     - [JProfiler Dependency](#jprofiler-dependency)
     - [JRebel Dependency](#jrebel-dependency)
     - [Leiningen Dependency](#leiningen-dependency)
@@ -41,7 +46,9 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [New Relic Dependency](#new-relic-dependency)
     - [NPM Dependency](#npm-dependency)
     - [OverOps Dependency](#overops-dependency)
+    - [Paketo Deps Dependency](#paketo-deps-dependency)
     - [Riverbed Dependency](#riverbed-dependency)
+    - [Rustup Init Dependency](#rustup-init-dependency)
     - [Skywalking Dependency](#skywalking-dependency)
     - [Spring Generations](#spring-generations)
     - [Tomcat Dependency](#tomcat-dependency)
@@ -251,6 +258,17 @@ with:
   version:        "[11,12)"
 ```
 
+### Alibaba Dragonwell Dependency
+The Alibaba Dependency watches [Alibaba repositories](https://github.com/alibaba/) for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/alibaba-dragonwell-dependency:main
+with:
+  glob:       Alibaba_Dragonwell_[\d\.]+_x64_linux.tar.gz$
+  repository: dragonwell<jdk-version>
+  token:      ${{ secrets.JAVA_GITHUB_TOKEN }}
+```
+
 ### Amazon Corretto Dependency
 The Amazon Corretto Dependency watches [Amazon Corretto repositories](https://github.com/corretto/) for new versions.
 
@@ -309,6 +327,35 @@ with:
   type: java
 ```
 
+### CF Java Index Dependency
+The CF Java Index Dependency querys a CloudFoundry Java buildpack v2 `index.yml` file for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/cf-java-index-dependency:main
+with:
+  repository_root: <repo-root>
+```
+
+### Clojure Tools Dependency
+The Clojure Tools Dependency watches [Clojure Tools repositories](https://github.com/clojure/clojure-tools) for new versions. It then filters based on the [stable.properties](https://raw.githubusercontent.com/clojure/brew-install/%s/stable.properties) file in their brew tap repo, allowing it to pick the most recent stable version.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/alibaba-dragonwell-dependency:main
+with:
+  token:      ${{ secrets.JAVA_GITHUB_TOKEN }}
+```
+
+### Foojay Dependency
+The Foojay Dependency queries the [Foojay API](https://api.foojay.io/swagger-ui#/) for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/foojay-dependency:main
+with:
+  distro:  microsoft
+  type:    jdk
+  version: "11"
+```
+
 ### GCS Dependency
 The GCS Dependency watches [GCS Buckets](https://cloud.google.com/storage) for new versions.  The first capture in `glob` is used as the version.
 
@@ -355,6 +402,19 @@ The Gradle Dependency queries the [Gradle API](https://raw.githubusercontent.com
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/gradle-dependency:main
+```
+
+### IBM Semeru Dependency
+The IBM Semeru Dependency queries the [Gradle API](https://raw.githubusercontent.com/gradle/gradle/master/released-versions.json) for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/ibm-semeru-dependency:main
+with:
+  glob: ibm-semeru-open-jdk_x64_linux_.+_openj9-.+.tar.gz
+  owner: ibmruntimes
+  repository: semeru8-binaries
+  tag_filter: jdk(.*8.*)
+  token: ${{ secrets.JAVA_GITHUB_TOKEN }}
 ```
 
 ### JProfiler Dependency
@@ -418,11 +478,30 @@ The OverOps Dependency watches the [OverOps Download Page](https://app.overops.c
 uses: docker://ghcr.io/paketo-buildpacks/actions/overops-dependency:main
 ```
 
+### Paketo Deps Dependency
+The Paketo Deps Dependency queries the [Paketo Deps Server](https://api.deps.paketo.io/v1/dependency?name) for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/paketo-deps-dependency:main
+with:
+  name: rust
+```
+
 ### Riverbed Dependency
 The Riverbed Dependency watches the [Riverbed Bucket](http://s3.amazonaws.com/appint-pcf-instrumentation-rpm-master) for new versions.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/riverbed-dependency:main
+```
+
+### Rustup Init Dependency
+The Rustup Init Dependency queries the [Rustup Github Project](https://github.com/rust-lang/rustup) for new versions. The `target` specifies the target triple to download.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/rustup-init-dependency:main
+with:
+  target: x86_64-unknown-linux-musl
+  token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
 ```
 
 ### Skywalking Dependency

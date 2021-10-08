@@ -340,7 +340,7 @@ with:
 The Clojure Tools Dependency watches [Clojure Tools repositories](https://github.com/clojure/clojure-tools) for new versions. It then filters based on the [stable.properties](https://raw.githubusercontent.com/clojure/brew-install/%s/stable.properties) file in their brew tap repo, allowing it to pick the most recent stable version.
 
 ```yaml
-uses: docker://ghcr.io/paketo-buildpacks/actions/alibaba-dragonwell-dependency:main
+uses: docker://ghcr.io/paketo-buildpacks/actions/clojure-tools-dependency:main
 with:
   token:      ${{ secrets.JAVA_GITHUB_TOKEN }}
 ```

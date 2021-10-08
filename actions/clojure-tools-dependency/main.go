@@ -46,7 +46,7 @@ func main() {
 
 	versions := make(actions.Versions)
 
-	// fetch all the versions from tags
+	// fetch all the clojure-tools versions from tags
 	opt := &github.ListOptions{PerPage: 100}
 	for {
 		tags, rsp, err := gh.Repositories.ListTags(context.Background(), ORG, REPO, opt)

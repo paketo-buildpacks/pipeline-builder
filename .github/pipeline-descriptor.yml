@@ -30,6 +30,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/ca-apm-dependency
 - source: cf-java-index-dependency
   target: ghcr.io/paketo-buildpacks/actions/cf-java-index-dependency
+- source: clojure-tools-dependency
+  target: ghcr.io/paketo-buildpacks/actions/clojure-tools-dependency
 - source: foojay-dependency
   target: ghcr.io/paketo-buildpacks/actions/foojay-dependency
 - source: gcs-dependency

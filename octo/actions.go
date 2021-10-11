@@ -56,18 +56,13 @@ func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
 							Uses: "actions/checkout@v2",
 						},
 						{
-							Id:   "version",
-							Name: "Compute Version",
-							Run:  StatikString("/compute-version.sh"),
-						},
-						{
 							Name: "Create Action",
 							Run:  StatikString("/create-action.sh"),
 							Env: map[string]string{
 								"PUSH":    "${{ github.event_name != 'pull_request' }}",
 								"SOURCE":  a.Source,
 								"TARGET":  a.Target,
-								"VERSION": "${{ steps.version.outputs.version }}",
+								"VERSION": "main",
 							},
 						},
 					},

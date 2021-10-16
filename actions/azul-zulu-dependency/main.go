@@ -44,7 +44,8 @@ func main() {
 		"&features=%s"+
 		"&hw_bitness=64"+
 		"&jdk_version=%s"+
-		"&os=linux",
+		"&os=linux"+
+		"&javafx=false",
 		t, v)
 
 	resp, err := http.Get(uri)

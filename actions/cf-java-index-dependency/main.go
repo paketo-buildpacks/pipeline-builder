@@ -28,6 +28,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
+    // same repository_root as documented here: https://github.com/cloudfoundry/java-buildpack/blob/main/docs/extending-repositories.md
 	repositoryRoot, ok := inputs["repository_root"]
 	if !ok {
 		panic(fmt.Errorf("repository_root must be specified"))

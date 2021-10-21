@@ -111,7 +111,7 @@ func main() {
 }
 
 func GetVersion9Plus(assets []*github.ReleaseAsset) string {
-	re := regexp.MustCompile(`Alibaba_Dragonwell_([\d]+)\.([\d]+)\.([\d]+)[\._]?([\d]+)_x64_linux.tar.gz$`)
+	re := regexp.MustCompile(`Alibaba_Dragonwell_([\d]+)\.([\d]+)\.([\d]+)[\.+_]?([\d]+)_x64_linux.tar.gz$`)
 
 	for _, asset := range assets {
 		if g := re.FindStringSubmatch(*asset.Name); g != nil {

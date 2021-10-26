@@ -27,26 +27,6 @@ jobs:
                 registry: ghcr.io
                 username: ${{ secrets.JAVA_GITHUB_USERNAME }}
             - uses: actions/checkout@v2
-            - name: Compute Version
-              id: version
-              run: |
-                #!/usr/bin/env bash
-
-                set -euo pipefail
-
-                if [[ ${GITHUB_REF} =~ refs/tags/v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
-                  VERSION=${BASH_REMATCH[1]}
-                elif [[ ${GITHUB_REF} =~ refs/heads/(.+) ]]; then
-                  VERSION=${BASH_REMATCH[1]}
-                else
-                  VERSION=$(git rev-parse --short HEAD)
-                fi
-
-                echo "::set-output name=version::${VERSION}"
-                echo "Selected ${VERSION} from
-                  * ref: ${GITHUB_REF}
-                  * sha: ${GITHUB_SHA}
-                "
             - name: Create Action
               run: |
                 #!/usr/bin/env bash
@@ -72,4 +52,4 @@ jobs:
                 PUSH: ${{ github.event_name != 'pull_request' }}
                 SOURCE: tomcat-dependency
                 TARGET: ghcr.io/paketo-buildpacks/actions/tomcat-dependency
-                VERSION: ${{ steps.version.outputs.version }}
+                VERSION: main

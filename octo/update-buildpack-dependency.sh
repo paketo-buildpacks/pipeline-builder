@@ -19,5 +19,14 @@ update-buildpack-dependency \
 git add buildpack.toml
 git checkout -- .
 
+if [ "$(echo "$OLD_VERSION" | awk -F '.' '{print $1}')" != "$(echo "$VERSION" | awk -F '.' '{print $1}')" ]; then
+  LABEL="semver:major"
+elif [ "$(echo "$OLD_VERSION" | awk -F '.' '{print $2}')" != "$(echo "$VERSION" | awk -F '.' '{print $2}')" ]; then
+  LABEL="semver:minor"
+else
+  LABEL="semver:patch"
+fi
+
 echo "::set-output name=old-version::${OLD_VERSION}"
 echo "::set-output name=new-version::${VERSION}"
+echo "::set-output name=version-label::${LABEL}"

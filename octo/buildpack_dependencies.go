@@ -85,7 +85,7 @@ Bumps %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpa
 								"delete-branch": true,
 								"title":         fmt.Sprintf("Bump %s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}", d.Name),
 								"body":          fmt.Sprintf("Bumps `%[1]s` from `${{ steps.buildpack.outputs.old-version }}` to `${{ steps.buildpack.outputs.new-version }}`.", d.Name),
-								"labels":        "semver:minor, type:dependency-upgrade",
+								"labels":        "${{ steps.buildpack.outputs.version-label }}, type:dependency-upgrade",
 							},
 						},
 					},

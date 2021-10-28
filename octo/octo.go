@@ -29,10 +29,10 @@ import (
 //go:generate statik -src . -include *.sh
 
 const (
-	CraneVersion  = "0.5.1"
+	CraneVersion  = "0.6.0"
 	GoVersion     = "1.16"
-	PackVersion   = "0.18.1"
-	RichGoVersion = "0.3.6"
+	PackVersion   = "0.21.1"
+	RichGoVersion = "0.3.9"
 	YJVersion     = "5.0.0"
 )
 

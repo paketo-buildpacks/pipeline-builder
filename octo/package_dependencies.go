@@ -174,7 +174,7 @@ Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.o
 							"delete-branch": true,
 							"title":         fmt.Sprintf("Bump %s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.outputs.new-version }}", name),
 							"body":          fmt.Sprintf("Bumps [`%[1]s`](https://%[1]s) from [`${{ steps.package.outputs.old-version }}`](https://%[1]s:${{ steps.package.outputs.old-version }}) to [`${{ steps.package.outputs.new-version }}`](https://%[1]s:${{ steps.package.outputs.new-version }}).", name),
-							"labels":        "${{ steps.buildpack.outputs.version-label }}, type:dependency-upgrade",
+							"labels":        "${{ steps.package.outputs.version-label }}, type:dependency-upgrade",
 						},
 					},
 				},

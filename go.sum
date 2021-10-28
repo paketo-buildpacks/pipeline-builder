@@ -65,8 +65,8 @@ github.com/antchfx/xpath v1.1.6/go.mod h1:Yee4kTMuNiPYJ7nSNorELQMr1J33uOpXDMByNY
 github.com/antchfx/xpath v1.1.10 h1:cJ0pOvEdN/WvYXxvRrzQH9x5QWKpzHacYO8qzCcDYAg=
 github.com/antchfx/xpath v1.1.10/go.mod h1:Yee4kTMuNiPYJ7nSNorELQMr1J33uOpXDMByNYhvtNk=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
-github.com/aws/aws-sdk-go v1.41.12 h1:ahpbrGKS9MI/Kn+BHyISCrraGtf4y3pXKghPEJFRFF4=
-github.com/aws/aws-sdk-go v1.41.12/go.mod h1:585smgzpB/KqRA+K3y/NL/oYRqQvpNJYvLm+LY1U59Q=
+github.com/aws/aws-sdk-go v1.41.13 h1:wGgr6jkHdGExF33phfOqijFq7ZF+h7a6FXvJc77GpTc=
+github.com/aws/aws-sdk-go v1.41.13/go.mod h1:585smgzpB/KqRA+K3y/NL/oYRqQvpNJYvLm+LY1U59Q=
 github.com/buildpacks/libcnb v1.24.0 h1:jVpydlJPygweUBk4ac3WGT2X1NGeunH17eyn9tUqZuU=
 github.com/buildpacks/libcnb v1.24.0/go.mod h1:wIXTSW6ybtX9XIICQQqPnIUxx6t1bSZT7iIOKbEzRH0=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

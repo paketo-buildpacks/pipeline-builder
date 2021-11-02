@@ -51,7 +51,7 @@ func main() {
 		}
 
 		if p := cp.FindStringSubmatch(o.Name); p != nil {
-			versions[fmt.Sprintf("%s.%s", p[1], p[2])] = fmt.Sprintf("https://storage.googleapis.com/%s/%s", o.Bucket, o.Name)
+			versions[fmt.Sprintf("%s.%s.%s%s", p[1][0:4], p[1][4:6], p[1][6:8], p[2])] = fmt.Sprintf("https://storage.googleapis.com/%s/%s", o.Bucket, o.Name)
 		}
 	}
 

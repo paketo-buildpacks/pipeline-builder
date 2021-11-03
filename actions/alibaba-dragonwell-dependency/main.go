@@ -27,7 +27,6 @@ import (
 	"os"
 	"regexp"
 	"sort"
-	"strings"
 
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
@@ -58,11 +57,6 @@ func main() {
 		panic(fmt.Errorf("repository must be specified"))
 	}
 
-	GetVersion := GetVersion9Plus
-	if strings.HasSuffix(r, "8") {
-		GetVersion = GetVersion8
-	}
-
 	var c *http.Client
 	if s, ok := inputs["token"]; ok {
 		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
@@ -76,7 +70,7 @@ func main() {
 	for {
 		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "alibaba", r, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for alibaba/dragonwell8\n%w", err))
+			panic(fmt.Errorf("unable to list existing releases for alibaba/%s\n%w", r, err))
 		}
 
 		for _, r := range rel {
@@ -110,23 +104,7 @@ func main() {
 	}
 }
 
-func GetVersion9Plus(assets []*github.ReleaseAsset) string {
-	re := regexp.MustCompile(`Alibaba_Dragonwell_([\d]+)\.([\d]+)\.([\d]+)[\.+_]?([\d]+)_x64_linux.tar.gz$`)
-
-	for _, asset := range assets {
-		if g := re.FindStringSubmatch(*asset.Name); g != nil {
-			if g[2] == "8" {
-				return fmt.Sprintf("8.0.%s", g[4])
-			} else {
-				return fmt.Sprintf("%s.%s.%s", g[1], g[2], g[3])
-			}
-		}
-	}
-
-	panic(fmt.Errorf("unable to find file that matches %s", re.String()))
-}
-
-func GetVersion8(assets []*github.ReleaseAsset) string {
+func GetVersion(assets []*github.ReleaseAsset) string {
 	re := regexp.MustCompile(`Alibaba_Dragonwell_(.+)_x64_linux.tar.gz$`)
 
 	var uri *string

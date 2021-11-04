@@ -64,13 +64,15 @@ func main() {
 
 func LoadPackages(d string, t string, v int) actions.Versions {
 	uri := fmt.Sprintf(
-		"https://api.foojay.io/disco/v2.0/packages?"+
+		"https://api.foojay.io/disco/v3.0/packages?"+
 			"distro=%s&"+
 			"architecture=x64&"+
 			"archive_type=tar.gz&"+
 			"package_type=%s&"+
-			"operating_system=linux",
-		url.PathEscape(d), t)
+			"operating_system=linux&"+
+			"javafx_bundled=false&"+
+			"version=%d..%%3C%d", // 11..<12
+		url.PathEscape(d), t, v, v+1)
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -91,12 +93,10 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 
 	versions := make(actions.Versions)
 	for _, result := range raw.Result {
-		if result.MajorVersion == v {
-			if ver := re.FindStringSubmatch(result.JavaVersion); ver != nil {
-				versions[ver[1]] = LoadDownloadURI(result.Links.URI)
-			} else {
-				fmt.Println(result.JavaVersion, "failed to parse")
-			}
+		if ver := re.FindStringSubmatch(result.JavaVersion); ver != nil {
+			versions[ver[1]] = LoadDownloadURI(result.Links.URI)
+		} else {
+			fmt.Println(result.JavaVersion, "failed to parse")
 		}
 	}
 
@@ -128,9 +128,8 @@ func LoadDownloadURI(uri string) string {
 
 type PackagesResponse struct {
 	Result []struct {
-		MajorVersion int    `json:"major_version"`
-		JavaVersion  string `json:"java_version"`
-		Links        struct {
+		JavaVersion string `json:"java_version"`
+		Links       struct {
 			URI string `json:"pkg_info_uri"`
 		}
 	}
@@ -140,6 +139,7 @@ type PackagesResponse struct {
 type DownloadResponse struct {
 	Result []struct {
 		DirectDownloadURI string `json:"direct_download_uri"`
+		SignatureURI      string `json:"signature_uri"`
 	}
 	Message string
 }

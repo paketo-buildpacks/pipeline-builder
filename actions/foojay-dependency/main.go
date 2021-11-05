@@ -28,6 +28,10 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
 
+const userAgent = "Paketo_Buildpacks_CI/1.0"
+
+var client *http.Client = http.DefaultClient
+
 func main() {
 	inputs := actions.NewInputs()
 
@@ -74,7 +78,13 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 			"version=%d..%%3C%d", // 11..<12
 		url.PathEscape(d), t, v, v+1)
 
-	resp, err := http.Get(uri)
+	request, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	request.Header.Set("User-Agent", userAgent)
+
+	resp, err := client.Do(request)
 	if err != nil {
 		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
 	}
@@ -104,7 +114,13 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 }
 
 func LoadDownloadURI(uri string) string {
-	resp, err := http.Get(uri)
+	request, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	request.Header.Set("User-Agent", userAgent)
+
+	resp, err := client.Do(request)
 	if err != nil {
 		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
 	}

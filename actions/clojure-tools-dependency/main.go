@@ -99,13 +99,13 @@ func main() {
 			panic(err)
 		}
 
-		versions := make(actions.Versions)
+		versions = make(actions.Versions)
 		versions[normalVersion] = fmt.Sprintf("https://download.clojure.org/install/linux-install-%s.sh", origVersion)
-	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
-		panic(err)
-	} else {
-		o.Write(os.Stdout)
+		if o, err := versions.GetLatest(inputs); err != nil {
+			panic(err)
+		} else {
+			o.Write(os.Stdout)
+		}
 	}
 }

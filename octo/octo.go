@@ -102,6 +102,12 @@ func Contribute(path string) error {
 		contributions = append(contributions, c...)
 	}
 
+	if c, err := ContributeLitePackages(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if c, err := ContributePackageDependencies(descriptor); err != nil {
 		return err
 	} else {

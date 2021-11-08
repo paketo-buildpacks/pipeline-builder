@@ -20,6 +20,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
       - [`test`](#test)
       - [`path`](#path)
       - [`offline_packages`](#offline_packages)
+      - [`republish_images`](#republish_images)
       - [`actions`](#actions)
   - [Actions](#actions-1)
     - [Adoptium Dependency](#adoptium-dependency)
@@ -230,6 +231,16 @@ offline_packages:
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
 
 `platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
+
+#### `republish_images`
+```yaml
+republish_images:
+- source: gcr.io/paketo-buildpacks/bellsoft-liberica
+  target: gcr.io/tanzu-buildpacks/bellsoft-liberica-lite
+  id: tanzu-buildpacks/bellsoft-liberica-lite
+```
+
+`republish_images` is a list of objects that describe a `source` Docker registry location, a `target` Docker registry location, and a new buildpack id. If defined, each object will create a `republish-image` workflow that is responsible for detecting new source images, modifying the buildpack id of the image to the new id, and publishing a new target image with the modified buildpack id.
 
 #### `actions`
 ```yaml

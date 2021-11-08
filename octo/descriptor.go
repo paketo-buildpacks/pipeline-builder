@@ -35,6 +35,7 @@ type Descriptor struct {
 	DockerCredentials []DockerCredentials `yaml:"docker_credentials"`
 	HttpCredentials   []HTTPCredentials   `yaml:"http_credentials"`
 	OfflinePackages   []OfflinePackage    `yaml:"offline_packages"`
+	RepublishImages   []RepublishImage    `yaml:"republish_images"`
 	Actions           []Action
 	Dependencies      []Dependency
 	Test              Test
@@ -83,6 +84,12 @@ type OfflinePackage struct {
 	Source   string
 	Target   string
 	Platform Platform
+}
+
+type RepublishImage struct {
+	Source string
+	Target string
+	ID     string
 }
 
 type Package struct {

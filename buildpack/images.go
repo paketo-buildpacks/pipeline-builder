@@ -145,10 +145,12 @@ func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId
 type BuildpackLayerMetadata map[string]map[string]BuildpackLayerInfo
 
 type BuildpackLayerInfo struct {
-	API         string  `json:"api"`
-	Stacks      []Stack `json:"stacks,omitempty"`
-	Order       Order   `json:"order,omitempty"`
-	LayerDiffID string  `json:"layerDiffID"`
+	API         string      `json:"api"`
+	Stacks      []Stack     `json:"stacks,omitempty"`
+	Order       Order       `json:"order,omitempty"`
+	LayerDiffID string      `json:"layerDiffID"`
+	Name        string      `json:"name,omitempty"`
+	Homepage    interface{} `json:"homepage,omitempty"`
 }
 
 type Order []OrderEntry
@@ -174,6 +176,7 @@ type Stack struct {
 
 type Metadata struct {
 	Id          string      `json:"id"`
+	Name        string      `json:"name,omitempty"`
 	Version     string      `json:"version,omitempty"`
 	Homepage    interface{} `json:"homepage,omitempty"`
 	Description interface{} `json:"description,omitempty"`

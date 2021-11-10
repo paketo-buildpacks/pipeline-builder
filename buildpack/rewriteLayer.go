@@ -13,7 +13,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/tarball"
 )
 
-func rewriteLayer(layer v1.Layer, old, new string) (v1.Layer, error) {
+func rewriteLayer(layer v1.Layer, oldID, newID, oldVersion, newVersion string) (v1.Layer, error) {
 	b := &bytes.Buffer{}
 	tw := tar.NewWriter(b)
 
@@ -30,8 +30,12 @@ func rewriteLayer(layer v1.Layer, old, new string) (v1.Layer, error) {
 			break
 		}
 
-		newName := strings.ReplaceAll(header.Name, escapedID(old), escapedID(new))
+		// replace buildpack id and version in folder names
+		newName := strings.ReplaceAll(
+			strings.ReplaceAll(header.Name, escapedID(oldID), escapedID(newID)),
+			oldVersion, newVersion)
 
+		// replace buildpack id and version in buildpack.toml
 		if strings.HasSuffix(path.Clean(header.Name), "buildpack.toml") {
 			buf, err := ioutil.ReadAll(tr)
 			if err != nil {
@@ -44,7 +48,8 @@ func rewriteLayer(layer v1.Layer, old, new string) (v1.Layer, error) {
 				return nil, fmt.Errorf("unable to decode buildpack.toml\n%w", err)
 			}
 
-			bd.Info.ID = new
+			bd.Info.ID = newID
+			bd.Info.Version = newVersion
 
 			updatedBuildpackToml := &bytes.Buffer{}
 			err = toml.NewEncoder(updatedBuildpackToml).Encode(bd)

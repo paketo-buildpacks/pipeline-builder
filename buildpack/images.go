@@ -16,7 +16,7 @@ const (
 	buildpackMetadataLabel = "io.buildpacks.buildpackage.metadata"
 )
 
-func Rename(buildpack, tag, newID string) (string, error) {
+func Rename(buildpack, tag, newID, newVersion string) (string, error) {
 	reference, err := name.ParseReference(buildpack)
 	if err != nil {
 		return "", fmt.Errorf("unable to parse reference for existing buildpack tag\n%w", err)
@@ -39,7 +39,7 @@ func Rename(buildpack, tag, newID string) (string, error) {
 		return "", fmt.Errorf("unable to get buildpack layer metadata\n%w", err)
 	}
 
-	newLayersMetedata, layers, err := layerMetadata.metadataAndLayersFor(image, metadata.Id, metadata.Version, newID)
+	newLayersMetedata, layers, err := layerMetadata.metadataAndLayersFor(image, metadata.Id, metadata.Version, newID, newVersion)
 	if err != nil {
 		return "", fmt.Errorf("unable to generate new metadata\n%w", err)
 	}
@@ -55,6 +55,7 @@ func Rename(buildpack, tag, newID string) (string, error) {
 	}
 
 	metadata.Id = newID
+	metadata.Version = newVersion
 	newBuildpackage, err = SetLabels(newBuildpackage, map[string]interface{}{
 		layerMetadataLabel:     newLayersMetedata,
 		buildpackMetadataLabel: metadata,
@@ -83,7 +84,7 @@ func Rename(buildpack, tag, newID string) (string, error) {
 	return identifer, nil
 }
 
-func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId string, oldVersion string, newId string) (BuildpackLayerMetadata, []v1.Layer, error) {
+func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId string, oldVersion string, newId string, newVersion string) (BuildpackLayerMetadata, []v1.Layer, error) {
 	newLayerMetdata := BuildpackLayerMetadata{}
 
 	var layers []v1.Layer
@@ -121,9 +122,9 @@ func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId
 					return nil, nil, fmt.Errorf("unable to fetch layer by diff id %s for matching layer\n%w", diffId, err)
 				}
 
-				layer, err = rewriteLayer(layer, oldId, newId)
+				layer, err = rewriteLayer(layer, oldId, newId, oldVersion, newVersion)
 				if err != nil {
-					return nil, nil, fmt.Errorf("unable to rewrite layer, old id: %s, new id: %s\n%w", oldId, newId, err)
+					return nil, nil, fmt.Errorf("unable to rewrite layer, old id: %s, new id: %s, new version: %s\n%w", oldId, newId, newVersion, err)
 				}
 
 				diffID, err := layer.DiffID()
@@ -133,7 +134,7 @@ func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId
 
 				buildpack.LayerDiffID = diffID.String()
 
-				newLayerMetdata[newId][v] = buildpack
+				newLayerMetdata[newId][newVersion] = buildpack
 				layers = append(layers, layer)
 			}
 		}

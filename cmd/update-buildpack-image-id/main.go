@@ -14,6 +14,7 @@ func main() {
 	image := flagSet.String("image", "", "The exisiting buildpack image")
 	newImage := flagSet.String("new-image", "", "The new buildpack image")
 	id := flagSet.String("id", "", "The new id of the buildpack")
+	version := flagSet.String("version", "", "The new version of the buildpack")
 
 	if err := flagSet.Parse(os.Args[1:]); err != nil {
 		log.Fatal(fmt.Errorf("unable to parse flags\n%w", err))
@@ -31,7 +32,11 @@ func main() {
 		log.Fatal("--id is required")
 	}
 
-	rename, err := buildpack.Rename(*image, *newImage, *id)
+	if *version == "" {
+		log.Fatal("--version is required")
+	}
+
+	rename, err := buildpack.Rename(*image, *newImage, *id, *version)
 	if err != nil {
 		log.Fatal(err)
 	}

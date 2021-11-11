@@ -56,6 +56,12 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
+						Uses: "actions/checkout@v2",
+						With: map[string]interface{}{
+							"fetch-depth": 0,
+						},
+					},
+					{
 						Id:   "version",
 						Name: "Check for next version",
 						Run:  StatikString("/check-republish-version.sh"),
@@ -79,10 +85,11 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  StatikString("/republish-image.sh"),
 						Env: map[string]string{
-							"SOURCE":  republishImage.Source,
-							"TARGET":  republishImage.Target,
-							"VERSION": "${{ steps.version.outputs.version }}",
-							"NEWID":   republishImage.ID,
+							"SOURCE":         republishImage.Source,
+							"SOURCE_VERSION": "${{ steps.version.outputs.source }}",
+							"TARGET":         republishImage.Target,
+							"TARGET_VERSION": "${{ steps.version.outputs.target }}",
+							"NEWID":          republishImage.ID,
 						},
 					},
 				},

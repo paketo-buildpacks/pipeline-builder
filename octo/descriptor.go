@@ -87,9 +87,10 @@ type OfflinePackage struct {
 }
 
 type RepublishImage struct {
-	Source string
-	Target string
-	ID     string
+	Source     string
+	Target     string
+	ID         string
+	TargetRepo string `yaml:"target_repo"`
 }
 
 type Package struct {

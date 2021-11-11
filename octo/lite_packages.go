@@ -58,6 +58,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 					{
 						Uses: "actions/checkout@v2",
 						With: map[string]interface{}{
+							"repository":  republishImage.TargetRepo,
 							"fetch-depth": 0,
 						},
 					},

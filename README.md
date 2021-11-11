@@ -238,9 +238,12 @@ republish_images:
 - source: gcr.io/paketo-buildpacks/bellsoft-liberica
   target: gcr.io/tanzu-buildpacks/bellsoft-liberica-lite
   id: tanzu-buildpacks/bellsoft-liberica-lite
+  target_repo: paketo-buildpacks/bellsoft-liberica
 ```
 
 `republish_images` is a list of objects that describe a `source` Docker registry location, a `target` Docker registry location, and a new buildpack id. If defined, each object will create a `republish-image` workflow that is responsible for detecting new source images, modifying the buildpack id of the image to the new id, and publishing a new target image with the modified buildpack id.
+
+The `target_repo` setting can be used to point the workflow to a different source control repository for the target image. It's assumed to be the current repository, but for cases where you have a utility repo which is republishing multiple images you need to point the workflow to are repository from which it can read the git tags and extract the target version. The example above, points it to the source image's code repository so it'll end up with a source and target version that are in sync.
 
 #### `actions`
 ```yaml

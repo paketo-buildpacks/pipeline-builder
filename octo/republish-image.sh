@@ -2,16 +2,18 @@
 
 set -euo pipefail
 
-if [ "$SOURCE" == "" ] || [ "$TARGET" == "" ] || [ "$VERSION" == "" ] || [ "$NEWID" == "" ]; then
+if [ "$SOURCE" == "" ] || [ "$TARGET" == "" ] || [ "$SOURCE_VERSION" == "" ] || [ "$TARGET_VERSION" == "" ] || [ "$NEWID" == "" ]; then
     echo "Missing source, target, version and/or newid:"
-    echo "   Source: $SOURCE"
-    echo "   Target: $TARGET"
-    echo "  Version: $VERSION"
-    echo "    NewID: $NEWID"
-    exit -1
+    echo "     Source: $SOURCE"
+    echo "    Version: $SOURCE_VERSION"
+    echo "     Target: $TARGET"
+    echo "    Version: $TARGET_VERSION"
+    echo "     New ID: $NEWID"
+    exit 255
 fi
 
 update-buildpack-image-id \
-    --image "$SOURCE:$VERSION" \
+    --image "$SOURCE:$SOURCE_VERSION" \
     --id "$NEWID" \
-    --new-image "$TARGET:$VERSION"
+    --version "$TARGET_VERSION" \
+    --new-image "$TARGET:$TARGET_VERSION"

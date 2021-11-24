@@ -189,6 +189,8 @@ github.com/buildpacks/libcnb v1.24.0 h1:jVpydlJPygweUBk4ac3WGT2X1NGeunH17eyn9tUq
 github.com/buildpacks/libcnb v1.24.0/go.mod h1:wIXTSW6ybtX9XIICQQqPnIUxx6t1bSZT7iIOKbEzRH0=
 github.com/buildpacks/libcnb v1.25.0 h1:f0UWYUbXQ/vTX6SztGn+sP/F6cVSAbBQO4B5/R1LEP8=
 github.com/buildpacks/libcnb v1.25.0/go.mod h1:XX0+zHW8CNLNwiiwowgydAgWWfyDt8Lj1NcuWtkkBJQ=
+github.com/buildpacks/libcnb v1.25.1 h1:fIMkksmGQHzRuqbxRst/Z3y6L8/6PJWT7H1jIVEpkqQ=
+github.com/buildpacks/libcnb v1.25.1/go.mod h1:XX0+zHW8CNLNwiiwowgydAgWWfyDt8Lj1NcuWtkkBJQ=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.3.0 h1:t/LhUZLVitR1Ow2YOnduCsavhwFUklBMoGVYUCqmCqk=
 github.com/census-instrumentation/opencensus-proto v0.3.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

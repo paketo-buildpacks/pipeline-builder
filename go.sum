@@ -187,6 +187,8 @@ github.com/bugsnag/panicwrap v0.0.0-20151223152923-e2c28503fcd0 h1:nvj0OLI3YqYXe
 github.com/bugsnag/panicwrap v0.0.0-20151223152923-e2c28503fcd0/go.mod h1:D/8v3kj0zr8ZAKg1AQ6crr+5VwKN5eIywRkfhyM/+dE=
 github.com/buildpacks/libcnb v1.24.0 h1:jVpydlJPygweUBk4ac3WGT2X1NGeunH17eyn9tUqZuU=
 github.com/buildpacks/libcnb v1.24.0/go.mod h1:wIXTSW6ybtX9XIICQQqPnIUxx6t1bSZT7iIOKbEzRH0=
+github.com/buildpacks/libcnb v1.25.0 h1:f0UWYUbXQ/vTX6SztGn+sP/F6cVSAbBQO4B5/R1LEP8=
+github.com/buildpacks/libcnb v1.25.0/go.mod h1:XX0+zHW8CNLNwiiwowgydAgWWfyDt8Lj1NcuWtkkBJQ=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/census-instrumentation/opencensus-proto v0.3.0 h1:t/LhUZLVitR1Ow2YOnduCsavhwFUklBMoGVYUCqmCqk=
 github.com/census-instrumentation/opencensus-proto v0.3.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=

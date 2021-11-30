@@ -91,7 +91,7 @@ func (m BuildpackLayerMetadata) metadataAndLayersFor(sourceImage v1.Image, oldId
 	for id, versions := range m {
 		for v, buildpack := range versions {
 
-			if v != oldVersion && id != oldId {
+			if v != oldVersion || id != oldId {
 				if _, ok := newLayerMetdata[id]; !ok {
 					newLayerMetdata[id] = map[string]BuildpackLayerInfo{}
 				}

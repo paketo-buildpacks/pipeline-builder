@@ -27,7 +27,7 @@ import (
 
 type Versions map[string]string
 
-func (v Versions) GetLatest(inputs Inputs, mods ...RequestModifierFunc) (Outputs, error) {
+func (v Versions) GetLatestVersion(inputs Inputs) (*semver.Version, error) {
 	if len(v) == 0 {
 		return nil, fmt.Errorf("no candidate version")
 	}
@@ -57,19 +57,16 @@ func (v Versions) GetLatest(inputs Inputs, mods ...RequestModifierFunc) (Outputs
 		return sv[i].LessThan(sv[j])
 	})
 
-	l := sv[len(sv)-1]
-	uri := v[l.Original()]
+	return sv[len(sv)-1], nil
+}
 
-	sha256, err := SHA256FromURI(uri, mods...)
+func (v Versions) GetLatest(inputs Inputs, mods ...RequestModifierFunc) (Outputs, error) {
+	latestVersion, err := v.GetLatestVersion(inputs)
 	if err != nil {
-		return nil, fmt.Errorf("unable to calculate sha256\n%w", err)
+		return nil, err
 	}
 
-	return Outputs{
-		"sha256":  sha256,
-		"uri":     uri,
-		"version": fmt.Sprintf("%d.%d.%d", l.Major(), l.Minor(), l.Patch()),
-	}, nil
+	return NewOutputs(v[latestVersion.Original()], latestVersion, nil, mods...)
 }
 
 var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)$`)

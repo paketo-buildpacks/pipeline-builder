@@ -75,15 +75,25 @@ func main() {
 		versions[strings.ReplaceAll(r.VersionData.Semver, "+", "-")] = r.Binaries[0].Package.Link
 	}
 
-	for k, _ := range versions {
-		fmt.Println(k)
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
-		panic(err)
-	} else {
-		o.Write(os.Stdout)
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}
+
+	if latestVersion.Major() == 8 {
+		// Java 8 uses `1.8.0` and `updateXX` in the CPE, instead of 8.0.x
+		//
+		// This adjusts the update job to set the CPE in this way instead
+		// of using the stardard version format
+		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
+	}
+
+	outputs.Write(os.Stdout)
 }
 
 type Asset struct {

@@ -22,6 +22,8 @@ import (
 	"os"
 	"regexp"
 	"strings"
+
+	"github.com/Masterminds/semver/v3"
 )
 
 type Inputs map[string]string
@@ -40,6 +42,25 @@ func NewInputs() Inputs {
 }
 
 type Outputs map[string]string
+
+func NewOutputs(uri string, latestVersion *semver.Version, additionalOutputs Outputs, mods ...RequestModifierFunc) (Outputs, error) {
+	sha256, err := SHA256FromURI(uri, mods...)
+	if err != nil {
+		return nil, fmt.Errorf("unable to calculate sha256\n%w", err)
+	}
+
+	outputs := Outputs{
+		"sha256":  sha256,
+		"uri":     uri,
+		"version": fmt.Sprintf("%d.%d.%d", latestVersion.Major(), latestVersion.Minor(), latestVersion.Patch()),
+	}
+
+	for k, v := range additionalOutputs {
+		outputs[k] = v
+	}
+
+	return outputs, nil
+}
 
 func (o Outputs) Write(writer io.Writer) {
 	for k, v := range o {

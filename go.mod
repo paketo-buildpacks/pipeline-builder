@@ -9,7 +9,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/antchfx/htmlquery v1.2.4 // indirect
 	github.com/antchfx/xmlquery v1.3.8 // indirect
-	github.com/aws/aws-sdk-go v1.42.18
+	github.com/aws/aws-sdk-go v1.42.19
 	github.com/buildpacks/libcnb v1.25.2
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect

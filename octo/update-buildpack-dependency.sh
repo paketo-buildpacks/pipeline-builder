@@ -13,6 +13,10 @@ update-buildpack-dependency \
   --id "${ID}" \
   --version-pattern "${VERSION_PATTERN}" \
   --version "${VERSION}" \
+  --cpe-pattern "${CPE_PATTERN:-}" \
+  --cpe "${CPE:-}" \
+  --purl-pattern "${PURL_PATTERN:-}" \
+  --purl "${PURL:-}" \
   --uri "${URI}" \
   --sha256 "${SHA256}"
 

@@ -76,6 +76,8 @@ type Dependency struct {
 	Name           string
 	Id             string
 	VersionPattern string `yaml:"version_pattern"`
+	PURLPattern    string `yaml:"purl_pattern"`
+	CPEPattern     string `yaml:"cpe_pattern"`
 	Uses           string
 	With           map[string]interface{}
 }

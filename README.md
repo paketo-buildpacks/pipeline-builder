@@ -175,6 +175,8 @@ dependencies:
 - name:            JRE 11
   id:              jre
   version_pattern: "11\\.[\\d]+\\.[\\d]+"
+  purl_pattern:    "version-11\\.[\\d]+\\.[\\d]+"
+  cpe_pattern:     "patch[\\d]+"
   uses:            docker://ghcr.io/paketo-buildpacks/actions/adoptium-dependency:main
   with:
     implementation: hotspot
@@ -184,7 +186,7 @@ dependencies:
 
 * [Example `update-*.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-jre-11.yml)
 
-`dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
+`dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, optional `purl_pattern` and `cpe_pattern` values which allow you to provide alternative patterns for updating the CPEs and PURL (they default to the version pattern), a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
 
 #### `test`
 ```yaml

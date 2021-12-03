@@ -97,11 +97,25 @@ func main() {
 	h := candidates[candidateVersions[len(candidateVersions)-1]]
 	versions := actions.Versions{GetVersion(h.Assets): h.URI}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
-		panic(err)
-	} else {
-		o.Write(os.Stdout)
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to create outputs\n%w", err))
+	}
+
+	if latestVersion.Major() == 8 {
+		// Java 8 uses `1.8.0` and `updateXX` in the CPE, instead of 8.0.x
+		//
+		// This adjusts the update job to set the CPE in this way instead
+		// of using the standard version format
+		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
+	}
+
+	outputs.Write(os.Stdout)
 }
 
 func GetVersion(assets []*github.ReleaseAsset) string {

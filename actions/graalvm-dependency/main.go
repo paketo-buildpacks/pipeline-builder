@@ -27,6 +27,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
+	"strings"
 
 	"github.com/google/go-github/v32/github"
 	"golang.org/x/oauth2"
@@ -34,14 +35,31 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
 
+const (
+	JDKProductType       = "jdk"
+	NIKProductType       = "nik"
+	UnknownProductType   = "unknown"
+	JDKProductTypePrefix = "graalvm-ce-java"
+	NIKProductTypePrefix = "native-image-installable-svm"
+)
+
 func main() {
 	inputs := actions.NewInputs()
 
 	var (
-		err error
-		g   *regexp.Regexp
+		err         error
+		g           *regexp.Regexp
+		productType string
 	)
 	if s, ok := inputs["glob"]; ok {
+		if strings.HasPrefix(s, JDKProductTypePrefix) {
+			productType = JDKProductType
+		} else if strings.HasPrefix(s, NIKProductTypePrefix) {
+			productType = NIKProductType
+		} else {
+			productType = UnknownProductType
+		}
+
 		g, err = regexp.Compile(s)
 		if err != nil {
 			panic(fmt.Errorf("unable to compile %s as a regexp\n%w", s, err))
@@ -100,17 +118,32 @@ func main() {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	url := versions[latestVersion.Original()]
+	outputs, err := actions.NewOutputs(url, latestVersion, nil)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}
 
-	if latestVersion.Major() == 8 {
+	if productType == JDKProductType && latestVersion.Major() == 8 {
 		// Java 8 uses `1.8.0` and `updateXX` in the CPE, instead of 8.0.x
 		//
 		// This adjusts the update job to set the CPE in this way instead
 		// of using the standard version format
 		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
+	}
+
+	if productType == NIKProductType {
+		// NIK/Substrate VM uses a different version, not the Java version
+		//
+		// This adjusts the update job to set the PURL & CPE in this way instead
+		// of using the standard version format
+		re = regexp.MustCompile(`\/vm-([\d]+\.[\d]+\.[\d]+)\/`)
+		matches := re.FindStringSubmatch(url)
+		if matches == nil || len(matches) != 2 {
+			panic(fmt.Errorf("unable to parse NIK version: %s", matches))
+		}
+		outputs["cpe"] = matches[1]
+		outputs["purl"] = matches[1]
 	}
 
 	outputs.Write(os.Stdout)

@@ -117,9 +117,11 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Name: "Package Buildpack",
 						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
-							"PACKAGE": descriptor.Package.Repository,
-							"PUBLISH": "true",
-							"VERSION": "${{ steps.version.outputs.version }}",
+							"PACKAGE":       descriptor.Package.Repository,
+							"PUBLISH":       "true",
+							"VERSION":       "${{ steps.version.outputs.version }}",
+							"VERSION_MAJOR": "${{ steps.version.outputs.version-major }}",
+							"VERSION_MINOR": "${{ steps.version.outputs.version-minor }}",
 						},
 					},
 					{

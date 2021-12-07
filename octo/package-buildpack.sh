@@ -8,8 +8,10 @@ if [[ -n "${PUBLISH+x}" ]]; then
     --config "${HOME}"/package.toml \
     --publish
 
-  crane tag "${PACKAGE}:${VERSION}" "${VERSION_MINOR}"
-  crane tag "${PACKAGE}:${VERSION}" "${VERSION_MAJOR}"
+  if [ ! -z ${VERSION_MINOR} ] && [ ! -z ${VERSION_MAJOR} ]; then
+    crane tag "${PACKAGE}:${VERSION}" "${VERSION_MINOR}"
+    crane tag "${PACKAGE}:${VERSION}" "${VERSION_MAJOR}"
+  fi
   crane tag "${PACKAGE}:${VERSION}" latest
   echo "::set-output name=digest::$(crane digest "${PACKAGE}:${VERSION}")"
 else

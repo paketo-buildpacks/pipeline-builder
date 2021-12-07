@@ -120,8 +120,8 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 							"PACKAGE":       descriptor.Package.Repository,
 							"PUBLISH":       "true",
 							"VERSION":       "${{ steps.version.outputs.version }}",
-							"VERSION_MAJOR": "${{ steps.version.outputs.version_major }}",
-							"VERSION_MINOR": "${{ steps.version.outputs.version_minor }}",
+							"VERSION_MAJOR": "${{ steps.version.outputs.version-major }}",
+							"VERSION_MINOR": "${{ steps.version.outputs.version-minor }}",
 						},
 					},
 					{

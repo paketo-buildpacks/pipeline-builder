@@ -121,18 +121,16 @@ func main() {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}
 
-	if latestVersion.Major() == 8 {
-		// IBM Semeru uses the OpenJ9 version in the CPE, ex: 0.29.1
-		//
-		// This adjusts the update job to set the CPE in this way instead
-		// of using the standard version format
-		re = regexp.MustCompile(`openj9-([\d]+\.[\d]+\.[\d]+).*?\/`)
-		matches := re.FindStringSubmatch(url)
-		if matches == nil || len(matches) != 2 {
-			panic(fmt.Errorf("unable to parse OpenJ9 version: %s", matches))
-		}
-		outputs["cpe"] = matches[1]
+	// IBM Semeru uses the OpenJ9 version in the CPE, ex: 0.29.1
+	//
+	// This adjusts the update job to set the CPE in this way instead
+	// of using the standard version format
+	re = regexp.MustCompile(`openj9-([\d]+\.[\d]+\.[\d]+).*?\/`)
+	matches := re.FindStringSubmatch(url)
+	if matches == nil || len(matches) != 2 {
+		panic(fmt.Errorf("unable to parse OpenJ9 version: %s", matches))
 	}
+	outputs["cpe"] = matches[1]
 
 	outputs.Write(os.Stdout)
 }

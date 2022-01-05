@@ -29,7 +29,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	uri := "https://archive.apache.org/dist/skywalking"
+	uri := "https://archive.apache.org/dist/skywalking/java-agent"
 
 	c := colly.NewCollector()
 
@@ -39,7 +39,7 @@ func main() {
 		if p := cp.FindStringSubmatch(element.Attr("href")); p != nil {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
-			versions[v] = fmt.Sprintf("%s/%[2]s/apache-skywalking-apm-%[2]s.tar.gz", uri, v)
+			versions[v] = fmt.Sprintf("%s/%[2]s/apache-skywalking-java-agent-%[2]s.tgz", uri, v)
 		}
 	})
 

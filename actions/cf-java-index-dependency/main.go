@@ -20,15 +20,18 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 	"gopkg.in/yaml.v3"
 )
 
+var versionPattern = regexp.MustCompile(`(\d+)\.(\d+)\.(\d+)_(.*)`)
+
 func main() {
 	inputs := actions.NewInputs()
 
-    // same repository_root as documented here: https://github.com/cloudfoundry/java-buildpack/blob/main/docs/extending-repositories.md
+	// same repository_root as documented here: https://github.com/cloudfoundry/java-buildpack/blob/main/docs/extending-repositories.md
 	repositoryRoot, ok := inputs["repository_root"]
 	if !ok {
 		panic(fmt.Errorf("repository_root must be specified"))
@@ -52,7 +55,7 @@ func main() {
 
 	versions := make(actions.Versions)
 	for k, v := range raw {
-		versions[k] = v
+		versions[versionPattern.ReplaceAllString(k, "$1.$2.$3-$4")] = v
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

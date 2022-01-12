@@ -3,6 +3,7 @@ module github.com/paketo-buildpacks/pipeline-builder
 go 1.16
 
 require (
+	cloud.google.com/go/iam v0.1.0 // indirect
 	cloud.google.com/go/storage v1.18.2
 	github.com/BurntSushi/toml v0.4.1
 	github.com/Masterminds/semver/v3 v3.1.1
@@ -27,6 +28,6 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	golang.org/x/crypto v0.0.0-20211117183948-ae814b36b871 // indirect
 	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
-	google.golang.org/api v0.64.0
+	google.golang.org/api v0.65.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

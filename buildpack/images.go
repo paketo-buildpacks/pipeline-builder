@@ -24,7 +24,7 @@ func Rename(buildpack, tag, newID, newVersion string) (string, error) {
 
 	image, err := remote.Image(reference, remote.WithAuthFromKeychain(authn.DefaultKeychain))
 	if err != nil {
-		return "", fmt.Errorf("unable to feth remote image\n%w", err)
+		return "", fmt.Errorf("unable to fetch remote image\n%w", err)
 	}
 
 	metadata := Metadata{}

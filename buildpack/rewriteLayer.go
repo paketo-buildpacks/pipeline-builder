@@ -100,10 +100,13 @@ type BuildpackDescriptor struct {
 }
 
 type BuildpackTomlInfo struct {
-	ID       string `toml:"id"`
-	Version  string `toml:"version"`
-	Name     string `toml:"name"`
-	ClearEnv bool   `toml:"clear-env,omitempty"`
+	ID          string   `toml:"id"`
+	Version     string   `toml:"version"`
+	Name        string   `toml:"name"`
+	ClearEnv    bool     `toml:"clear-env,omitempty"`
+	SBOMFormats []string `toml:"sbom-formats,omitempty"`
+	Description string   `toml:"description,omitempty"`
+	Homepage    string   `toml:"homepage,omitempty"`
 }
 
 func escapedID(id string) string {

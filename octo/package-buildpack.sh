@@ -2,13 +2,13 @@
 
 set -euo pipefail
 
-if [[ -n "${PUBLISH+x}" ]]; then
+if [[ "${PUBLISH:-x}" == "true" ]]; then
   pack buildpack package \
     "${PACKAGE}:${VERSION}" \
     --config "${HOME}"/package.toml \
     --publish
 
-  if [ ! -z ${VERSION_MINOR} ] && [ ! -z ${VERSION_MAJOR} ]; then
+  if [[ -n ${VERSION_MINOR:-} && -n ${VERSION_MAJOR:-} ]]; then
     crane tag "${PACKAGE}:${VERSION}" "${VERSION_MINOR}"
     crane tag "${PACKAGE}:${VERSION}" "${VERSION_MAJOR}"
   fi

@@ -88,6 +88,7 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 			"archive_type=tar.gz&"+
 			"package_type=%s&"+
 			"operating_system=linux&"+
+			"lib_c_type=glibc&"+
 			"javafx_bundled=false&"+
 			"version=%d..%%3C%d", // 11..<12
 		url.PathEscape(d), t, v, v+1)

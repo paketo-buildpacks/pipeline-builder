@@ -137,7 +137,7 @@ func main() {
 		//
 		// This adjusts the update job to set the PURL & CPE in this way instead
 		// of using the standard version format
-		re = regexp.MustCompile(`\/vm-([\d]+\.[\d]+\.[\d]+)\/`)
+		re = regexp.MustCompile(`\/vm-([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
 		matches := re.FindStringSubmatch(url)
 		if matches == nil || len(matches) != 2 {
 			panic(fmt.Errorf("unable to parse NIK version: %s", matches))

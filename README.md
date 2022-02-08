@@ -226,11 +226,14 @@ path: ..
 offline_packages:
 - source: paketo-buildpacks/adoptium
   target: gcr.io/tanzu-buildpacks/adoptium
+  path: subdir/adoptium
   platform:
     os: linux
 ```
 
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
+
+`path` is the path to the buildpack's directory relative to the repository's root.
 
 `platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
 

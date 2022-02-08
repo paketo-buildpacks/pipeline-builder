@@ -83,9 +83,10 @@ type Dependency struct {
 }
 
 type OfflinePackage struct {
-	Source   string
-	Target   string
-	Platform Platform
+	Source     string
+	Target     string
+	SourcePath string `yaml:"source_path"`
+	Platform   Platform
 }
 
 type RepublishImage struct {

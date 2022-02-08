@@ -112,6 +112,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 							"INCLUDE_DEPENDENCIES": "true",
 							"OS":                   offlinePackage.Platform.OS,
 							"VERSION":              "${{ steps.version.outputs.version }}",
+							"SOURCE_PATH":          offlinePackage.SourcePath,
 						},
 					},
 					{

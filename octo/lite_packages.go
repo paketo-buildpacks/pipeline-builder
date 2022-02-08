@@ -67,8 +67,9 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						Name: "Check for next version",
 						Run:  StatikString("/check-republish-version.sh"),
 						Env: map[string]string{
-							"SOURCE": republishImage.Source,
-							"TARGET": republishImage.Target,
+							"SOURCE":     republishImage.Source,
+							"TARGET":     republishImage.Target,
+							"TAG_PREFIX": republishImage.TagPrefix,
 						},
 					},
 					{

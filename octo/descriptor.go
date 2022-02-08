@@ -86,6 +86,7 @@ type OfflinePackage struct {
 	Source     string
 	Target     string
 	SourcePath string `yaml:"source_path"`
+	TagPrefix  string `yaml:"tag_prefix"`
 	Platform   Platform
 }
 
@@ -93,6 +94,7 @@ type RepublishImage struct {
 	Source     string
 	Target     string
 	ID         string
+	TagPrefix  string `yaml:"tag_prefix"`
 	TargetRepo string `yaml:"target_repo"`
 }
 

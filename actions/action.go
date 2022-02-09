@@ -52,7 +52,7 @@ func NewOutputs(uri string, latestVersion *semver.Version, additionalOutputs Out
 	outputs := Outputs{
 		"sha256":  sha256,
 		"uri":     uri,
-		"version": fmt.Sprintf("%d.%d.%d", latestVersion.Major(), latestVersion.Minor(), latestVersion.Patch()),
+		"version": latestVersion.String(),
 	}
 
 	for k, v := range additionalOutputs {

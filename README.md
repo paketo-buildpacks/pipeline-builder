@@ -53,6 +53,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [Skywalking Dependency](#skywalking-dependency)
     - [Spring Generations](#spring-generations)
     - [Tomcat Dependency](#tomcat-dependency)
+    - [Tomee Dependency](#tomee-dependency)
     - [YourKit Dependency](#yourkit-dependency)
   - [License](#license)
 
@@ -547,6 +548,16 @@ uses: docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
 with:
   uri: https://archive.apache.org/dist/tomcat/tomcat-9
 ```
+
+### Tomee Dependency
+The Tomee Dependency watches the [Apache Tomee Download Page](https://archive.apache.org/dist/tomee/) for new versions. Available distributions are `microprofile`, `webprofile`, `plus` or `plume`
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/tomee-dependency:main
+with:
+  uri: https://archive.apache.org/dist/tomee/
+  dist: webprofile
+```  
 
 ### YourKit Dependency
 The YourKit Dependency watches the [YourKit Download Page](https://www.yourkit.com/java/profiler/download) for new versions.

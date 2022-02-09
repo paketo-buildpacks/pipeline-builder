@@ -228,6 +228,7 @@ offline_packages:
 - source: paketo-buildpacks/adoptium
   target: gcr.io/tanzu-buildpacks/adoptium
   path: subdir/adoptium
+  tag_prefix: my-buildpack/
   platform:
     os: linux
 ```
@@ -235,6 +236,8 @@ offline_packages:
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
 
 `path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
+
+`tag_prefix` is the optional prefix to filter for when detecting the buildpack's version via tags. Defaults to empty string.
 
 `platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
 
@@ -245,11 +248,14 @@ republish_images:
   target: gcr.io/tanzu-buildpacks/bellsoft-liberica-lite
   id: tanzu-buildpacks/bellsoft-liberica-lite
   target_repo: paketo-buildpacks/bellsoft-liberica
+  tag_prefix: java/
 ```
 
 `republish_images` is a list of objects that describe a `source` Docker registry location, a `target` Docker registry location, and a new buildpack id. If defined, each object will create a `republish-image` workflow that is responsible for detecting new source images, modifying the buildpack id of the image to the new id, and publishing a new target image with the modified buildpack id.
 
 The `target_repo` setting can be used to point the workflow to a different source control repository for the target image. It's assumed to be the current repository, but for cases where you have a utility repo which is republishing multiple images you need to point the workflow to are repository from which it can read the git tags and extract the target version. The example above, points it to the source image's code repository so it'll end up with a source and target version that are in sync.
+
+`tag_prefix` is the optional prefix to filter for when detecting the buildpack's version via tags. Defaults to empty string.
 
 #### `actions`
 ```yaml

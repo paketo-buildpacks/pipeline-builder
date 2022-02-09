@@ -19,17 +19,20 @@ contains() {
 
 IMAGES=$(crane ls "${TARGET}")
 
-for GIT in $(git tag | sort -V -r ); do
-  if contains "${GIT}" "${IMAGES}"; then
-    echo "Found ${GIT}. Skipping."
+for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
+  VERSION=${TAG#${TAG_PREFIX}}
+  VERSION=${VERSION#v}
+
+  if contains "${VERSION}" "${IMAGES}"; then
+    echo "Found ${TAG}. Skipping."
     echo "::set-output name=skip::true"
     exit
   fi
 
-  echo "::group::Checking out ${GIT}"
+  echo "::group::Checking out ${TAG}"
     git checkout -- .
-    git checkout "${GIT}"
+    git checkout "${TAG}"
   echo "::endgroup::"
-  echo "::set-output name=version::${GIT#v}"
+  echo "::set-output name=version::${VERSION}"
   exit
 done

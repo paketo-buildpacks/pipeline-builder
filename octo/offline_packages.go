@@ -68,8 +68,9 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Name: "Checkout next version",
 						Run:  StatikString("/checkout-next-version.sh"),
 						Env: map[string]string{
-							"SOURCE": offlinePackage.Source,
-							"TARGET": offlinePackage.Target,
+							"SOURCE":     offlinePackage.Source,
+							"TARGET":     offlinePackage.Target,
+							"TAG_PREFIX": offlinePackage.TagPrefix,
 						},
 					},
 					{

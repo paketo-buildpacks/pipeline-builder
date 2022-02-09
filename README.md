@@ -534,7 +534,7 @@ with:
 ```
 
 ### Skywalking Dependency
-The Skywalking Dependency watches the [Apache Skywalking Download Page](https://archive.apache.org/dist/skywalking) for new versions.
+The Skywalking Dependency watches the [Apache Skywalking Download Page](https://downloads.apache.org/skywalking) for new versions.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/skywalking-dependency:main
@@ -550,22 +550,23 @@ with:
 ```
 
 ### Tomcat Dependency
-The Tomcat Dependency watches the [Apache Tomcat Download Page](https://archive.apache.org/dist/tomcat/tomcat-9/) for new versions.
+The Tomcat Dependency watches the [Apache Tomcat Download Page](https://downloads.apache.org/tomcat/tomcat-9/) for new versions.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
 with:
-  uri: https://archive.apache.org/dist/tomcat/tomcat-9
+  uri: https://downloads.apache.org/tomcat/tomcat-9
 ```
 
 ### Tomee Dependency
-The Tomee Dependency watches the [Apache Tomee Download Page](https://archive.apache.org/dist/tomee/) for new versions. Available distributions are `microprofile`, `webprofile`, `plus` or `plume`
+The Tomee Dependency watches the [Apache Tomee Download Page](https://downloads.apache.org/tomee/) for new versions. Available distributions are `microprofile`, `webprofile`, `plus` or `plume`.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/tomee-dependency:main
 with:
-  uri: https://archive.apache.org/dist/tomee/
+  uri: https://downloads.apache.org/tomee/
   dist: webprofile
+  major: 9
 ```  
 
 ### YourKit Dependency

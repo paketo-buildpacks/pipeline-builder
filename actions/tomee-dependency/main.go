@@ -58,8 +58,6 @@ func main() {
 				}
 
 				versions[v] = fmt.Sprintf("%s/tomee-%[2]s/apache-tomee-%[2]s-%s.tar.gz", uri, v, dist)
-
-				fmt.Println("Adding", v, "with url", versions[v])
 			}
 		}
 	})

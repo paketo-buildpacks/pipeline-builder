@@ -29,7 +29,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	uri := "https://archive.apache.org/dist/skywalking/java-agent"
+	uri := "https://downloads.apache.org/skywalking/java-agent"
 
 	c := colly.NewCollector()
 

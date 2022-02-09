@@ -128,6 +128,7 @@ package:
   include_dependencies: false
   register:             true
   registry_token:       ${{ secrets.JAVA_REGISTRY_TOKEN }}
+  source_path:          subdir/adoptium
   platform:
     os: linux
 ```
@@ -136,6 +137,8 @@ package:
 * [Example `test.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/tests.yml)
 
 `package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
+
+`source_path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
 
 `platform` describes what platform the created package should be built for. `os` can be set to `linux` or `windows` (`linux` by default).
 
@@ -227,15 +230,15 @@ path: ..
 offline_packages:
 - source: paketo-buildpacks/adoptium
   target: gcr.io/tanzu-buildpacks/adoptium
-  path: subdir/adoptium
   tag_prefix: my-buildpack/
+  source_path: subdir/adoptium
   platform:
     os: linux
 ```
 
 `offline_packages` is a list of objects that describe a `source` GitHub repository and a `target` Docker registry location.  If defined, each object will create a `create-package` workflow that is responsible for detecting a new online buildpackage release and creating a matching offline buildpackage release and publishing it.
 
-`path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
+`source_path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
 
 `tag_prefix` is the optional prefix to filter for when detecting the buildpack's version via tags. Defaults to empty string.
 

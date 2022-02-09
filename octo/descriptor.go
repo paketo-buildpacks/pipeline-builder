@@ -104,6 +104,7 @@ type Package struct {
 	Register            bool
 	RegistryToken       string `yaml:"registry_token"`
 	Platform            Platform
+	SourcePath          string `yaml:"source_path"`
 }
 
 const (

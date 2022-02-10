@@ -71,15 +71,16 @@ func main() {
 		panic(err)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	if err != nil {
 		panic(err)
-	} else {
-		// override the version with the full string (including prerelease information)
-		if latestVersion.Prerelease() != "" {
-			o["version"] = latestVersion.String()
-		}
-		o.Write(os.Stdout)
 	}
+
+	// override the version with the full string (including prerelease information)
+	if latestVersion.Prerelease() != "" {
+		o["version"] = latestVersion.String()
+	}
+	o.Write(os.Stdout)
 }
 
 func GetLatest(v actions.Versions, inputs actions.Inputs, mods ...actions.RequestModifierFunc) (actions.Outputs, error) {

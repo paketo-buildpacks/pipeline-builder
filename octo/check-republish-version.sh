@@ -20,7 +20,7 @@ contains() {
 IMAGES=$(crane ls "${TARGET}")
 
 for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
-  VERSION=${TAG#${TAG_PREFIX}}
+  VERSION=${TAG#"${TAG_PREFIX}"}
   VERSION=${VERSION#v}
 
   if contains "${VERSION}" "${IMAGES}"; then
@@ -33,8 +33,8 @@ for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
     git checkout -- .
     git checkout "${TAG}"
   echo "::endgroup::"
-  echo "::set-output name=version::${VERSION}"
-  exit
+  echo "::set-output name=target::${VERSION}"
+  break
 done
 
 for IMG in $(crane ls "${SOURCE}" | grep -v "latest" | sort -V -r); do

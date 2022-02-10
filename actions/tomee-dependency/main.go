@@ -66,9 +66,19 @@ func main() {
 		panic(err)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
-		o.Write(os.Stdout)
 	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	if err != nil {
+		panic(err)
+	}
+
+	// override the version with the full string (including prerelease information)
+	if latestVersion.Prerelease() != "" {
+		o["version"] = latestVersion.String()
+	}
+	o.Write(os.Stdout)
 }

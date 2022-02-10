@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -86,7 +85,13 @@ func main() {
 	for _, r := range raw {
 		key := fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)
 		if p == "nik" {
-			key = strings.SplitN(r.Components[0].Version, "+", 2)[0]
+			if v := actions.ExtendedVersionPattern.FindStringSubmatch(r.Components[0].Version); v != nil {
+				s := fmt.Sprintf("%s.%s.%s", v[1], v[2], v[3])
+				if v[4] != "" {
+					s = fmt.Sprintf("%s-%s", s, v[4])
+				}
+				key = s
+			}
 		}
 		versions[key] = r.DownloadURL
 	}

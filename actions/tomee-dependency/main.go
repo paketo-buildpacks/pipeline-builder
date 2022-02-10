@@ -82,12 +82,3 @@ func main() {
 	}
 	o.Write(os.Stdout)
 }
-
-func GetLatest(v actions.Versions, inputs actions.Inputs, mods ...actions.RequestModifierFunc) (actions.Outputs, error) {
-	latestVersion, err := v.GetLatestVersion(inputs)
-	if err != nil {
-		return nil, err
-	}
-
-	return actions.NewOutputs(v[latestVersion.Original()], latestVersion, nil, mods...)
-}

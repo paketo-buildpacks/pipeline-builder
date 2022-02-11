@@ -152,7 +152,7 @@ func GetVersion(assets []*github.ReleaseAsset) string {
 
 	t := tar.NewReader(gz)
 
-	re = regexp.MustCompile(`jdk[^/]+/release`)
+	re = regexp.MustCompile(`(dragonwell|jdk)[^/]+/release`)
 	for {
 		f, err := t.Next()
 		if err != nil && err == io.EOF {

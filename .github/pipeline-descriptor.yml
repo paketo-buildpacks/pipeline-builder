@@ -62,8 +62,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/overops-dependency
 - source: paketo-deps-dependency
   target: ghcr.io/paketo-buildpacks/actions/paketo-deps-dependency
-- source: riverbed-dependency
-  target: ghcr.io/paketo-buildpacks/actions/riverbed-dependency
+- source: aternity-dependency
+  target: ghcr.io/paketo-buildpacks/actions/aternity-dependency
 - source: rustup-init-dependency
   target: ghcr.io/paketo-buildpacks/actions/rustup-init-dependency
 - source: skywalking-dependency

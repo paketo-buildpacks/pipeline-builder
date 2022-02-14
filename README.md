@@ -48,7 +48,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [NPM Dependency](#npm-dependency)
     - [OverOps Dependency](#overops-dependency)
     - [Paketo Deps Dependency](#paketo-deps-dependency)
-    - [Riverbed Dependency](#riverbed-dependency)
+    - [Aternity Dependency](#aternity-dependency)
     - [Rustup Init Dependency](#rustup-init-dependency)
     - [Skywalking Dependency](#skywalking-dependency)
     - [Spring Generations](#spring-generations)
@@ -516,11 +516,11 @@ with:
   name: rust
 ```
 
-### Riverbed Dependency
-The Riverbed Dependency watches the [Riverbed Bucket](http://s3.amazonaws.com/appint-pcf-instrumentation-rpm-master) for new versions.
+### Aternity Dependency
+The Aternity Dependency watches the [Aternity Bucket](http://s3.amazonaws.com/appint-pcf-instrumentation-rpm-master) for new versions.
 
 ```yaml
-uses: docker://ghcr.io/paketo-buildpacks/actions/riverbed-dependency:main
+uses: docker://ghcr.io/paketo-buildpacks/actions/aternity-dependency:main
 ```
 
 ### Rustup Init Dependency

@@ -1,15 +1,15 @@
-name: Create Action riverbed-dependency
+name: Create Action aternity-dependency
 "on":
     pull_request:
         paths:
             - actions/*
-            - actions/riverbed-dependency/*
+            - actions/aternity-dependency/*
     push:
         branches:
             - main
         paths:
             - actions/*
-            - actions/riverbed-dependency/*
+            - actions/aternity-dependency/*
     release:
         types:
             - published
@@ -50,6 +50,6 @@ jobs:
                 fi
               env:
                 PUSH: ${{ github.event_name != 'pull_request' }}
-                SOURCE: riverbed-dependency
-                TARGET: ghcr.io/paketo-buildpacks/actions/riverbed-dependency
+                SOURCE: aternity-dependency
+                TARGET: ghcr.io/paketo-buildpacks/actions/aternity-dependency
                 VERSION: main

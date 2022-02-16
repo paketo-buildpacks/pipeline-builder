@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -81,6 +82,7 @@ func main() {
 	}
 
 	versions := make(actions.Versions)
+	additionalOutputs := make(actions.Outputs)
 
 	for _, r := range raw {
 		key := fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)
@@ -91,6 +93,14 @@ func main() {
 					s = fmt.Sprintf("%s-%s", s, v[4])
 				}
 				key = s
+
+				// Use NIK version for CPE/PURL
+				re := regexp.MustCompile(`\/vm/([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
+				matches := re.FindStringSubmatch(r.DownloadURL)
+				if matches == nil || len(matches) != 2 {
+					panic(fmt.Errorf("unable to parse NIK version: %s", matches))
+				}
+				additionalOutputs["purl"] = matches[1]
 			}
 		}
 		versions[key] = r.DownloadURL
@@ -101,7 +111,7 @@ func main() {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, additionalOutputs)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}

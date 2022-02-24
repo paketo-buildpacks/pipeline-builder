@@ -74,7 +74,7 @@ func main() {
 			w = fmt.Sprintf("%s.jar", w)
 		}
 
-		n, err := actions.NormalizeVersion(v)
+		n, err := NormalizeVersion(v)
 		if err != nil {
 			panic(err)
 		}
@@ -93,7 +93,7 @@ var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)
 
 func NormalizeVersion(raw string) (string, error) {
 	if p := ExtendedVersionPattern.FindStringSubmatch(raw); p != nil {
-		for i := 1; i < 4; i++ {
+		for i := 1; i < 5; i++ {
 			if p[i] == "" {
 				p[i] = "0"
 			}

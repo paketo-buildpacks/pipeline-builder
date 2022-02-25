@@ -43,6 +43,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [JProfiler Dependency](#jprofiler-dependency)
     - [JRebel Dependency](#jrebel-dependency)
     - [Leiningen Dependency](#leiningen-dependency)
+    - [Liberty Dependency](#liberty-dependency)
     - [Maven Dependency](#maven-dependency)
     - [New Relic Dependency](#new-relic-dependency)
     - [NPM Dependency](#npm-dependency)

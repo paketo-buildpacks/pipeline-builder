@@ -52,6 +52,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/jrebel-dependency
 - source: leiningen-dependency
   target: ghcr.io/paketo-buildpacks/actions/leiningen-dependency
+- source: liberty-dependency
+  target: ghcr.io/paketo-buildpacks/actions/liberty-dependency
 - source: maven-dependency
   target: ghcr.io/paketo-buildpacks/actions/maven-dependency
 - source: new-relic-dependency

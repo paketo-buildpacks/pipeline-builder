@@ -16,6 +16,7 @@ require (
 	github.com/pelletier/go-toml v1.9.4
 	github.com/rakyll/statik v0.1.7
 	github.com/spf13/pflag v1.0.5
+	github.com/stretchr/testify v1.7.0
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
 	google.golang.org/api v0.71.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
@@ -31,6 +32,7 @@ require (
 	github.com/antchfx/xmlquery v1.3.9 // indirect
 	github.com/antchfx/xpath v1.2.0 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.11.1 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/cli v20.10.12+incompatible // indirect
 	github.com/docker/distribution v2.8.0+incompatible // indirect
 	github.com/docker/docker v20.10.12+incompatible // indirect
@@ -49,6 +51,7 @@ require (
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect

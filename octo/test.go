@@ -18,6 +18,7 @@ package octo
 
 import (
 	"fmt"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -46,9 +47,17 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		Jobs: map[string]actions.Job{},
 	}
 
-	if f, err := Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString); err != nil {
+	goFiles, err := Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString)
+	if err != nil {
 		return nil, fmt.Errorf("unable to Find .go files in %s\n%w", descriptor.Path, err)
-	} else if len(f) > 0 {
+	}
+
+	integrationTestFiles, err := Find(descriptor.Path, regexp.MustCompile(`integration/.+\.go`).MatchString)
+	if err != nil {
+		return nil, fmt.Errorf("unable to Find .go files in %s\n%w", filepath.Join(descriptor.Path, "integration"), err)
+	}
+
+	if len(goFiles) > 0 {
 		j := actions.Job{
 			Name:   "Unit Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
@@ -71,9 +80,72 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			},
 		}
 
-		j.Steps = append(j.Steps, descriptor.Test.Steps...)
+		if len(integrationTestFiles) == 0 {
+			j.Steps = append(j.Steps, descriptor.Test.Steps...)
+		} else {
+			j.Steps = append(j.Steps, actions.Step{
+					Name: "Install richgo",
+					Run:  StatikString("/install-richgo.sh"),
+					Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
+				},
+				actions.Step{
+					Name: "Run Tests",
+					Run:  StatikString("/run-short-tests.sh"),
+					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
+				})
+		}
 
 		w.Jobs["unit"] = j
+	}
+
+	if len(integrationTestFiles) > 0 {
+		j := actions.Job{
+			Name:   "Integration Test",
+			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
+			Steps: []actions.Step{
+				{
+					Uses: "actions/checkout@v2",
+				},
+				{
+					Uses: "actions/cache@v2",
+					With: map[string]interface{}{
+						"path":         "${{ env.HOME }}/go/pkg/mod",
+						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
+						"restore-keys": "${{ runner.os }}-go-",
+					},
+				},
+				{
+					Uses: "actions/setup-go@v2",
+					With: map[string]interface{}{"go-version": GoVersion},
+				},
+				{
+					Name: "Install create-package",
+					Run:  StatikString("/install-create-package.sh"),
+				},
+				{
+					Name: "Install pack",
+					Run:  StatikString("/install-pack.sh"),
+					Env:  map[string]string{"PACK_VERSION": PackVersion},
+				},
+				{
+					Name: "Enable pack Experimental",
+					If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
+					Run:  StatikString("/enable-pack-experimental.sh"),
+				},
+				{
+					Name: "Install richgo",
+					Run:  StatikString("/install-richgo.sh"),
+					Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
+				},
+				{
+					Name: "Run Tests",
+					Run:  StatikString("/run-integration-tests.sh"),
+					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
+				},
+			},
+		}
+
+		w.Jobs["integration"] = j
 	}
 
 	if descriptor.Builder != nil {

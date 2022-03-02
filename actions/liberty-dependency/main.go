@@ -62,6 +62,7 @@ func main() {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
+	originalVersions := map[string]string{}
 	versions := make(actions.Versions)
 	for _, v := range raw.Versioning.Versions {
 		w := fmt.Sprintf("%s/%s/%s/%s", u, strings.ReplaceAll(g, ".", "/"), a, v)
@@ -80,14 +81,23 @@ func main() {
 			panic(err)
 		}
 
+		originalVersions[n] = v
 		versions[n] = w
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
-		panic(err)
-	} else {
-		o.Write(os.Stdout)
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to create outputs\n%w", err))
+	}
+
+	outputs["cpe"] = originalVersions[latestVersion.Original()]
+	outputs["purl"] = originalVersions[latestVersion.Original()]
+	outputs.Write(os.Stdout)
 }
 
 var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)$`)
@@ -106,7 +116,7 @@ func NormalizeVersion(raw string) (string, error) {
 	}
 
 	return "", fmt.Errorf("unable to parse %s as a extended version (%s)", raw, ExtendedVersionPattern)
-}	
+}
 
 type Metadata struct {
 	Versioning Versioning `xml:"versioning"`

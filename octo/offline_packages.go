@@ -57,7 +57,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 						With: map[string]interface{}{
 							"repository":  offlinePackage.Source,
 							"fetch-depth": 0,

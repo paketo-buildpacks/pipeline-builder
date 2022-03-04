@@ -54,7 +54,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/checkout@v2",
+					Uses: "actions/checkout@v3",
 				},
 				{
 					Uses: "actions/cache@v2",
@@ -87,7 +87,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
-					Uses: "actions/checkout@v2",
+					Uses: "actions/checkout@v3",
 				},
 				{
 					Id:   "version",
@@ -139,7 +139,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/enable-pack-experimental.sh"),
 				},
 				{
-					Uses: "actions/checkout@v2",
+					Uses: "actions/checkout@v3",
 				},
 				{
 					Uses: "actions/cache@v2",

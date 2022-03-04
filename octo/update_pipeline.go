@@ -49,7 +49,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 						Run:  StatikString("/install-octo.sh"),
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "pipeline",

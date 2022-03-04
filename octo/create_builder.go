@@ -55,7 +55,7 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 						Env:  map[string]string{"PACK_VERSION": PackVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "version",

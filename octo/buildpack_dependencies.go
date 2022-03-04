@@ -54,7 +54,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							Env:  map[string]string{"YJ_VERSION": YJVersion},
 						},
 						{
-							Uses: "actions/checkout@v2",
+							Uses: "actions/checkout@v3",
 						},
 						{
 							Id:   "dependency",

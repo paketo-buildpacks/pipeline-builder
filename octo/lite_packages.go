@@ -56,7 +56,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 						With: map[string]interface{}{
 							"repository":  republishImage.TargetRepo,
 							"fetch-depth": 0,

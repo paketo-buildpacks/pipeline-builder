@@ -135,7 +135,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 				Env:  map[string]string{"YJ_VERSION": YJVersion},
 			},
 			actions.Step{
-				Uses: "actions/checkout@v2",
+				Uses: "actions/checkout@v3",
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",

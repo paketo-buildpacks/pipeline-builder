@@ -126,7 +126,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 	w := actions.Workflow{
 		Name: fmt.Sprintf("Update %s", filepath.Base(name)),
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "4", DayOfWeek: "3-4"}},
+			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "4", DayOfWeek: "4-5"}},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{
@@ -153,7 +153,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "package",

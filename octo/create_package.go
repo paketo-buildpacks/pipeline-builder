@@ -84,7 +84,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  StatikString("/enable-pack-experimental.sh"),
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Uses: "actions/cache@v2",

@@ -26,7 +26,7 @@ jobs:
                 password: ${{ secrets.JAVA_GITHUB_TOKEN }}
                 registry: ghcr.io
                 username: ${{ secrets.JAVA_GITHUB_USERNAME }}
-            - uses: actions/checkout@v2
+            - uses: actions/checkout@v3
             - name: Create Action
               run: |
                 #!/usr/bin/env bash

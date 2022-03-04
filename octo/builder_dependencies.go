@@ -105,7 +105,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "build-image",
@@ -170,7 +170,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "dependency",

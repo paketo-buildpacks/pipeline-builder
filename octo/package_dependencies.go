@@ -153,7 +153,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v2",
+						Uses: "actions/checkout@v3",
 					},
 					{
 						Id:   "package",

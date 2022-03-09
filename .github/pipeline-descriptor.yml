@@ -74,5 +74,7 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/spring-generations
 - source: tomcat-dependency
   target: ghcr.io/paketo-buildpacks/actions/tomcat-dependency
+- source: tomee-dependency
+  target: ghcr.io/paketo-buildpacks/actions/tomee-dependency
 - source: yourkit-dependency
   target: ghcr.io/paketo-buildpacks/actions/yourkit-dependency

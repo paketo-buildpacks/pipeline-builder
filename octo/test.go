@@ -90,7 +90,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				actions.Step{
 					Name: "Run Tests",
-					Run:  StatikString("/run-short-tests.sh"),
+					Run:  StatikString("/run-unit-tests.sh"),
 					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
 				})
 		}

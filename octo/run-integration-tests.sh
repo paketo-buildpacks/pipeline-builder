@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-richgo test ./integration/...
+richgo test ./integration/... -run Integration

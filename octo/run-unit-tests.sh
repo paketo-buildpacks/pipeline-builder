@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-richgo test -short ./...
+richgo test ./... -run Unit

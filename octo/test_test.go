@@ -1,9 +1,26 @@
+/*
+ * Copyright 2018-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package octo_test
 
 import (
+	. "github.com/onsi/gomega"
 	"github.com/paketo-buildpacks/pipeline-builder/octo"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
-	"github.com/stretchr/testify/assert"
+	"github.com/sclevine/spec"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
@@ -16,74 +33,22 @@ type jobs struct {
 	Jobs map[string]*actions.Job `yaml:jobs`
 }
 
-func TestContributeTest_Default(t *testing.T) {
-	dir, descriptor := setUp(t)
-	defer os.RemoveAll(dir)
+func testTestGeneration(t *testing.T, context spec.G, it spec.S) {
+	var (
+		Expect = NewWithT(t).Expect
 
-	err := ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)
-	assert.NoError(t, err)
+		dir string
+		descriptor octo.Descriptor
+	)
 
-	contribution, err := octo.ContributeTest(descriptor)
-	assert.NoError(t, err)
+	context("Generate Tests", func() {
+		it.Before(func() {
+			var err error
+			dir, err = ioutil.TempDir("", "main-package")
+			Expect(err).To(Not(HaveOccurred()))
 
-	assert.Equal(t, ".github/workflows/tests.yml", contribution.Path)
-	t.Log(string(contribution.Content))
-
-	var workflow jobs
-	err = yaml.Unmarshal(contribution.Content, &workflow)
-	assert.NoError(t, err)
-
-	assert.Equal(t, 2, len(workflow.Jobs))
-	assert.NotNil(t, workflow.Jobs["unit"])
-	assert.Nil(t, workflow.Jobs["integration"])
-
-	steps := workflow.Jobs["unit"].Steps
-	assert.Contains(t, steps[len(steps) - 1].Run, "richgo test ./...")
-}
-
-
-func TestContributeTest_IntegrationTests(t *testing.T) {
-	dir, descriptor := setUp(t)
-	defer os.RemoveAll(dir)
-
-	err := ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)
-	assert.NoError(t, err)
-
-	err = os.Mkdir(filepath.Join(dir, "integration"), 0755)
-	assert.NoError(t, err)
-
-	err = ioutil.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)
-	assert.NoError(t, err)
-
-	contribution, err := octo.ContributeTest(descriptor)
-	assert.NoError(t, err)
-
-	assert.Equal(t, ".github/workflows/tests.yml", contribution.Path)
-	t.Log(string(contribution.Content))
-
-	var workflow jobs
-	err = yaml.Unmarshal(contribution.Content, &workflow)
-	assert.NoError(t, err)
-
-	assert.Equal(t, 3, len(workflow.Jobs))
-	assert.NotNil(t, workflow.Jobs["unit"])
-	assert.NotNil(t, workflow.Jobs["integration"])
-
-	steps := workflow.Jobs["unit"].Steps
-	assert.Contains(t, steps[len(steps) - 1].Run, "richgo test -short ./...")
-
-	steps = workflow.Jobs["integration"].Steps
-	assert.Contains(t, steps[len(steps) - 1].Run, "richgo test ./integration/...")
-}
-
-func setUp(t *testing.T) (string, octo.Descriptor ){
-	dir, err := ioutil.TempDir("", "main-package")
-	assert.NoError(t, err)
-
-	err = os.Mkdir(filepath.Join(dir, ".github"), 0755)
-	assert.NoError(t, err)
-
-	err = ioutil.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
+			Expect(os.Mkdir(filepath.Join(dir, ".github"), 0755)).To(Succeed())
+			Expect(ioutil.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
 github:
   username: ${{ secrets.JAVA_GITHUB_USERNAME }}
   token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
@@ -92,16 +57,62 @@ package:
   repository:     gcr.io/paketo-buildpacks/dummy
   register:       true
   registry_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
-`), 0644)
-	assert.NoError(t, err)
+`), 0644)).To(Succeed())
 
-	descriptor, err := octo.NewDescriptor(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"))
-	assert.NoError(t, err)
+			descriptor, err = octo.NewDescriptor(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"))
+			Expect(err).To(Not(HaveOccurred()))
 
-	t.Logf("%+v", descriptor)
+			Expect(ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)).To(Succeed())
+		})
 
+		it.After(func() {
+			Expect(os.RemoveAll(dir)).To(Succeed())
+		})
 
-	assert.NotNil(t, descriptor.Package)
+		it("will contribute a unit test pipeline", func() {
+			contribution, err := octo.ContributeTest(descriptor)
+			Expect(err).To(Not(HaveOccurred()))
 
-	return dir, descriptor
+			Expect(contribution.Path).To(Equal(".github/workflows/tests.yml"))
+
+			var workflow jobs
+			Expect(yaml.Unmarshal(contribution.Content, &workflow)).To(Succeed())
+
+			Expect(len(workflow.Jobs)).To(Equal(2))
+			Expect(workflow.Jobs["unit"]).To(Not(BeNil()))
+			Expect(workflow.Jobs["integration"]).To(BeNil())
+
+			steps := workflow.Jobs["unit"].Steps
+			Expect(steps[len(steps) - 1].Run).Should(ContainSubstring("richgo test ./..."))
+		})
+
+		context("there are integration tests", func() {
+			it.Before(func() {
+				Expect(os.Mkdir(filepath.Join(dir, "integration"), 0755)).To(Succeed())
+				Expect( ioutil.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)).To(Succeed())
+			})
+
+			it("will contribute a unit test and an integration test pipeline", func() {
+				contribution, err := octo.ContributeTest(descriptor)
+				Expect(err).To(Not(HaveOccurred()))
+
+				Expect(contribution.Path).To(Equal(".github/workflows/tests.yml"))
+
+				var workflow jobs
+				Expect(yaml.Unmarshal(contribution.Content, &workflow)).To(Succeed())
+
+				Expect(len(workflow.Jobs)).To(Equal(3))
+				Expect(workflow.Jobs["unit"]).To(Not(BeNil()))
+				Expect(workflow.Jobs["integration"]).To(Not(BeNil()))
+
+				unitSteps := workflow.Jobs["unit"].Steps
+				Expect(unitSteps[len(unitSteps) - 1].Run).Should(ContainSubstring("richgo test ./... -run Unit"))
+
+				integrationSteps := workflow.Jobs["integration"].Steps
+				Expect(integrationSteps[len(integrationSteps) - 1].Run).Should(ContainSubstring("richgo test ./integration/... -run Integration"))
+			})
+		})
+
+	})
+
 }

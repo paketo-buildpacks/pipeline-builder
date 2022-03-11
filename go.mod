@@ -13,8 +13,10 @@ require (
 	github.com/google/go-containerregistry v0.8.0
 	github.com/google/go-github/v32 v32.1.0
 	github.com/iancoleman/strcase v0.2.0
+	github.com/onsi/gomega v1.18.1
 	github.com/pelletier/go-toml v1.9.4
 	github.com/rakyll/statik v0.1.7
+	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.5
 	golang.org/x/oauth2 v0.0.0-20220223155221-ee480838109b
 	google.golang.org/api v0.71.0
@@ -45,7 +47,6 @@ require (
 	github.com/kennygrant/sanitize v1.2.4 // indirect
 	github.com/klauspost/compress v1.14.4 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
-	github.com/onsi/gomega v1.18.1 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -64,4 +65,5 @@ require (
 	google.golang.org/genproto v0.0.0-20220304144024-325a89244dc8 // indirect
 	google.golang.org/grpc v1.44.0 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if [ -z "${GITHUB_REF+set}" ]; then
+  echo "GITHUB_REF set to [${GITHUB_REF-<unset>}], but should never be empty or unset"
+  exit 255
+fi
+
 if [[ ${GITHUB_REF} =~ refs/tags/v([0-9]+\.[0-9]+\.[0-9]+) ]]; then
   VERSION=${BASH_REMATCH[1]}
 

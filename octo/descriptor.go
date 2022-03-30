@@ -99,6 +99,7 @@ type RepublishImage struct {
 }
 
 type Package struct {
+	Repositories        []string
 	Repository          string
 	IncludeDependencies bool `yaml:"include_dependencies"`
 	Register            bool

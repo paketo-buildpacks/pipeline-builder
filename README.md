@@ -125,7 +125,8 @@ codeowners:
 #### `package`
 ```yaml
 package:
-  repository:           gcr.io/paketo-buildpacks/adoptium
+  repository:           ""
+  repositories:         ["index.docker.io/paketobuildpacks/adoptium","gcr.io/paketo-buildpacks/adoptium"]
   include_dependencies: false
   register:             true
   registry_token:       ${{ secrets.JAVA_REGISTRY_TOKEN }}
@@ -137,7 +138,11 @@ package:
 * [Example `create-package.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/create-package.yml)
 * [Example `test.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/tests.yml)
 
-`package` is an object that describes the `repository` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
+`package` is an object that describes the `repositories` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
+
+`repository` is deprecated in favour of a list of repositories, as described below. This should be left empty if the `repositories` property is used. If a value is specified, this will take preference over `repositories`
+
+`repositories` is the list of repositories that the image should be published to. The list is an array of strings, and the Docker Hub address should be be listed as the first item, as per the above example - this address will be added to the Buildpack Registry Index. The image will be copied to subsequent repository addresses specified. 
 
 `source_path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
 

@@ -36,6 +36,13 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
+	var repos []string
+	if descriptor.Package.Repository != "" {
+		repos = append(repos, descriptor.Package.Repository)
+	} else {
+		repos = descriptor.Package.Repositories
+	}
+
 	w := actions.Workflow{
 		Name: "Tests",
 		On: map[event.Type]event.Event{
@@ -84,10 +91,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			j.Steps = append(j.Steps, descriptor.Test.Steps...)
 		} else {
 			j.Steps = append(j.Steps, actions.Step{
-					Name: "Install richgo",
-					Run:  StatikString("/install-richgo.sh"),
-					Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
-				},
+				Name: "Install richgo",
+				Run:  StatikString("/install-richgo.sh"),
+				Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
+			},
 				actions.Step{
 					Name: "Run Tests",
 					Run:  StatikString("/run-unit-tests.sh"),
@@ -242,16 +249,18 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":  format,
-						"PACKAGE": "test",
-						"VERSION": "${{ steps.version.outputs.version }}",
+						"FORMAT":   format,
+						"PACKAGES": "test1 test2",
+						"VERSION":  "${{ steps.version.outputs.version }}",
 					},
 				},
 			},
 		}
 
-		if !strings.Contains(descriptor.Package.Repository, "paketo-buildpacks") {
-			j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+		for _, repo := range repos {
+			if !strings.Contains(repo, "paketo-buildpacks") {
+				j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
+			}
 		}
 		j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 

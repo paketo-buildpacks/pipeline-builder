@@ -35,6 +35,13 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
+	var repos string
+	if descriptor.Package.Repository != "" {
+		repos = descriptor.Package.Repository
+	} else {
+		repos = strings.Join(descriptor.Package.Repositories, " ")
+	}
+
 	file := filepath.Join(descriptor.Path, "buildpack.toml")
 	s, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -118,7 +125,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Name: "Package Buildpack",
 						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
-							"PACKAGE":       descriptor.Package.Repository,
+							"PACKAGES":      repos,
 							"PUBLISH":       "true",
 							"VERSION":       "${{ steps.version.outputs.version }}",
 							"VERSION_MAJOR": "${{ steps.version.outputs.version-major }}",
@@ -140,7 +147,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 							"token":   descriptor.Package.RegistryToken,
 							"id":      b.Info.ID,
 							"version": "${{ steps.version.outputs.version }}",
-							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
+							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repositories[0]),
 						},
 					},
 				},

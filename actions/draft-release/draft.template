@@ -1,0 +1,67 @@
+**ID**: `{{ .PrimaryBuildpack.Info.ID }}`
+**Digest**: <!-- DIGEST PLACEHOLDER -->
+
+{{ if .NestedBuildpacks -}}
+#### Included Buildpackages:
+Name | ID | Version
+:--- | :- | :------
+{{ range .NestedBuildpacks -}}
+{{ .Info.Name }} | `{{ .Info.ID }}` | `{{ .Info.Version }}`
+{{ end -}}
+{{ end -}}
+
+{{ if .PrimaryBuildpack.Stacks }}
+#### Supported Stacks:
+{{ range .PrimaryBuildpack.Stacks -}}
+- `{{ .ID }}`
+{{ end -}}
+{{ end }}
+
+{{ if .PrimaryBuildpack.Dependencies }}
+#### Dependencies:
+Name | Version | SHA256
+:--- | :------ | :-----
+{{ range .PrimaryBuildpack.Dependencies -}}
+{{ .Name }} | `{{ .Version }}` | `{{ .SHA256 }}`
+{{ end }}
+{{ end }}
+{{ if .PrimaryBuildpack.OrderGroups }}
+<details>
+<summary>Order Groupings</summary>
+
+{{ range .PrimaryBuildpack.OrderGroups -}}
+ID | Version | Optional
+:- | :------ | :-------
+{{ range .Groups -}}
+`{{ .ID }}` | `{{ .Version }}` | `{{ .Optional }}`
+{{ end }}
+{{ end -}}
+</details>
+{{ end }}
+---
+
+{{ range .NestedBuildpacks -}}
+<details>
+<summary>{{- .Info.Name }} {{ .Info.Version -}}</summary>
+
+**ID**: `{{ .Info.ID }}`
+
+{{ if .Stacks -}}
+#### Supported Stacks:
+{{ range .Stacks -}}
+- `{{ .ID }}`
+{{ end -}}
+{{ end }}
+{{ if .Dependencies -}}
+#### Dependencies:
+Name | Version | SHA256
+:--- | :------ | :-----
+{{ range .Dependencies -}}
+{{ .Name }} | `{{ .Version }}` | `{{ .SHA256 }}`
+{{ end -}}
+{{ end -}}
+
+---
+</details>
+{{ end }}
+{{ .Release.Body -}}

@@ -5,6 +5,85 @@ name: Tests
         branches:
             - main
 jobs:
+    integration:
+        name: Integration Test
+        runs-on:
+            - ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: actions/cache@v2
+              with:
+                key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+                path: ${{ env.HOME }}/go/pkg/mod
+                restore-keys: ${{ runner.os }}-go-
+            - uses: actions/setup-go@v2
+              with:
+                go-version: "1.17"
+            - name: Install create-package
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                GO111MODULE=on go get -u -ldflags="-s -w" github.com/paketo-buildpacks/libpak/cmd/create-package
+            - name: Install pack
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                echo "Installing pack ${PACK_VERSION}"
+
+                mkdir -p "${HOME}"/bin
+                echo "${HOME}/bin" >> "${GITHUB_PATH}"
+
+                curl \
+                  --location \
+                  --show-error \
+                  --silent \
+                  "https://github.com/buildpacks/pack/releases/download/v${PACK_VERSION}/pack-v${PACK_VERSION}-linux.tgz" \
+                | tar -C "${HOME}"/bin -xz pack
+              env:
+                PACK_VERSION: 0.24.0
+            - name: Enable pack Experimental
+              if: ${{ false }}
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                echo "Enabling pack experimental features"
+
+                mkdir -p "${HOME}"/.pack
+                echo "experimental = true" >> "${HOME}"/.pack/config.toml
+            - name: Install richgo
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                echo "Installing richgo ${RICHGO_VERSION}"
+
+                mkdir -p "${HOME}"/bin
+                echo "${HOME}/bin" >> "${GITHUB_PATH}"
+
+                curl \
+                  --location \
+                  --show-error \
+                  --silent \
+                  "https://github.com/kyoh86/richgo/releases/download/v${RICHGO_VERSION}/richgo_${RICHGO_VERSION}_linux_amd64.tar.gz" \
+                | tar -C "${HOME}"/bin -xz richgo
+              env:
+                RICHGO_VERSION: 0.3.10
+            - name: Run Tests
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                richgo test ./integration/... -run Integration
+              env:
+                RICHGO_FORCE_COLOR: "1"
     unit:
         name: Unit Test
         runs-on:
@@ -44,6 +123,6 @@ jobs:
 
                 set -euo pipefail
 
-                richgo test ./...
+                richgo test ./... -run Unit
               env:
                 RICHGO_FORCE_COLOR: "1"

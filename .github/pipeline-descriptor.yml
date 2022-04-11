@@ -32,6 +32,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/cf-java-index-dependency
 - source: clojure-tools-dependency
   target: ghcr.io/paketo-buildpacks/actions/clojure-tools-dependency
+- source: draft-release
+  target: ghcr.io/paketo-buildpacks/actions/draft-release
 - source: foojay-dependency
   target: ghcr.io/paketo-buildpacks/actions/foojay-dependency
 - source: gcs-dependency

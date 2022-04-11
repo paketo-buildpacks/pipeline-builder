@@ -46,7 +46,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	file := filepath.Join(descriptor.Path, "buildpack.toml")
 	s, err := ioutil.ReadFile(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read foo %s\n%w", file, err)
+		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
 	}
 
 	var b libcnb.Buildpack

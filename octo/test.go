@@ -36,11 +36,12 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
-	var repos []string
-	if descriptor.Package.Repository != "" {
-		repos = append(repos, descriptor.Package.Repository)
-	} else {
-		repos = descriptor.Package.Repositories
+	if descriptor.Package.Repository == "" && len(descriptor.Package.Repositories) > 0 {
+		descriptor.Package.Repository = descriptor.Package.Repositories[0]
+	}
+
+	if len(descriptor.Package.Repositories) == 0 && descriptor.Package.Repository != "" {
+		descriptor.Package.Repositories = append(descriptor.Package.Repositories, descriptor.Package.Repository)
 	}
 
 	w := actions.Workflow{
@@ -189,7 +190,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		w.Jobs["create-builder"] = j
 	}
 
-	if descriptor.Package != nil {
+	if descriptor.Package.Enabled {
 		format := FormatImage
 		if descriptor.Package.Platform.OS == PlatformWindows {
 			format = FormatFile
@@ -250,14 +251,14 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
 						"FORMAT":   format,
-						"PACKAGES": "test1 test2",
+						"PACKAGES": "test",
 						"VERSION":  "${{ steps.version.outputs.version }}",
 					},
 				},
 			},
 		}
 
-		for _, repo := range repos {
+		for _, repo := range descriptor.Package.Repositories {
 			if !strings.Contains(repo, "paketo-buildpacks") {
 				j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 			}

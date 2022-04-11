@@ -106,6 +106,7 @@ type Package struct {
 	RegistryToken       string `yaml:"registry_token"`
 	Platform            Platform
 	SourcePath          string `yaml:"source_path"`
+	Enabled             bool
 }
 
 const (
@@ -159,7 +160,13 @@ func NewDescriptor(path string) (Descriptor, error) {
 		}
 	}
 
-	if d.Package != nil && d.Package.Platform.OS == "" {
+	if d.Package == nil {
+		d.Package = &Package{}
+	} else {
+		d.Package.Enabled = true
+	}
+
+	if d.Package.Platform.OS == "" {
 		d.Package.Platform.OS = PlatformLinux
 	}
 

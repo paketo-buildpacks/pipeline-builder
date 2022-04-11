@@ -31,21 +31,22 @@ import (
 )
 
 func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
-	if descriptor.Package == nil {
+	if !descriptor.Package.Enabled {
 		return nil, nil
 	}
 
-	var repos string
-	if descriptor.Package.Repository != "" {
-		repos = descriptor.Package.Repository
-	} else {
-		repos = strings.Join(descriptor.Package.Repositories, " ")
+	if descriptor.Package.Repository == "" && len(descriptor.Package.Repositories) > 0 {
+		descriptor.Package.Repository = descriptor.Package.Repositories[0]
+	}
+
+	if len(descriptor.Package.Repositories) == 0 && descriptor.Package.Repository != "" {
+		descriptor.Package.Repositories = append(descriptor.Package.Repositories, descriptor.Package.Repository)
 	}
 
 	file := filepath.Join(descriptor.Path, "buildpack.toml")
 	s, err := ioutil.ReadFile(file)
 	if err != nil {
-		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
+		return nil, fmt.Errorf("unable to read foo %s\n%w", file, err)
 	}
 
 	var b libcnb.Buildpack
@@ -125,7 +126,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Name: "Package Buildpack",
 						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
-							"PACKAGES":      repos,
+							"PACKAGES":      strings.Join(descriptor.Package.Repositories, " "),
 							"PUBLISH":       "true",
 							"VERSION":       "${{ steps.version.outputs.version }}",
 							"VERSION_MAJOR": "${{ steps.version.outputs.version-major }}",
@@ -147,7 +148,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 							"token":   descriptor.Package.RegistryToken,
 							"id":      b.Info.ID,
 							"version": "${{ steps.version.outputs.version }}",
-							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repositories[0]),
+							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
 						},
 					},
 				},

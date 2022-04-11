@@ -140,9 +140,11 @@ package:
 
 `package` is an object that describes the `repositories` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
-`repository` is deprecated in favour of a list of repositories, as described below. This should be left empty if the `repositories` property is used. If a value is specified, this will take preference over `repositories`
+`repository` is the primary repository. It is the repository registered with the Buildpack Registry Index. It defaults to the first entry in `repositories` so if a value is specified, this will take preference over `repositories[0]`.
 
-`repositories` is the list of repositories that the image should be published to. The list is an array of strings, and the Docker Hub address should be be listed as the first item, as per the above example - this address will be added to the Buildpack Registry Index. The image will be copied to subsequent repository addresses specified. 
+`repositories` is the list of repositories that the image should be published to. The list is an array of strings. If `repository` is not set then the first registry address will be used for `repository`, which is the address that's added to the Buildpack Registry Index. When multiple repositories are set, the image will be packaged once and then copied to subsequent repository addresses specified for efficiency.
+
+If you have a single repository to which you want to publish, using `repository` is preferred but it is the same as setting `repositories` to a single repository. If you have multiple repositories, you may set both `repository` and `repositories` but that's only necessary if you need a repository registered with the Buildpack Registry Index that's not the first in the `repositories` list.
 
 `source_path` is the optional path to the buildpack's directory relative to the repository's root. Defaults to the repository root.
 
@@ -473,6 +475,19 @@ The Leiningen Dependency watches the [Leiningen Repository](https://github.com/t
 uses: docker://ghcr.io/paketo-buildpacks/actions/leiningen-dependency:main
 with:
   token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Liberty Dependency
+The Liberty Dependency watches a [Maven Repository](https://repo1.maven.org/maven2) for new versions.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/liberty-dependency:main
+with:
+  uri:         https://repo1.maven.org/maven2
+  group_id:    org.apache.maven
+  artifact_id: apache-maven
+  classifier:  bin
+  packaging:   tar.gz
 ```
 
 ### Maven Dependency

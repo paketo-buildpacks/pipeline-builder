@@ -121,9 +121,9 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
-							"PACKAGE": offlinePackage.Target,
-							"PUBLISH": "true",
-							"VERSION": "${{ steps.version.outputs.version }}",
+							"PACKAGES": offlinePackage.Target,
+							"PUBLISH":  "true",
+							"VERSION":  "${{ steps.version.outputs.version }}",
 						},
 					},
 				},

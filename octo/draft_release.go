@@ -139,7 +139,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",
-				Uses: "ghcr.io/paketo-buildpacks/actions/draft-release",
+				Uses: "docker://ghcr.io/paketo-buildpacks/actions/draft-release:main",
 				With: map[string]interface{}{
 					"github_token":     descriptor.GitHub.Token,
 					"release_id":       "${{ steps.release-drafter.outputs.id }}",

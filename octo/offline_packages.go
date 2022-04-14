@@ -74,12 +74,12 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						},
 					},
 					{
-						Uses: "actions/setup-go@v2",
+						Uses: "actions/setup-go@v3",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
-						Uses: "actions/cache@v2",
+						Uses: "actions/cache@v3",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{
 							"path": strings.Join([]string{

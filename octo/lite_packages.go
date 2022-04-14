@@ -73,7 +73,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						},
 					},
 					{
-						Uses: "actions/setup-go@v2",
+						Uses: "actions/setup-go@v3",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},

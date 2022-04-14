@@ -87,7 +87,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v2",
+						Uses: "actions/setup-go@v3",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -117,7 +117,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 						},
 					},
 					{
-						Uses: "peter-evans/create-pull-request@v3",
+						Uses: "peter-evans/create-pull-request@v4",
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
@@ -157,7 +157,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v2",
+						Uses: "actions/setup-go@v3",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -191,7 +191,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 						},
 					},
 					{
-						Uses: "peter-evans/create-pull-request@v3",
+						Uses: "peter-evans/create-pull-request@v4",
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),

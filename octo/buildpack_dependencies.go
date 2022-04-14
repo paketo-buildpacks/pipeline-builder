@@ -41,7 +41,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
-							Uses: "actions/setup-go@v2",
+							Uses: "actions/setup-go@v3",
 							With: map[string]interface{}{"go-version": GoVersion},
 						},
 						{
@@ -77,7 +77,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 								"PURL_PATTERN":    d.PURLPattern,
 							},
 						}, {
-							Uses: "peter-evans/create-pull-request@v3",
+							Uses: "peter-evans/create-pull-request@v4",
 							With: map[string]interface{}{
 								"token":  descriptor.GitHub.Token,
 								"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),

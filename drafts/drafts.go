@@ -313,7 +313,14 @@ func (r RegistryBuildpackLoader) LoadBuildpacks(uris []string) ([]Buildpack, err
 }
 
 func (r RegistryBuildpackLoader) LoadBuildpack(uri string) (Buildpack, error) {
-	tarFile, err := ioutil.TempFile(os.Getenv("RUNNER_TEMP"), "tarfiles")
+	tmpdir := os.Getenv("RUNNER_TEMP")
+	if tmpdir != "" {
+		if err := os.MkdirAll(tmpdir, 0755); err != nil {
+			return Buildpack{}, fmt.Errorf("unable to create tempdir\n%w", err)
+		}
+	}
+
+	tarFile, err := ioutil.TempFile(tmpdir, "tarfiles")
 	if err != nil {
 		return Buildpack{}, fmt.Errorf("unable to create tempfile\n%w", err)
 	}

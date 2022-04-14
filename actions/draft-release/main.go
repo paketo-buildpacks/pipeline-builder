@@ -76,9 +76,9 @@ func main() {
 	}
 
 	if _, dryRun := inputs["dry_run"]; dryRun {
-		fmt.Println("Title:", name)
-		fmt.Println("Body:", body)
-		fmt.Println("Would execute EditRelease with:")
+		fmt.Println("Title: ", name)
+		fmt.Println("Body: ", body)
+		fmt.Println("Would execute EditRelease with: ")
 		fmt.Println("    ", owner)
 		fmt.Println("    ", repo)
 		fmt.Println("    ", releaseId)

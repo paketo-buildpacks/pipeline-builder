@@ -23,7 +23,7 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/google/go-github/v32/github"
+	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"

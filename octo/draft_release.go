@@ -118,22 +118,9 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 
 		if builderExists || packageExists {
 			j.Steps = append(j.Steps, NewDockerCredentialActions(descriptor.DockerCredentials)...)
-
-			j.Steps = append(j.Steps,
-				actions.Step{
-					Name: "Install crane",
-					Run:  StatikString("/install-crane.sh"),
-					Env:  map[string]string{"CRANE_VERSION": CraneVersion},
-				},
-			)
 		}
 
 		j.Steps = append(j.Steps,
-			actions.Step{
-				Name: "Install yj",
-				Run:  StatikString("/install-yj.sh"),
-				Env:  map[string]string{"YJ_VERSION": YJVersion},
-			},
 			actions.Step{
 				Uses: "actions/checkout@v3",
 			},

@@ -22,6 +22,7 @@ import (
 	_ "embed"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -44,6 +45,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("CWD:", cwd)
+	files, err := filepath.Glob("./*")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Files:", files)
+	fmt.Println("Payload:", payload)
 
 	buf := &bytes.Buffer{}
 	err = drafter.BuildAndWriteReleaseDraftFromTemplate(buf, templateContents, payload)

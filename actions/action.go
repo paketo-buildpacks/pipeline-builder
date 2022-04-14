@@ -29,7 +29,7 @@ import (
 type Inputs map[string]string
 
 func NewInputs() Inputs {
-	re := regexp.MustCompile("^INPUT_([A-Z0-9-_]+)=(.+)$")
+	re := regexp.MustCompile("^INPUT_([A-Z0-9-_]+)=((?s).+)$")
 
 	i := make(Inputs)
 	for _, s := range os.Environ() {

@@ -1,0 +1,37 @@
+description = "description"
+
+[[buildpacks]]
+  id = "example/bp1"
+  uri = "docker://example.com/example/bp1:1.1.2"
+
+[[buildpacks]]
+  id = "example/bp2"
+  uri = "docker://example.com/example/bp2:1.4.1"
+
+[[buildpacks]]
+  id = "example/bp3"
+  uri = "docker://example.com/example/bp3:0.2.1"
+
+[[buildpacks]]
+  id = "example/bp4"
+  uri = "docker://example.com/example/bp4:5.0.3"
+
+[[order]]
+
+  [[order.group]]
+    id = "example/bp1"
+
+  [[order.group]]
+    id = "example/bp2"
+
+  [[order.group]]
+    id = "example/bp3"
+
+  [[order.group]]
+    id = "example/bp4"
+    optional = false
+
+[stack]
+  build-image = "example.com/example/build:base-cnb"
+  id = "stack1"
+  run-image = "example.com/example/run:base-cnb"

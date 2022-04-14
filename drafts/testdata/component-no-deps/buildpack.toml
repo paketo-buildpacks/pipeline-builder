@@ -1,0 +1,41 @@
+# Copyright 2018-2020 the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+api = "0.7"
+
+[buildpack]
+  description = "description"
+  homepage = "https://example.com/example/component"
+  id = "example/component"
+  keywords = ["example", "component"]
+  name = "Example Component Buildpack"
+  sbom-formats = ["application/vnd.cyclonedx+json", "application/vnd.syft+json"]
+  version = "2.1.1"
+
+  [[buildpack.licenses]]
+    type = "Apache-2.0"
+    uri = "https://example.com/example/component/blob/main/LICENSE"
+
+[metadata]
+  include-files = ["LICENSE", "NOTICE", "README.md", "bin/build", "bin/detect", "bin/helper", "bin/main", "buildpack.toml", "resources/context.xml", "resources/logging.properties", "resources/server.xml", "resources/web.xml"]
+  pre-package = "scripts/build.sh"
+
+[[stacks]]
+  id = "stack1"
+
+[[stacks]]
+  id = "stack2"
+
+[[stacks]]
+  id = "*"

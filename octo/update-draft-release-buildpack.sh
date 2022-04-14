@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+echo "****** DEPRECATED - Use draft-release action instead *******"
+
 PAYLOAD="{}"
 
 if [[ -e buildpack.toml ]]; then

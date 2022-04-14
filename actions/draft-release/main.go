@@ -22,7 +22,6 @@ import (
 	_ "embed"
 	"net/http"
 	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -46,18 +45,6 @@ func main() {
 		panic(err)
 	}
 
-	cwd, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("CWD:", cwd)
-	files, err := filepath.Glob("./*")
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("Files:", files)
-	fmt.Println("Payload:", payload)
-
 	buf := &bytes.Buffer{}
 	err = drafter.BuildAndWriteReleaseDraftFromTemplate(buf, templateContents, payload)
 	if err != nil {
@@ -66,12 +53,9 @@ func main() {
 	body := buf.String()
 
 	name := payload.Release.Name
-	fmt.Println("PrimaryBuildpack Name:", payload.PrimaryBuildpack.Info.Name, "]")
 	if payload.PrimaryBuildpack.Info.Name != "" {
-		fmt.Println("it's not empty")
 		name = fmt.Sprintf("%s %s", payload.PrimaryBuildpack.Info.Name, payload.Release.Name)
 	}
-	fmt.Println("Name:", name)
 
 	fullRepo, found := os.LookupEnv("GITHUB_REPOSITORY")
 	if !found {
@@ -90,8 +74,6 @@ func main() {
 		Name:    &name,
 		Body:    &body,
 	}
-	fmt.Println("owner:", owner, "repo:", repo, "releaseId:", releaseId)
-	fmt.Println("repoRelease:", repoRelease)
 
 	if _, dryRun := inputs["dry_run"]; dryRun {
 		fmt.Println("Title:", name)
@@ -103,12 +85,12 @@ func main() {
 		fmt.Println("    ", repoRelease)
 	} else {
 		var c *http.Client
-		if s, ok := inputs["token"]; ok {
+		if s, ok := inputs["github_token"]; ok {
 			c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
 		}
 		gh := github.NewClient(c)
 
-		rel, resp, err := gh.Repositories.EditRelease(
+		_, _, err := gh.Repositories.EditRelease(
 			context.Background(),
 			owner,
 			repo,
@@ -117,9 +99,5 @@ func main() {
 		if err != nil {
 			panic(fmt.Errorf("unable to execute EditRelease %s/%s/%d with %q\n%w", owner, repo, releaseId, repoRelease, err))
 		}
-
-		fmt.Println("rel:", rel)
-		fmt.Println("resp:", resp)
-		fmt.Println("status:", resp.StatusCode)
 	}
 }

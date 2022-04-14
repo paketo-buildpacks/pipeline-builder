@@ -17,15 +17,20 @@
 package main
 
 import (
+	"bytes"
+	"context"
 	_ "embed"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
 
 	"fmt"
-	"io/ioutil"
-	"path/filepath"
 
-	"github.com/paketo-buildpacks/libpak/effect"
+	"github.com/google/go-github/v43/github"
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/drafts"
+	"golang.org/x/oauth2"
 )
 
 //go:embed "draft.template"
@@ -40,46 +45,59 @@ func main() {
 		panic(err)
 	}
 
-	err = drafter.BuildAndWriteReleaseToFileDraftFromTemplate(
-		filepath.Join(".", "body"), templateContents, payload)
+	buf := &bytes.Buffer{}
+	err = drafter.BuildAndWriteReleaseDraftFromTemplate(buf, templateContents, payload)
 	if err != nil {
 		panic(err)
 	}
+	body := buf.String()
 
 	name := payload.Release.Name
 	if payload.PrimaryBuildpack.Info.Name != "" {
 		name = fmt.Sprintf("%s %s", payload.PrimaryBuildpack.Info.Name, payload.Release.Name)
 	}
 
-	err = ioutil.WriteFile(filepath.Join(".", "name"), []byte(name), 0644)
+	fullRepo, found := os.LookupEnv("GITHUB_REPOSITORY")
+	if !found {
+		panic(fmt.Errorf("unable to find GITHUB_REPOSITORY"))
+	}
+
+	owner := strings.SplitN(fullRepo, "/", 2)[0]
+	repo := strings.SplitN(fullRepo, "/", 2)[1]
+	releaseId, err := strconv.ParseInt(payload.Release.ID, 10, 32)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("unable to parse %s\n%w", payload.Release.ID, err))
 	}
 
-	execution := effect.Execution{
-		Command: "gh",
-		Args: []string{
-			"api",
-			"--method", "PATCH",
-			fmt.Sprintf("/repos/:owner/:repo/releases/%s", payload.Release.ID),
-			"--field", fmt.Sprintf("tag_name=%s", payload.Release.Tag),
-			"--field", "name=@./name",
-			"--field", "body=@./body",
-		},
+	repoRelease := github.RepositoryRelease{
+		TagName: &payload.Release.Tag,
+		Name:    &name,
+		Body:    &body,
 	}
+
 	if _, dryRun := inputs["dry_run"]; dryRun {
-		bits, err := ioutil.ReadFile(filepath.Join(".", "body"))
-		if err != nil {
-			panic(err)
-		}
-
 		fmt.Println("Title:", name)
-		fmt.Println("Body:", string(bits))
-		fmt.Println("Would execute:", execution)
+		fmt.Println("Body:", body)
+		fmt.Println("Would execute EditRelease with:")
+		fmt.Println("    ", owner)
+		fmt.Println("    ", repo)
+		fmt.Println("    ", releaseId)
+		fmt.Println("    ", repoRelease)
 	} else {
-		err = effect.NewExecutor().Execute(execution)
+		var c *http.Client
+		if s, ok := inputs["token"]; ok {
+			c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
+		}
+		gh := github.NewClient(c)
+
+		gh.Repositories.EditRelease(
+			context.Background(),
+			owner,
+			repo,
+			releaseId,
+			&repoRelease)
 		if err != nil {
-			panic(fmt.Errorf("unable to execute %s\n%w", execution, err))
+			panic(fmt.Errorf("unable to execute EditRelease %s/%s/%d with %q\n%w", owner, repo, releaseId, repoRelease, err))
 		}
 	}
 }

@@ -1,4 +1,4 @@
-FROM golang:latest as build-stage
+FROM golang:1.17 as build-stage
 
 RUN apt-get update && apt-get install -y --no-install-recommends upx
 
@@ -21,5 +21,6 @@ RUN upx -q -9 /bin/action
 
 FROM scratch
 COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+RUN mkdir /tmp && chmod 1777 /tmp
 COPY --from=build-stage /bin/action /bin/action
 ENTRYPOINT ["/bin/action"]

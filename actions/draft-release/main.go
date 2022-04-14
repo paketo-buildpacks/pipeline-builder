@@ -85,7 +85,7 @@ func main() {
 		fmt.Println("    ", repoRelease)
 	} else {
 		var c *http.Client
-		if s, ok := inputs["token"]; ok {
+		if s, ok := inputs["github_token"]; ok {
 			c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
 		}
 		gh := github.NewClient(c)

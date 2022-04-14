@@ -66,9 +66,12 @@ func main() {
 	body := buf.String()
 
 	name := payload.Release.Name
+	fmt.Println("PrimaryBuildpack Name:", payload.PrimaryBuildpack.Info.Name, "]")
 	if payload.PrimaryBuildpack.Info.Name != "" {
+		fmt.Println("it's not empty")
 		name = fmt.Sprintf("%s %s", payload.PrimaryBuildpack.Info.Name, payload.Release.Name)
 	}
+	fmt.Println("Name:", name)
 
 	fullRepo, found := os.LookupEnv("GITHUB_REPOSITORY")
 	if !found {
@@ -87,6 +90,9 @@ func main() {
 		Name:    &name,
 		Body:    &body,
 	}
+	fmt.Println("owner:", owner, "repo:", repo, "releaseId:", releaseId)
+	fmt.Println("repoRelease:", repoRelease)
+	fmt.Println("body:", body)
 
 	if _, dryRun := inputs["dry_run"]; dryRun {
 		fmt.Println("Title:", name)

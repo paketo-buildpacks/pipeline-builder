@@ -92,7 +92,6 @@ func main() {
 	}
 	fmt.Println("owner:", owner, "repo:", repo, "releaseId:", releaseId)
 	fmt.Println("repoRelease:", repoRelease)
-	fmt.Println("body:", body)
 
 	if _, dryRun := inputs["dry_run"]; dryRun {
 		fmt.Println("Title:", name)
@@ -109,7 +108,7 @@ func main() {
 		}
 		gh := github.NewClient(c)
 
-		gh.Repositories.EditRelease(
+		rel, resp, err := gh.Repositories.EditRelease(
 			context.Background(),
 			owner,
 			repo,
@@ -118,5 +117,9 @@ func main() {
 		if err != nil {
 			panic(fmt.Errorf("unable to execute EditRelease %s/%s/%d with %q\n%w", owner, repo, releaseId, repoRelease, err))
 		}
+
+		fmt.Println("rel:", rel)
+		fmt.Println("resp:", resp)
+		fmt.Println("status:", resp.StatusCode)
 	}
 }

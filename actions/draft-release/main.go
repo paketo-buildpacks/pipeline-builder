@@ -40,13 +40,8 @@ func main() {
 		panic(err)
 	}
 
-	scratchDir, err := ioutil.TempDir("", "drafts")
-	if err != nil {
-		panic(err)
-	}
-
 	err = drafter.BuildAndWriteReleaseToFileDraftFromTemplate(
-		filepath.Join(scratchDir, "body"), templateContents, payload)
+		filepath.Join(".", "body"), templateContents, payload)
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +51,7 @@ func main() {
 		name = fmt.Sprintf("%s %s", payload.PrimaryBuildpack.Info.Name, payload.Release.Name)
 	}
 
-	err = ioutil.WriteFile(filepath.Join(scratchDir, "name"), []byte(name), 0644)
+	err = ioutil.WriteFile(filepath.Join(".", "name"), []byte(name), 0644)
 	if err != nil {
 		panic(err)
 	}
@@ -68,12 +63,12 @@ func main() {
 			"--method", "PATCH",
 			fmt.Sprintf("/repos/:owner/:repo/releases/%s", payload.Release.ID),
 			"--field", fmt.Sprintf("tag_name=%s", payload.Release.Tag),
-			"--field", fmt.Sprintf("name=@%s/name", scratchDir),
-			"--field", fmt.Sprintf("body=@%s/body", scratchDir),
+			"--field", "name=@./name",
+			"--field", "body=@./body",
 		},
 	}
 	if _, dryRun := inputs["dry_run"]; dryRun {
-		bits, err := ioutil.ReadFile(filepath.Join(scratchDir, "body"))
+		bits, err := ioutil.ReadFile(filepath.Join(".", "body"))
 		if err != nil {
 			panic(err)
 		}

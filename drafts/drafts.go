@@ -31,6 +31,7 @@ import (
 	"github.com/buildpacks/libcnb"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
+	"github.com/google/go-containerregistry/pkg/v1/google"
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/paketo-buildpacks/libpak"
@@ -352,7 +353,12 @@ func loadBuildpackImage(ref string, to io.Writer) error {
 		return fmt.Errorf("unable to parse reference for existing buildpack tag\n%w", err)
 	}
 
-	img, err := remote.Image(reference, remote.WithAuthFromKeychain(authn.DefaultKeychain))
+	authn := authn.Anonymous
+	if gcrKey, found := os.LookupEnv("JAVA_GCLOUD_SERVICE_ACCOUNT_KEY"); found {
+		authn = google.NewJSONKeyAuthenticator(gcrKey)
+	}
+
+	img, err := remote.Image(reference, remote.WithAuth(authn))
 	if err != nil {
 		return fmt.Errorf("unable to fetch remote image\n%w", err)
 	}

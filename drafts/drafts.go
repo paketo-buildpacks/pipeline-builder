@@ -19,11 +19,13 @@ package drafts
 import (
 	"archive/tar"
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"text/template"
 
@@ -34,15 +36,16 @@ import (
 	"github.com/google/go-containerregistry/pkg/v1/google"
 	"github.com/google/go-containerregistry/pkg/v1/mutate"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
+	"github.com/google/go-github/v43/github"
 	"github.com/paketo-buildpacks/libpak"
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	"github.com/pkg/errors"
 )
 
 type Payload struct {
 	PrimaryBuildpack Buildpack
 	Builder          Builder
 	NestedBuildpacks []Buildpack
-	OrderGroups      [][]libcnb.BuildpackOrderBuildpack
 	Release          Release
 }
 
@@ -295,6 +298,116 @@ func loadBuilderTOML(buildpackPath string) (*Builder, error) {
 	}
 
 	return builder, nil
+}
+
+type GithubBuildpackLoader struct {
+	GithubClient *github.Client
+	RegexMappers []string
+}
+
+func (g GithubBuildpackLoader) LoadBuildpacks(uris []string) ([]Buildpack, error) {
+	buildpacks := []Buildpack{}
+
+	for _, uri := range uris {
+		bp, err := g.LoadBuildpack(uri)
+		if err != nil {
+			return []Buildpack{}, fmt.Errorf("unable to process %s\n%w", uri, err)
+		}
+		buildpacks = append(buildpacks, bp)
+	}
+
+	return buildpacks, nil
+}
+
+func (g GithubBuildpackLoader) LoadBuildpack(imgUri string) (Buildpack, error) {
+	uris, err := g.mapURIs(imgUri)
+	if err != nil {
+		return Buildpack{}, fmt.Errorf("unable to map URIs\n%w", err)
+	}
+
+	var tomlBytes []byte
+	for _, uri := range uris {
+		uriPattern := regexp.MustCompile(`.*\/(.*)\/(.*):(.*)`)
+
+		parts := uriPattern.FindStringSubmatch(uri)
+		if len(parts) != 4 {
+			return Buildpack{}, fmt.Errorf("unable to parse %s, found %q", uri, parts)
+		}
+
+		org := parts[1]
+		repo := parts[2]
+		version := parts[3]
+		if regexp.MustCompile(`\d+\.\d+\.\d+`).MatchString(version) {
+			version = fmt.Sprintf("v%s", version)
+		}
+
+		tomlBytes, err = g.fetchBuildpackTOML(org, repo, version)
+		if err != nil {
+			var apiErr *github.ErrorResponse
+			if errors.As(err, &apiErr) && apiErr.Response.StatusCode == 404 {
+				fmt.Println("skipping 404", apiErr)
+				continue
+			}
+			return Buildpack{}, fmt.Errorf("unable to fetch toml\n%w", err)
+		}
+
+		if len(tomlBytes) > 0 {
+			break
+		}
+	}
+
+	if len(tomlBytes) == 0 {
+		return Buildpack{}, fmt.Errorf("unable to fetch toml, file not found")
+	}
+
+	bp, err := loadBuildpackTOML(tomlBytes)
+	if err != nil {
+		return Buildpack{}, fmt.Errorf("unable to load buildpack toml from image\n%w", err)
+	}
+
+	return *bp, nil
+}
+
+func (g GithubBuildpackLoader) mapURIs(uri string) ([]string, error) {
+	possibilities := []string{uri}
+
+	for _, mapper := range g.RegexMappers {
+		if len(mapper) <= 3 {
+			continue
+		}
+
+		splitCh := string(mapper[0])
+		parts := strings.SplitN(mapper[1:len(mapper)-1], splitCh, 2)
+
+		expr, err := regexp.Compile(parts[0])
+		if err != nil {
+			return []string{}, fmt.Errorf("unable to parse regex %s\n%w", mapper, err)
+		}
+
+		possibilities = append(possibilities, expr.ReplaceAllString(uri, parts[1]))
+	}
+
+	return possibilities, nil
+}
+
+func (g GithubBuildpackLoader) fetchBuildpackTOML(org, repo, version string) ([]byte, error) {
+	body, _, err := g.GithubClient.Repositories.DownloadContents(
+		context.Background(),
+		org,
+		repo,
+		"/buildpack.toml",
+		&github.RepositoryContentGetOptions{Ref: version})
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to download file\n%w", err)
+	}
+
+	buf := &bytes.Buffer{}
+	_, err = io.Copy(buf, body)
+	if err != nil {
+		return []byte{}, fmt.Errorf("unable to read downloaded file\n%w", err)
+	}
+
+	return buf.Bytes(), nil
 }
 
 type RegistryBuildpackLoader struct{}

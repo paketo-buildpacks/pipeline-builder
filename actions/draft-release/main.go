@@ -39,7 +39,18 @@ var templateContents string
 func main() {
 	inputs := actions.NewInputs()
 
-	drafter := drafts.Drafter{Loader: drafts.RegistryBuildpackLoader{}}
+	var c *http.Client
+	if s, ok := inputs["github_token"]; ok {
+		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
+	}
+	gh := github.NewClient(c)
+
+	drafter := drafts.Drafter{
+		Loader: drafts.GithubBuildpackLoader{
+			GithubClient: gh,
+			RegexMappers: parseMappers(inputs),
+		},
+	}
 	payload, err := drafter.CreatePayload(inputs, ".")
 	if err != nil {
 		panic(err)
@@ -84,12 +95,6 @@ func main() {
 		fmt.Println("    ", releaseId)
 		fmt.Println("    ", repoRelease)
 	} else {
-		var c *http.Client
-		if s, ok := inputs["github_token"]; ok {
-			c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
-		}
-		gh := github.NewClient(c)
-
 		_, _, err := gh.Repositories.EditRelease(
 			context.Background(),
 			owner,
@@ -100,4 +105,16 @@ func main() {
 			panic(fmt.Errorf("unable to execute EditRelease %s/%s/%d with %q\n%w", owner, repo, releaseId, repoRelease, err))
 		}
 	}
+}
+
+func parseMappers(inputs actions.Inputs) []string {
+	mappers := []string{}
+
+	for key, val := range inputs {
+		if strings.HasPrefix(key, "mapper_") {
+			mappers = append(mappers, val)
+		}
+	}
+
+	return mappers
 }

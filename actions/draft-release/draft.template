@@ -1,4 +1,6 @@
+{{ if .PrimaryBuildpack.Info.ID -}}
 **ID**: `{{ .PrimaryBuildpack.Info.ID }}`
+{{ end -}}
 **Digest**: <!-- DIGEST PLACEHOLDER -->
 
 {{ if .NestedBuildpacks -}}
@@ -30,6 +32,19 @@ Name | Version | SHA256
 <summary>Order Groupings</summary>
 
 {{ range .PrimaryBuildpack.OrderGroups -}}
+ID | Version | Optional
+:- | :------ | :-------
+{{ range .Groups -}}
+`{{ .ID }}` | `{{ .Version }}` | `{{ .Optional }}`
+{{ end }}
+{{ end -}}
+</details>
+{{ end }}
+{{ if .Builder.OrderGroups }}
+<details>
+<summary>Order Groupings</summary>
+
+{{ range .Builder.OrderGroups -}}
 ID | Version | Optional
 :- | :------ | :-------
 {{ range .Groups -}}

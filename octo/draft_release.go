@@ -129,6 +129,8 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 				Uses: "docker://ghcr.io/paketo-buildpacks/actions/draft-release:main",
 				With: map[string]interface{}{
 					"github_token":     descriptor.GitHub.Token,
+					"input_mapper_1":   "|tanzu-buildpacks|paketo-buildpacks|",
+					"input_mapper_2":   `|tanzu-buildpacks\/|pivotal-cf/tanzu-|`,
 					"release_id":       "${{ steps.release-drafter.outputs.id }}",
 					"release_tag_name": "${{ steps.release-drafter.outputs.tag_name }}",
 					"release_name":     "${{ steps.release-drafter.outputs.name }}",

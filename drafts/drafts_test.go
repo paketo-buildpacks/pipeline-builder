@@ -228,7 +228,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 					{ID: "example/bp1"},
 					{ID: "example/bp2"},
 					{ID: "example/bp3"},
-					{ID: "example/bp4"},
+					{ID: "example/bp4", Optional: true},
 				}))
 
 				Expect(p.NestedBuildpacks).To(HaveLen(4))
@@ -276,7 +276,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(body).To(ContainSubstring("foo-body"))
 			})
 
-			it.Focus("generates composite", func() {
+			it("generates composite", func() {
 				bpLoader.On("LoadBuildpacks", mock.Anything).Return([]drafts.Buildpack{
 					{Buildpack: libcnb.Buildpack{Info: libcnb.BuildpackInfo{ID: "bp1", Name: "BP 1", Version: "3.1.0"}}},
 					{Buildpack: libcnb.Buildpack{Info: libcnb.BuildpackInfo{ID: "bp2", Name: "BP 2", Version: "9.3.1"}}},
@@ -346,7 +346,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).ToNot(HaveOccurred())
 
 				body := buf.String()
-				Expect(body).To(ContainSubstring("**ID**: `example/builder`"))
+				Expect(body).ToNot(ContainSubstring("**ID**: ``"))
 				Expect(body).To(ContainSubstring("**Digest**: <!-- DIGEST PLACEHOLDER -->"))
 				Expect(body).ToNot(ContainSubstring("#### Supported Stacks:"))
 				Expect(body).To(ContainSubstring("#### Included Buildpackages:"))
@@ -355,9 +355,10 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(body).To(ContainSubstring("BP 3 | `bp3` | `1.10.0`"))
 				Expect(body).To(ContainSubstring("BP 4 | `bp4` | `6.5.0`"))
 				Expect(body).To(ContainSubstring("<summary>Order Groupings</summary>"))
-				Expect(body).To(ContainSubstring("`example/bp1` | `3.1.0` | `true`"))
-				Expect(body).To(ContainSubstring("`example/bp2` | `9.3.1` | `false`"))
-				Expect(body).To(ContainSubstring("`example/bp3` | `1.10.0` | `true`"))
+				Expect(body).To(ContainSubstring("`example/bp1` | `` | `false`"))
+				Expect(body).To(ContainSubstring("`example/bp2` | `` | `false`"))
+				Expect(body).To(ContainSubstring("`example/bp3` | `` | `false`"))
+				Expect(body).To(ContainSubstring("`example/bp4` | `` | `true`"))
 				Expect(body).To(ContainSubstring("<summary>BP 1 3.1.0</summary>"))
 				Expect(body).To(ContainSubstring("**ID**: `bp1`"))
 				Expect(body).To(ContainSubstring("<summary>BP 2 9.3.1</summary>"))

@@ -33,6 +33,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [CA APM Dependency](#ca-apm-dependency)
     - [CF Java Index Dependency](#cf-java-index-dependency)
     - [Clojure Tools Dependency](#clojure-tools-dependency)
+    - [Compute Artifact Dependencies](#compute-artifact-dependencies)
     - [Draft Release](#draft-release)
     - [Foojay Dependency](#foojay-dependency)
     - [GCS Dependency](#gcs-dependency)
@@ -384,12 +385,35 @@ with:
 ```
 
 ### Clojure Tools Dependency
+
 The Clojure Tools Dependency watches [Clojure Tools repositories](https://github.com/clojure/clojure-tools) for new versions. It then filters based on the [stable.properties](https://raw.githubusercontent.com/clojure/brew-install/%s/stable.properties) file in their brew tap repo, allowing it to pick the most recent stable version.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/clojure-tools-dependency:main
 with:
   token:      ${{ secrets.JAVA_GITHUB_TOKEN }}
+```
+
+### Compute Artifact Dependencies
+
+The Compute Artifact Dependencies takes a buildpack image and produces the list of included dependencies. It's used for generating release notes. If the image is a composite buildpack, then it will recursively load all of the referenced buildpacks, pulling metadata directly from Github, and give a compete, sorted and deduplicated list of dependencies.
+
+A Github token is strongly recommended. This is for fetching information from Github, and without it you might get rate limited. It is required for private repositories.
+
+The `package` and `version` entries are required. They are required to indiciate the specific buildpack that will be described.
+
+A mapper will add additional permutations of Github project URIs to try. For example, if you have an image URI of `gcr.io/foo/bar:1.2.3` but the Github project is at `github.com/org/foo-bar` then you can add a mapper of `|foo\/bar|org/foo-bar|` to have `compute-artifact-dependencies` try both. You can specify as many mappers as you want, with each mapper generating a new URI for `compute-artifact-dependencies` to try. It will stop when it hits the first URL that successfully pulls back the `buildpack.toml` file.
+
+The output is `artifact-reference-description`, which can be referenced by other jobs.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/compute-artifact-description:main
+with:
+  github_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
+  package:      "gcr.io/paketo-buildpacks/java"
+  version:      "1.2.3"
+  mapper_1:     '|tanzu-buildpacks|paketo-buildpacks|'
+  mapper_2:     '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
 ```
 
 ### Draft Release
@@ -404,8 +428,8 @@ A mapper will add additional permutations of Github project URIs to try. For exa
 uses: docker://ghcr.io/paketo-buildpacks/actions/draft-release:main
 with:
   github_token:     ${{ secrets.JAVA_GITHUB_TOKEN }}
-  mapper_1:   '|tanzu-buildpacks|paketo-buildpacks|'
-  mapper_2:   '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
+  mapper_1:         '|tanzu-buildpacks|paketo-buildpacks|'
+  mapper_2:         '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
   release_body:     ${{ steps.release-drafter.outputs.body }}
   release_id:       ${{ steps.release-drafter.outputs.id }}
   release_name:     ${{ steps.release-drafter.outputs.name }}

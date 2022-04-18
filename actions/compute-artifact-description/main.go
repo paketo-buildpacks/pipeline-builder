@@ -33,6 +33,17 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
+	if _, found := inputs["package"]; !found {
+		panic(fmt.Errorf("unable to read package, package must be set"))
+	}
+
+	if _, found := inputs["version"]; !found {
+		panic(fmt.Errorf("unable to read version, version must be set"))
+	}
+
+	imgUri := fmt.Sprintf("%s:%s", inputs["package"], inputs["version"])
+	fmt.Println("Loading image URI:", imgUri)
+
 	var c *http.Client
 	if s, ok := inputs["github_token"]; ok {
 		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
@@ -44,7 +55,7 @@ func main() {
 		RegexMappers: parseMappers(inputs),
 	}
 
-	mainBp, err := loader.LoadBuildpack(inputs["package"])
+	mainBp, err := loader.LoadBuildpack(imgUri)
 	if err != nil {
 		panic(err)
 	}

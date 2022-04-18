@@ -410,12 +410,15 @@ func (g GithubBuildpackLoader) fetchBuildpackTOML(org, repo, version string) ([]
 	return buf.Bytes(), nil
 }
 
-type RegistryBuildpackLoader struct{}
+type RegistryBuildpackLoader struct {
+	GCRToken string
+}
 
 func (r RegistryBuildpackLoader) LoadBuildpacks(uris []string) ([]Buildpack, error) {
 	buildpacks := []Buildpack{}
 
 	for _, uri := range uris {
+		fmt.Println("Loading buildpack info from:", uri)
 		bp, err := r.LoadBuildpack(uri)
 		if err != nil {
 			return []Buildpack{}, fmt.Errorf("unable to process %s\n%w", uri, err)
@@ -437,7 +440,7 @@ func (r RegistryBuildpackLoader) LoadBuildpack(uri string) (Buildpack, error) {
 	}
 	defer os.Remove(tarFile.Name())
 
-	err = loadBuildpackImage(uri, tarFile)
+	err = r.loadBuildpackImage(uri, tarFile)
 	if err != nil {
 		return Buildpack{}, fmt.Errorf("unable to load %s\n%w", uri, err)
 	}
@@ -460,18 +463,18 @@ func (r RegistryBuildpackLoader) LoadBuildpack(uri string) (Buildpack, error) {
 	return *bp, nil
 }
 
-func loadBuildpackImage(ref string, to io.Writer) error {
+func (r RegistryBuildpackLoader) loadBuildpackImage(ref string, to io.Writer) error {
 	reference, err := name.ParseReference(ref)
 	if err != nil {
 		return fmt.Errorf("unable to parse reference for existing buildpack tag\n%w", err)
 	}
 
-	authn := authn.Anonymous
-	if gcrKey, found := os.LookupEnv("JAVA_GCLOUD_SERVICE_ACCOUNT_KEY"); found {
-		authn = google.NewJSONKeyAuthenticator(gcrKey)
+	auth := authn.Anonymous
+	if r.GCRToken != "" {
+		auth = google.NewJSONKeyAuthenticator(r.GCRToken)
 	}
 
-	img, err := remote.Image(reference, remote.WithAuth(authn))
+	img, err := remote.Image(reference, remote.WithAuth(auth))
 	if err != nil {
 		return fmt.Errorf("unable to fetch remote image\n%w", err)
 	}

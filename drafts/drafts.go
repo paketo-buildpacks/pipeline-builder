@@ -26,6 +26,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -212,6 +213,9 @@ func loadBuildpackTOML(TOML []byte) (*Buildpack, error) {
 	if err := toml.Unmarshal(TOML, bp); err != nil {
 		return nil, fmt.Errorf("unable to parse buildpack TOML\n%w", err)
 	}
+	sort.Slice(bp.Stacks, func(i, j int) bool {
+		return strings.ToLower(bp.Stacks[i].ID) < strings.ToLower(bp.Stacks[j].ID)
+	})
 
 	if deps, found := bp.Metadata["dependencies"]; found {
 		if depList, ok := deps.([]map[string]interface{}); ok {
@@ -255,6 +259,10 @@ func loadBuildpackTOML(TOML []byte) (*Buildpack, error) {
 		} else {
 			return nil, fmt.Errorf("unable to read dependencies from %v", bp.Metadata)
 		}
+
+		sort.Slice(bp.Dependencies, func(i, j int) bool {
+			return strings.ToLower(bp.Dependencies[i].Name) < strings.ToLower(bp.Dependencies[j].Name)
+		})
 	}
 
 	return bp, nil
@@ -315,6 +323,10 @@ func (g GithubBuildpackLoader) LoadBuildpacks(uris []string) ([]Buildpack, error
 		}
 		buildpacks = append(buildpacks, bp)
 	}
+
+	sort.Slice(buildpacks, func(i, j int) bool {
+		return strings.ToLower(buildpacks[i].Info.Name) < strings.ToLower(buildpacks[j].Info.Name)
+	})
 
 	return buildpacks, nil
 }

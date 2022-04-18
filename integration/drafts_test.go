@@ -2,6 +2,8 @@ package integration_test
 
 import (
 	"net/http"
+	"sort"
+	"strings"
 	"testing"
 
 	"github.com/google/go-github/v43/github"
@@ -64,6 +66,29 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 			Expect(bp.Dependencies).ToNot(BeEmpty())
 			Expect(bp.OrderGroups).To(BeEmpty())
 			Expect(bp.Stacks).ToNot(BeEmpty())
+		})
+
+		it("fetches buildpack.toml from a multiple remote buildpack", func() {
+			bpList := []string{
+				"gcr.io/paketo-buildpacks/upx:main",
+				"gcr.io/paketo-buildpacks/azul-zulu:main",
+				"gcr.io/paketo-buildpacks/watchexec:main",
+				"gcr.io/paketo-buildpacks/bellsoft-liberica:main",
+			}
+
+			bps, err := drafts.GithubBuildpackLoader{
+				GithubClient: github.NewClient(http.DefaultClient),
+			}.LoadBuildpacks(bpList)
+			Expect(err).ToNot(HaveOccurred())
+
+			sort.Strings(bpList)
+			for i := range bpList {
+				Expect(bps[i].Info.ID).To(Equal(strings.TrimSuffix(strings.TrimPrefix(bpList[i], "gcr.io/"), ":main")))
+				Expect(bps[i].Info.Version).ToNot(ContainSubstring("{{.version}}"))
+				Expect(bps[i].Dependencies).ToNot(BeEmpty())
+				Expect(bps[i].OrderGroups).To(BeEmpty())
+				Expect(bps[i].Stacks).ToNot(BeEmpty())
+			}
 		})
 
 		it("fails fetching an image that does not exist", func() {

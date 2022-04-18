@@ -27,27 +27,10 @@ api = "0.7"
     type = "Apache-2.0"
     uri = "https://example.com/example/component/blob/main/LICENSE"
 
-[metadata]
-  include-files = ["LICENSE", "NOTICE", "README.md", "bin/build", "bin/detect", "bin/helper", "bin/main", "buildpack.toml", "resources/context.xml", "resources/logging.properties", "resources/server.xml", "resources/web.xml"]
-  pre-package = "scripts/build.sh"
-
-  [[metadata.dependencies]]
-    id = "dep"
-    name = "Example Dep"
-    purl = "pkg:generic/example-dep@8.5.78"
-    sha256 = "84c7707db0ce495473df2efdc93da21b6d47bf25cd0a79de52e5472ff9e5f094"
-    stacks = ["stack1", "stack2", "*"]
-    uri = "https://archive.example.org/dist/dep/dep-8/v8.5.78/bin/example-dep-8.5.78.tar.gz"
-    version = "8.5.78"
-
-    [[metadata.dependencies.licenses]]
-      type = "Apache-2.0"
-      uri = "https://www.apache.org/licenses/"
-
-  [[metadata.dependencies]]
+[[metadata.dependencies]]
     cpes = ["cpe:2.3:a:example:dep:9.0.62:*:*:*:*:*:*:*"]
     id = "dep"
-    name = "Example Dep"
+    name = "Example Dep 9"
     purl = "pkg:generic/example-dep@9.0.62"
     sha256 = "03157728a832cf9c83048cdc28d09600cbb3e4fa087f8b97d74c8b4f34cd89bb"
     stacks = ["stack1", "stack2", "*"]
@@ -58,11 +41,28 @@ api = "0.7"
       type = "Apache-2.0"
       uri = "https://www.apache.org/licenses/"
 
-[[stacks]]
-  id = "stack1"
+[metadata]
+  include-files = ["LICENSE", "NOTICE", "README.md", "bin/build", "bin/detect", "bin/helper", "bin/main", "buildpack.toml", "resources/context.xml", "resources/logging.properties", "resources/server.xml", "resources/web.xml"]
+  pre-package = "scripts/build.sh"
+
+  [[metadata.dependencies]]
+    id = "dep"
+    name = "Example Dep 8"
+    purl = "pkg:generic/example-dep@8.5.78"
+    sha256 = "84c7707db0ce495473df2efdc93da21b6d47bf25cd0a79de52e5472ff9e5f094"
+    stacks = ["stack1", "stack2", "*"]
+    uri = "https://archive.example.org/dist/dep/dep-8/v8.5.78/bin/example-dep-8.5.78.tar.gz"
+    version = "8.5.78"
+
+    [[metadata.dependencies.licenses]]
+      type = "Apache-2.0"
+      uri = "https://www.apache.org/licenses/"
 
 [[stacks]]
   id = "stack2"
+
+[[stacks]]
+  id = "stack1"
 
 [[stacks]]
   id = "*"

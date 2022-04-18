@@ -78,10 +78,12 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(p.PrimaryBuildpack.Info.ID).To(Equal("example/component"))
 				Expect(p.PrimaryBuildpack.Info.Version).To(Equal("2.1.1"))
 				Expect(p.PrimaryBuildpack.Info.Name).To(Equal("Example Component Buildpack"))
-				Expect(p.PrimaryBuildpack.Stacks).To(ContainElements(
-					libcnb.BuildpackStack{ID: "stack1"},
-					libcnb.BuildpackStack{ID: "stack2"},
-					libcnb.BuildpackStack{ID: "*"}))
+				Expect(p.PrimaryBuildpack.Stacks).To(Equal(
+					[]libcnb.BuildpackStack{
+						{ID: "*"},
+						{ID: "stack1"},
+						{ID: "stack2"},
+					}))
 				Expect(p.PrimaryBuildpack.Dependencies).To(HaveLen(2))
 				Expect(p.PrimaryBuildpack.Dependencies[0].ID).To(Equal("dep"))
 				Expect(p.PrimaryBuildpack.Dependencies[0].Version).To(Equal("8.5.78"))
@@ -119,10 +121,12 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(p.PrimaryBuildpack.Info.ID).To(Equal("example/component"))
 				Expect(p.PrimaryBuildpack.Info.Version).To(Equal("2.1.1"))
 				Expect(p.PrimaryBuildpack.Info.Name).To(Equal("Example Component Buildpack"))
-				Expect(p.PrimaryBuildpack.Stacks).To(ContainElements(
-					libcnb.BuildpackStack{ID: "stack1"},
-					libcnb.BuildpackStack{ID: "stack2"},
-					libcnb.BuildpackStack{ID: "*"}))
+				Expect(p.PrimaryBuildpack.Stacks).To(Equal(
+					[]libcnb.BuildpackStack{
+						{ID: "*"},
+						{ID: "stack1"},
+						{ID: "stack2"},
+					}))
 				Expect(p.PrimaryBuildpack.Dependencies).To(HaveLen(0))
 			})
 
@@ -271,8 +275,8 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(body).To(ContainSubstring("- `stack2`"))
 				Expect(body).To(ContainSubstring("- `*`"))
 				Expect(body).To(ContainSubstring("#### Dependencies:"))
-				Expect(body).To(ContainSubstring("Example Dep | `8.5.78` | `84c7707db0ce495473df2efdc93da21b6d47bf25cd0a79de52e5472ff9e5f094`"))
-				Expect(body).To(ContainSubstring("Example Dep | `9.0.62` | `03157728a832cf9c83048cdc28d09600cbb3e4fa087f8b97d74c8b4f34cd89bb`"))
+				Expect(body).To(ContainSubstring("Example Dep 8 | `8.5.78` | `84c7707db0ce495473df2efdc93da21b6d47bf25cd0a79de52e5472ff9e5f094`"))
+				Expect(body).To(ContainSubstring("Example Dep 9 | `9.0.62` | `03157728a832cf9c83048cdc28d09600cbb3e4fa087f8b97d74c8b4f34cd89bb`"))
 				Expect(body).To(ContainSubstring("foo-body"))
 			})
 

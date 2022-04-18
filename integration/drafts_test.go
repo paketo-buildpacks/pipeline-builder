@@ -42,6 +42,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(bp.Info.ID).To(Equal("paketo-buildpacks/bellsoft-liberica"))
+			Expect(bp.Info.Version).ToNot(ContainSubstring("{{.version}}"))
 			Expect(bp.Dependencies).ToNot(BeEmpty())
 			Expect(bp.OrderGroups).To(BeEmpty())
 			Expect(bp.Stacks).ToNot(BeEmpty())
@@ -59,6 +60,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).ToNot(HaveOccurred())
 
 			Expect(bp.Info.ID).To(Equal("paketo-buildpacks/bellsoft-liberica"))
+			Expect(bp.Info.Version).ToNot(ContainSubstring("{{.version}}"))
 			Expect(bp.Dependencies).ToNot(BeEmpty())
 			Expect(bp.OrderGroups).To(BeEmpty())
 			Expect(bp.Stacks).ToNot(BeEmpty())
@@ -75,7 +77,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("gcr.io/paketo-buildpacks/does-not-exist:main")
 			Expect(err).To(HaveOccurred())
-			Expect(err).To(MatchError(HavePrefix("unable to fetch toml, file not found")))
+			Expect(err).To(MatchError(HavePrefix("unable to load buildpack.toml for gcr.io/paketo-buildpacks/does-not-exist:main")))
 		})
 	})
 }

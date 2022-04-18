@@ -352,20 +352,17 @@ func (g GithubBuildpackLoader) LoadBuildpack(imgUri string) (Buildpack, error) {
 		}
 
 		if len(tomlBytes) > 0 {
-			break
+			bp, err := loadBuildpackTOML(tomlBytes)
+			if err != nil {
+				return Buildpack{}, fmt.Errorf("unable to load buildpack toml from image\n%w", err)
+			}
+
+			bp.Info.Version = parts[3]
+			return *bp, nil
 		}
 	}
 
-	if len(tomlBytes) == 0 {
-		return Buildpack{}, fmt.Errorf("unable to fetch toml, file not found")
-	}
-
-	bp, err := loadBuildpackTOML(tomlBytes)
-	if err != nil {
-		return Buildpack{}, fmt.Errorf("unable to load buildpack toml from image\n%w", err)
-	}
-
-	return *bp, nil
+	return Buildpack{}, fmt.Errorf("unable to load buildpack.toml for %s", imgUri)
 }
 
 func (g GithubBuildpackLoader) mapURIs(uri string) ([]string, error) {

@@ -391,6 +391,7 @@ func (g GithubBuildpackLoader) mapURIs(uri string) ([]string, error) {
 }
 
 func (g GithubBuildpackLoader) fetchBuildpackTOML(org, repo, version string) ([]byte, error) {
+	fmt.Println("Fetching from org:", org, "repo:", repo, "version:", version)
 	body, _, err := g.GithubClient.Repositories.DownloadContents(
 		context.Background(),
 		org,

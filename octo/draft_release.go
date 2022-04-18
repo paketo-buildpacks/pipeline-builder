@@ -120,6 +120,18 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			j.Steps = append(j.Steps, NewDockerCredentialActions(descriptor.DockerCredentials)...)
 		}
 
+		draftReleaseContext := map[string]interface{}{
+			"github_token":     descriptor.GitHub.Token,
+			"release_id":       "${{ steps.release-drafter.outputs.id }}",
+			"release_tag_name": "${{ steps.release-drafter.outputs.tag_name }}",
+			"release_name":     "${{ steps.release-drafter.outputs.name }}",
+			"release_body":     "${{ steps.release-drafter.outputs.body }}",
+		}
+
+		for i, mapper := range descriptor.GitHub.Mappers {
+			draftReleaseContext[fmt.Sprintf("mapper_%d", i+1)] = mapper
+		}
+
 		j.Steps = append(j.Steps,
 			actions.Step{
 				Uses: "actions/checkout@v3",
@@ -127,15 +139,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			actions.Step{
 				Name: "Update draft release with buildpack information",
 				Uses: "docker://ghcr.io/paketo-buildpacks/actions/draft-release:main",
-				With: map[string]interface{}{
-					"github_token":     descriptor.GitHub.Token,
-					"input_mapper_1":   "|tanzu-buildpacks|paketo-buildpacks|",
-					"input_mapper_2":   `|tanzu-buildpacks\/|pivotal-cf/tanzu-|`,
-					"release_id":       "${{ steps.release-drafter.outputs.id }}",
-					"release_tag_name": "${{ steps.release-drafter.outputs.tag_name }}",
-					"release_name":     "${{ steps.release-drafter.outputs.name }}",
-					"release_body":     "${{ steps.release-drafter.outputs.body }}",
-				},
+				With: draftReleaseContext,
 			},
 		)
 		w.Jobs["update"] = j

@@ -100,19 +100,28 @@ A pipeline-updating workflow is added to the repository to ensure that workflows
 Draft release notes are created on every commit to `main`.  These notes take into account every PR since the previous release in order to create a division of the types of changes that were made and the semver scope of the change to work out the next release number.
 
 ### Descriptor
+
 The descriptor is a YAML document with a number of top-level keys that correspond to new workflows, modified workflows, or artifacts.  All top-level keys except `github` are optional.
 
 #### `github` (REQUIRED)
+
 ```yaml
 github:
   username: ${{ secrets.JAVA_GITHUB_USERNAME }}
   token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
+  mappers:
+  - '|tanzu-buildpacks|paketo-buildpacks|'
+  - '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
 ```
+
 `github` is an object the describes the GitHub identity that the pipeline should use in the many places that GitHub API access is required.  The token must be granted the `repo`, `write:packages`, and `workflow` scopes.
 
 ![Token Scopes](token-scopes.png)
 
+The `mappers` list is optional and is used by the [Draft Release](#draft-release) workflow. Mappers are used to control how the action looks up metadata in Github for a buildpack. See the action notes for more information.
+
 #### `codeowners`
+
 ```yaml
 codeowners:
 - path:  "*"
@@ -395,8 +404,8 @@ A mapper will add additional permutations of Github project URIs to try. For exa
 uses: docker://ghcr.io/paketo-buildpacks/actions/draft-release:main
 with:
   github_token:     ${{ secrets.JAVA_GITHUB_TOKEN }}
-  input_mapper_1:   '|tanzu-buildpacks|paketo-buildpacks|'
-  input_mapper_2:   '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
+  mapper_1:   '|tanzu-buildpacks|paketo-buildpacks|'
+  mapper_2:   '|tanzu-buildpacks\/|pivotal-cf/tanzu-|'
   release_body:     ${{ steps.release-drafter.outputs.body }}
   release_id:       ${{ steps.release-drafter.outputs.id }}
   release_name:     ${{ steps.release-drafter.outputs.name }}

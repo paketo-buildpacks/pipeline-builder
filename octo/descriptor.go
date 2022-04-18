@@ -44,6 +44,7 @@ type Descriptor struct {
 type GitHub struct {
 	Username string
 	Token    string
+	Mappers  []string
 }
 
 type Action struct {

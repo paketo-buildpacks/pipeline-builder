@@ -62,7 +62,7 @@ func main() {
 
 	depsMap := map[string]bool{}
 	if len(mainBp.OrderGroups) > 0 {
-		pkg, err := loader.LoadPackages(inputs["package"])
+		pkg, err := loader.LoadPackages(imgUri)
 		if err != nil {
 			panic(err)
 		}

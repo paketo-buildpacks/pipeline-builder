@@ -26,9 +26,9 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"sort"
 	"strings"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 
@@ -48,7 +48,7 @@ func main() {
 
 	var (
 		err         error
-		g           *regexp.Regexp
+		globRegex   *regexp.Regexp
 		productType string
 	)
 	if s, ok := inputs["glob"]; ok {
@@ -60,17 +60,12 @@ func main() {
 			productType = UnknownProductType
 		}
 
-		g, err = regexp.Compile(s)
+		globRegex, err = regexp.Compile(s)
 		if err != nil {
 			panic(fmt.Errorf("unable to compile %s as a regexp\n%w", s, err))
 		}
 	} else {
-		g = regexp.MustCompile(".+")
-	}
-
-	v, ok := inputs["version"]
-	if !ok {
-		panic(fmt.Errorf("version must be specified"))
+		globRegex = regexp.MustCompile(".+")
 	}
 
 	var c *http.Client
@@ -79,9 +74,8 @@ func main() {
 	}
 	gh := github.NewClient(c)
 
-	candidates := make(map[string]Holder)
-	var candidateVersions []string
-	re := regexp.MustCompile(`vm-(.+)`)
+	tagRegex := regexp.MustCompile(`vm-(.+)`)
+	versions := actions.Versions{}
 	opt := &github.ListOptions{PerPage: 100}
 	for {
 		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "graalvm", "graalvm-ce-builds", opt)
@@ -90,12 +84,14 @@ func main() {
 		}
 
 		for _, r := range rel {
-			for _, a := range r.Assets {
-				if g.MatchString(*a.Name) {
-					if g := re.FindStringSubmatch(*r.TagName); g != nil {
-						ver := g[1]
-						candidateVersions = append(candidateVersions, ver)
-						candidates[ver] = Holder{Assets: r.Assets, URI: *a.BrowserDownloadURL}
+			if tag := tagRegex.FindStringSubmatch(*r.TagName); tag != nil {
+				for _, a := range r.Assets {
+					if globRegex.MatchString(*a.Name) {
+						version, err := actions.NormalizeVersion(tag[1])
+						if err != nil {
+							panic(fmt.Errorf("unable to normalize version %s\n%w", version, err))
+						}
+						versions[version] = *a.BrowserDownloadURL
 						break
 					}
 				}
@@ -108,28 +104,20 @@ func main() {
 		opt.Page = rsp.NextPage
 	}
 
-	sort.Strings(candidateVersions)
-
-	h := candidates[candidateVersions[len(candidateVersions)-1]]
-	versions := actions.Versions{GetVersion(h.Assets, v): h.URI}
-
 	latestVersion, err := versions.GetLatestVersion(inputs)
 	if err != nil {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
 	url := versions[latestVersion.Original()]
+
+	if productType == JDKProductType {
+		latestVersion = semver.MustParse(GetVersion(url))
+	}
+
 	outputs, err := actions.NewOutputs(url, latestVersion, nil)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
-	}
-
-	if productType == JDKProductType && latestVersion.Major() == 8 {
-		// Java 8 uses `1.8.0` and `updateXX` in the CPE, instead of 8.0.x
-		//
-		// This adjusts the update job to set the CPE in this way instead
-		// of using the standard version format
-		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
 	}
 
 	if productType == NIKProductType {
@@ -137,8 +125,8 @@ func main() {
 		//
 		// This adjusts the update job to set the PURL & CPE in this way instead
 		// of using the standard version format
-		re = regexp.MustCompile(`\/vm-([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
-		matches := re.FindStringSubmatch(url)
+		urlRegex := regexp.MustCompile(`\/vm-([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
+		matches := urlRegex.FindStringSubmatch(url)
 		if matches == nil || len(matches) != 2 {
 			panic(fmt.Errorf("unable to parse NIK version: %s", matches))
 		}
@@ -149,30 +137,15 @@ func main() {
 	outputs.Write(os.Stdout)
 }
 
-func GetVersion(assets []*github.ReleaseAsset, version string) string {
-	re := regexp.MustCompile(fmt.Sprintf(`graalvm-ce-java%s-linux-amd64-.+.tar.gz`, version))
-
-	var uri *string
-
-	for _, a := range assets {
-		if re.MatchString(*a.Name) {
-			uri = a.BrowserDownloadURL
-			break
-		}
-	}
-
-	if uri == nil {
-		panic(fmt.Errorf("unable to find asset that matches %s", re.String()))
-	}
-
-	resp, err := http.Get(*uri)
+func GetVersion(uri string) string {
+	resp, err := http.Get(uri)
 	if err != nil {
-		panic(fmt.Errorf("unable to get %s\n%w", *uri, err))
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		panic(fmt.Errorf("unable to download %s: %d", *uri, resp.StatusCode))
+		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
 	}
 
 	gz, err := gzip.NewReader(resp.Body)
@@ -183,7 +156,7 @@ func GetVersion(assets []*github.ReleaseAsset, version string) string {
 
 	t := tar.NewReader(gz)
 
-	re = regexp.MustCompile(fmt.Sprintf(`graalvm-ce-java%s-[^/]+/release`, version))
+	re := regexp.MustCompile(`graalvm-ce-java[^/]+/release`)
 	for {
 		f, err := t.Next()
 		if err != nil && err == io.EOF {
@@ -205,11 +178,7 @@ func GetVersion(assets []*github.ReleaseAsset, version string) string {
 
 		re = regexp.MustCompile(`JAVA_VERSION="([\d]+)\.([\d]+)\.([\d]+)[_]?([\d]+)?"`)
 		if g := re.FindStringSubmatch(string(b)); g != nil {
-			if g[2] == "8" {
-				v = fmt.Sprintf("8.0.%s", g[4])
-			} else {
-				v = fmt.Sprintf("%s.%s.%s", g[1], g[2], g[3])
-			}
+			v = fmt.Sprintf("%s.%s.%s", g[1], g[2], g[3])
 		}
 
 		return v

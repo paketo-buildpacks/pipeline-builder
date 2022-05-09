@@ -41,6 +41,23 @@ func main() {
 		panic(fmt.Errorf("distro must be specified"))
 	}
 
+	distros, err := LoadDistros()
+	if err != nil {
+		panic(fmt.Errorf("unable to load distros\n%w", err))
+	}
+
+	found := false
+	for _, distro := range distros {
+		if distro == d {
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		panic(fmt.Errorf("invalid distro %q, valid: %s", d, distros))
+	}
+
 	// type i.e. jre or jdk
 	t, ok := inputs["type"]
 	if !ok {
@@ -114,12 +131,20 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 		panic(fmt.Errorf("unable to decode package payload\n%w", err))
 	}
 
-	re := regexp.MustCompile(`(\d+\.\d+\.\d+|\d+)\+?.*`)
+	re := regexp.MustCompile(`(\d+\.\d+\.\d+\.\d+|\d+\.\d+\.\d+\+\d+|\d+\.\d+\.\d+|\d+)\+?.*`)
 
 	versions := make(actions.Versions)
 	for _, result := range raw.Result {
+		if !result.LatestBuild {
+			continue
+		}
+
 		if ver := re.FindStringSubmatch(result.JavaVersion); ver != nil {
-			versions[ver[1]] = LoadDownloadURI(result.Links.URI)
+			version, err := actions.NormalizeVersion(ver[1])
+			if err != nil {
+				panic(fmt.Errorf("unable to normalize version %s\n%w", version, err))
+			}
+			versions[version] = LoadDownloadURI(result.Links.URI)
 		} else {
 			fmt.Println(result.JavaVersion, "failed to parse")
 		}
@@ -157,12 +182,44 @@ func LoadDownloadURI(uri string) string {
 	return raw.Result[0].DirectDownloadURI
 }
 
+func LoadDistros() ([]string, error) {
+	uri := "https://api.foojay.io/disco/v3.0/distributions?include_versions=false&include_synonyms=false"
+	request, err := http.NewRequest("GET", uri, nil)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	request.Header.Set("User-Agent", userAgent)
+
+	resp, err := client.Do(request)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
+	}
+
+	var raw DistroResponse
+	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
+		panic(fmt.Errorf("unable to decode download payload\n%w", err))
+	}
+
+	distros := []string{}
+	for _, distro := range raw.Result {
+		distros = append(distros, distro.APIParameter)
+	}
+
+	return distros, nil
+}
+
 type PackagesResponse struct {
 	Result []struct {
 		JavaVersion string `json:"java_version"`
 		Links       struct {
 			URI string `json:"pkg_info_uri"`
 		}
+		LatestBuild bool `json:"latest_build_available"`
 	}
 	Message string
 }
@@ -171,6 +228,14 @@ type DownloadResponse struct {
 	Result []struct {
 		DirectDownloadURI string `json:"direct_download_uri"`
 		SignatureURI      string `json:"signature_uri"`
+	}
+	Message string
+}
+
+type DistroResponse struct {
+	Result []struct {
+		APIParameter string `json:"api_parameter"`
+		Maintained   bool   `json:"maintained"`
 	}
 	Message string
 }

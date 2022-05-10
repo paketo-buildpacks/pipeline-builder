@@ -73,7 +73,7 @@ func main() {
 				for _, a := range r.Assets {
 					if globRegex.MatchString(*a.Name) {
 						version := tag[1]
-						if strings.HasPrefix(tag[1], "8u") {
+						if strings.HasPrefix(version, "8u") {
 							version = fmt.Sprintf("8.0.%s", strings.TrimLeft(version, "8u"))
 						}
 						versions[version] = *a.BrowserDownloadURL

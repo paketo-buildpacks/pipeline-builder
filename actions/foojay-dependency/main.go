@@ -146,7 +146,7 @@ func LoadPackages(d string, t string, v int) actions.Versions {
 			}
 			versions[version] = LoadDownloadURI(result.Links.URI)
 		} else {
-			fmt.Println(result.JavaVersion, "failed to parse")
+			panic(fmt.Errorf(result.JavaVersion, "failed to parse"))
 		}
 	}
 

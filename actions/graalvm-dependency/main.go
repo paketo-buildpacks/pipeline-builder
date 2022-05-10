@@ -111,9 +111,7 @@ func main() {
 
 	url := versions[latestVersion.Original()]
 
-	if productType == JDKProductType {
-		latestVersion = semver.MustParse(GetVersion(url))
-	}
+	latestVersion = semver.MustParse(GetVersion(url))
 
 	outputs, err := actions.NewOutputs(url, latestVersion, nil)
 	if err != nil {
@@ -138,6 +136,9 @@ func main() {
 }
 
 func GetVersion(uri string) string {
+	// for native-image installer, we convert the URL to the graalvm-ce download URL to fetch the version
+	uri = strings.Replace(strings.Replace(uri, ".jar", ".tar.gz", 1), "native-image-installable-svm-", "graalvm-ce-", 1)
+
 	resp, err := http.Get(uri)
 	if err != nil {
 		panic(fmt.Errorf("unable to get %s\n%w", uri, err))
@@ -185,9 +186,4 @@ func GetVersion(uri string) string {
 	}
 
 	panic(fmt.Errorf("unable to find file that matches %s", re.String()))
-}
-
-type Holder struct {
-	Assets []*github.ReleaseAsset
-	URI    string
 }

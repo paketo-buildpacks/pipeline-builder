@@ -38,7 +38,7 @@ func main() {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[v] = fmt.Sprintf(
-				"https://www.yourkit.com/download/YourKit-JavaProfiler-%s.%s-b%s-docker.zip", p[1], p[2], p[3])
+				"https://download.yourkit.com/yjp/2022.3/YourKit-JavaProfiler-%s.%s-b%s.zip", p[1], p[2], p[3])
 		}
 	})
 

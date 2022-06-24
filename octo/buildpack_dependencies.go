@@ -18,6 +18,7 @@ package octo
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/iancoleman/strcase"
 
@@ -28,6 +29,11 @@ import (
 func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, error) {
 	var contributions []Contribution
 
+	fullRepo, found := os.LookupEnv("GITHUB_REPOSITORY")
+	if !found {
+		panic(fmt.Errorf("unable to find GITHUB_REPOSITORY"))
+	}
+
 	for _, d := range descriptor.Dependencies {
 		w := actions.Workflow{
 			Name: fmt.Sprintf("Update %s", d.Name),
@@ -37,6 +43,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 			},
 			Jobs: map[string]actions.Job{
 				"update": {
+					If:     "github.repository == '" + fullRepo + "'",
 					Name:   "Update Buildpack Dependency",
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{

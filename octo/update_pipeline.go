@@ -18,6 +18,7 @@ package octo
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
@@ -25,6 +26,11 @@ import (
 )
 
 func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
+	fullRepo, found := os.LookupEnv("GITHUB_REPOSITORY")
+	if !found {
+		panic(fmt.Errorf("unable to find GITHUB_REPOSITORY"))
+	}
+
 	w := actions.Workflow{
 		Name: "Update Pipeline",
 		On: map[event.Type]event.Event{
@@ -37,6 +43,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 		},
 		Jobs: map[string]actions.Job{
 			"update": {
+				If:     "github.repository == '" + fullRepo + "'",
 				Name:   "Update Pipeline",
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{

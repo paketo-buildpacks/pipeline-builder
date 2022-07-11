@@ -22,6 +22,8 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"sort"
+	"strconv"
 
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
@@ -42,10 +44,16 @@ func main() {
 		panic(fmt.Errorf("repository must be specified"))
 	}
 
-	var (
-		err error
-		g   *regexp.Regexp
-	)
+	var err error
+	useCreationTime := false
+	if b, ok := inputs["latest_by_creation_time"]; ok {
+		useCreationTime, err = strconv.ParseBool(b)
+		if err != nil {
+			panic(fmt.Errorf("unable to parse %s as a bool\n%w", b, err))
+		}
+	}
+
+	var g *regexp.Regexp
 	if s, ok := inputs["glob"]; ok {
 		g, err = regexp.Compile(s)
 		if err != nil {
@@ -73,6 +81,7 @@ func main() {
 		panic(fmt.Errorf("%s is not a valid regex", t))
 	}
 
+	var releases []*github.RepositoryRelease
 	opt := &github.ListOptions{PerPage: 100}
 	for {
 		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
@@ -86,17 +95,13 @@ func main() {
 			}
 
 			if p := re.FindStringSubmatch(*r.TagName); p != nil {
-				for _, a := range r.Assets {
-					if g.MatchString(*a.Name) {
-						n, err := actions.NormalizeVersion(p[1])
-						if err != nil {
-							panic(err)
-						}
-
-						versions[n] = *a.BrowserDownloadURL
-						break
-					}
+				n, err := actions.NormalizeVersion(p[1])
+				if err != nil {
+					panic(err)
 				}
+				r.TagName = github.String(n)
+
+				releases = append(releases, r)
 			}
 		}
 
@@ -104,6 +109,23 @@ func main() {
 			break
 		}
 		opt.Page = rsp.NextPage
+	}
+
+	if useCreationTime {
+		sort.Slice(releases, func(i, j int) bool {
+			return releases[i].CreatedAt.Before(releases[j].CreatedAt.Time)
+		})
+
+		releases = releases[len(releases)-1:]
+	}
+
+	for _, r := range releases {
+		for _, a := range r.Assets {
+			if g.MatchString(*a.Name) {
+				versions[*r.TagName] = *a.BrowserDownloadURL
+				break
+			}
+		}
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

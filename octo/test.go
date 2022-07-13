@@ -259,7 +259,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		}
 
 		for _, repo := range descriptor.Package.Repositories {
-			if !strings.Contains(repo, "paketo-buildpacks") {
+			if !strings.Contains(repo, "paketo-buildpacks") && !strings.Contains(repo, "paketobuildpacks") {
 				j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 			}
 		}

@@ -221,7 +221,7 @@ test:
 
       set -euo pipefail
 
-      GO111MODULE=on go get -u -ldflags="-s -w" github.com/kyoh86/richgo
+      go install -ldflags="-s -w" github.com/kyoh86/richgo
   - name: Run Tests
     run: |
       #!/usr/bin/env bash

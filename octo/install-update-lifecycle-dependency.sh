@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-go install -ldflags="-s -w" github.com/paketo-buildpacks/libpak/cmd/update-lifecycle-dependency
+go install -ldflags="-s -w" github.com/paketo-buildpacks/libpak/cmd/update-lifecycle-dependency@latest

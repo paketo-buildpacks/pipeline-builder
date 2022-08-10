@@ -30,7 +30,7 @@ import (
 
 const (
 	CraneVersion  = "0.8.0"
-	GoVersion     = "1.17"
+	GoVersion     = "1.18"
 	PackVersion   = "0.27.0"
 	RichGoVersion = "0.3.10"
 	YJVersion     = "5.0.0"
@@ -121,6 +121,12 @@ func Contribute(path string) error {
 	}
 
 	if c, err := ContributeUpdatePipeline(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c)
+	}
+
+	if c, err := ContributeUpdateGo(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c)

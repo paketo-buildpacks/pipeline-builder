@@ -128,8 +128,8 @@ func Contribute(path string) error {
 
 	if c, err := ContributeUpdateGo(descriptor); err != nil {
 		return err
-	} else {
-		contributions = append(contributions, c)
+	} else if c != nil {
+		contributions = append(contributions, *c)
 	}
 
 	if err := Remove(descriptor, RemovedFiles); err != nil {

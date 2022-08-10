@@ -8,6 +8,7 @@ else
   OLD_VERSION="0.0.0"
 fi
 
+rm .github/workflows/* || true
 octo --descriptor "${DESCRIPTOR}"
 
 PAYLOAD=$(gh api /repos/paketo-buildpacks/pipeline-builder/releases/latest)

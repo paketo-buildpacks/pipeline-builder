@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.24.0
 	github.com/BurntSushi/toml v1.2.0
 	github.com/Masterminds/semver/v3 v3.1.1
-	github.com/aws/aws-sdk-go v1.44.72
+	github.com/aws/aws-sdk-go v1.44.75
 	github.com/buildpacks/libcnb v1.26.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0

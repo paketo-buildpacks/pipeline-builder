@@ -18,12 +18,22 @@ package octo
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
 
-func ContributeUpdateGo(descriptor Descriptor) (Contribution, error) {
+func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
+	goModFiles, err := Find(descriptor.Path, regexp.MustCompile(`go\.(mod|sum)`).MatchString)
+	if err != nil {
+		return nil, fmt.Errorf("unable to Find go.mod or go.sum files in %s\n%w", descriptor.Path, err)
+	}
+
+	if len(goModFiles) != 2 {
+		return nil, nil
+	}
+
 	w := actions.Workflow{
 		Name: "Update Go",
 		On: map[event.Type]event.Event{
@@ -71,5 +81,10 @@ Bumps Go from ${{ steps.update-go.outputs.old-go-version }} to ${{ steps.update-
 		},
 	}
 
-	return NewActionContribution(w)
+	c, err := NewActionContribution(w)
+	if err != nil {
+		return nil, err
+	}
+
+	return &c, nil
 }

@@ -37,14 +37,21 @@ type Contribution struct {
 	Permissions os.FileMode
 	Structure   gotree.Tree
 	Content     []byte
+	Namespace   string
 }
 
-func NewActionContribution(workflow actions.Workflow) (Contribution, error) {
+func NewActionContributionWithNamespace(namespace string, workflow actions.Workflow) (Contribution, error) {
 	var (
 		c   Contribution
 		err error
 	)
-	c.Path = filepath.Join(".github", "workflows", fmt.Sprintf("%s.yml", strcase.ToKebab(workflow.Name)))
+
+	workflowName := fmt.Sprintf("%s-%s.yml", namespace, strcase.ToKebab(workflow.Name))
+	if namespace == "" {
+		workflowName = fmt.Sprintf("%s.yml", strcase.ToKebab(workflow.Name))
+	}
+
+	c.Path = filepath.Join(".github", "workflows", workflowName)
 	c.Permissions = 0644
 
 	var t []event.Type
@@ -62,6 +69,11 @@ func NewActionContribution(workflow actions.Workflow) (Contribution, error) {
 	}
 
 	return c, err
+}
+
+// Deprecated: use NewActionContributionWithNamespace instead
+func NewActionContribution(workflow actions.Workflow) (Contribution, error) {
+	return NewActionContributionWithNamespace("", workflow)
 }
 
 func NewDependabotContribution(dependabot dependabot.Dependabot) (Contribution, error) {

@@ -107,7 +107,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 		},
 	}
 
-	if c, err := NewActionContribution(w); err != nil {
+	if c, err := NewActionContributionWithNamespace(Namespace, w); err != nil {
 		return nil, err
 	} else {
 		contributions = append(contributions, c)
@@ -168,7 +168,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 		},
 	}
 
-	if c, err := NewActionContribution(w); err != nil {
+	if c, err := NewActionContributionWithNamespace(Namespace, w); err != nil {
 		return nil, err
 	} else {
 		contributions = append(contributions, c)

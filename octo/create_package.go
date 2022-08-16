@@ -161,7 +161,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 	w.Jobs["create-package"] = j
 
-	c, err := NewActionContribution(w)
+	c, err := NewActionContributionWithNamespace(Namespace, w)
 	if err != nil {
 		return nil, err
 	}

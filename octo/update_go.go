@@ -81,7 +81,7 @@ Bumps Go from ${{ steps.update-go.outputs.old-go-version }} to ${{ steps.update-
 		},
 	}
 
-	c, err := NewActionContribution(w)
+	c, err := NewActionContributionWithNamespace(Namespace, w)
 	if err != nil {
 		return nil, err
 	}

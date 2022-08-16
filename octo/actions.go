@@ -74,7 +74,7 @@ func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
 		j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 		w.Jobs["create-action"] = j
 
-		if c, err := NewActionContribution(w); err != nil {
+		if c, err := NewActionContributionWithNamespace(Namespace, w); err != nil {
 			return nil, err
 		} else {
 			contributions = append(contributions, c)

@@ -136,5 +136,5 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 	w.Jobs["offline-package"] = j
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }

@@ -18,16 +18,23 @@ package octo
 
 import (
 	"fmt"
-	"regexp"
+	"os"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
 
 func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
-	goModFiles, err := Find(descriptor.Path, regexp.MustCompile(`go\.(mod|sum)`).MatchString)
+	entries, err := os.ReadDir(descriptor.Path)
 	if err != nil {
 		return nil, fmt.Errorf("unable to Find go.mod or go.sum files in %s\n%w", descriptor.Path, err)
+	}
+
+	goModFiles := []string{}
+	for _, entry := range entries {
+		if entry.Name() == "go.mod" || entry.Name() == "go.sum" {
+			goModFiles = append(goModFiles, entry.Name())
+		}
 	}
 
 	if len(goModFiles) != 2 {

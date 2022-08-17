@@ -46,9 +46,11 @@ func NewActionContributionWithNamespace(namespace string, workflow actions.Workf
 		err error
 	)
 
-	workflowName := fmt.Sprintf("%s-%s.yml", namespace, strcase.ToKebab(workflow.Name))
+	var workflowName string
 	if namespace == "" {
 		workflowName = fmt.Sprintf("%s.yml", strcase.ToKebab(workflow.Name))
+	} else {
+		workflowName = fmt.Sprintf("%s-%s.yml", namespace, strcase.ToKebab(workflow.Name))
 	}
 
 	c.Path = filepath.Join(".github", "workflows", workflowName)

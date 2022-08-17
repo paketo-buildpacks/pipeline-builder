@@ -195,5 +195,5 @@ Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.o
 		}
 	}
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }

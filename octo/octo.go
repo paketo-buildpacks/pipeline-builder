@@ -34,6 +34,7 @@ const (
 	PackVersion   = "0.27.0"
 	RichGoVersion = "0.3.10"
 	YJVersion     = "5.0.0"
+	Namespace     = "pb"
 )
 
 var RemovedFiles []string

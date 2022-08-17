@@ -141,7 +141,7 @@ Bumps %[1]s from ${{ steps.build-image.outputs.old-version }} to ${{ steps.build
 	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	w.Jobs["update"] = j
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }
 
 func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
@@ -211,5 +211,5 @@ Bumps lifecycle from ${{ steps.lifecycle.outputs.old-version }} to ${{ steps.lif
 		},
 	}
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }

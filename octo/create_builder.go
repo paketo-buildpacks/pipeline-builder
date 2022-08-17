@@ -89,7 +89,7 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 	j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 	w.Jobs["create-builder"] = j
 
-	c, err := NewActionContribution(w)
+	c, err := NewActionContributionWithNamespace(Namespace, w)
 	if err != nil {
 		return nil, err
 	}

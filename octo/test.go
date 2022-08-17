@@ -268,7 +268,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		w.Jobs["create-package"] = j
 	}
 
-	c, err := NewActionContribution(w)
+	c, err := NewActionContributionWithNamespace(Namespace, w)
 	if err != nil {
 		return nil, err
 	}

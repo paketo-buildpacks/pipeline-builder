@@ -104,5 +104,5 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 	j.Steps = append(NewHttpCredentialActions(descriptor.HttpCredentials), j.Steps...)
 	w.Jobs["republish-image"] = j
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }

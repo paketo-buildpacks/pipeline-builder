@@ -81,5 +81,5 @@ Bumps pipeline from ${{ steps.pipeline.outputs.old-version }} to ${{ steps.pipel
 		},
 	}
 
-	return NewActionContribution(w)
+	return NewActionContributionWithNamespace(Namespace, w)
 }

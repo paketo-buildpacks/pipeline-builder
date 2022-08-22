@@ -96,13 +96,13 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("lasjdflaksdjfl")
 			Expect(err).To(HaveOccurred())
-			Expect(err).To(MatchError(HavePrefix("unable to parse lasjdflaksdjfl, found []")))
+			Expect(err).To(MatchError(ContainSubstring("unable to parse lasjdflaksdjfl, found []")))
 
 			_, err = drafts.GithubBuildpackLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("gcr.io/paketo-buildpacks/does-not-exist:main")
 			Expect(err).To(HaveOccurred())
-			Expect(err).To(MatchError(HavePrefix("unable to load buildpack.toml for gcr.io/paketo-buildpacks/does-not-exist:main")))
+			Expect(err).To(MatchError(ContainSubstring("unable to load buildpack.toml for gcr.io/paketo-buildpacks/does-not-exist:main")))
 		})
 	})
 }

@@ -108,11 +108,11 @@ func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (s
 		for _, order := range bpOrders.Orders {
 			for _, group := range order.Groups {
 				endOfId := strings.Split(possibleBpId, "/")[1]
-				fmt.Println("group.Id", group.ID, "endOfId", endOfId, "group.Version", group.Version, "version", version)
+				// fmt.Println("group.Id", group.ID, "endOfId", endOfId, "group.Version", group.Version, "version", version)
 				if strings.HasSuffix(group.ID, endOfId) && group.Version == version {
 					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
 					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
-					fmt.Println("pkgId", pkgId, "bpId", bpId)
+					// fmt.Println("pkgId", pkgId, "bpId", bpId)
 					return pkgId, bpId, nil
 				}
 			}

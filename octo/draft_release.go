@@ -19,6 +19,7 @@ package octo
 import (
 	"fmt"
 	"path/filepath"
+	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
@@ -132,6 +133,11 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 			draftReleaseContext[fmt.Sprintf("mapper_%d", i+1)] = mapper
 		}
 
+		draftReleaseEnv := map[string]string{}
+		for key, val := range descriptor.GitHub.BuildpackTOMLPaths {
+			draftReleaseEnv[fmt.Sprintf("BP_TOML_PATH_%s", toEnvVar(key))] = val
+		}
+
 		j.Steps = append(j.Steps,
 			actions.Step{
 				Uses: "actions/checkout@v3",
@@ -140,6 +146,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 				Name: "Update draft release with buildpack information",
 				Uses: "docker://ghcr.io/paketo-buildpacks/actions/draft-release:main",
 				With: draftReleaseContext,
+				Env:  draftReleaseEnv,
 			},
 		)
 		w.Jobs["update"] = j
@@ -152,4 +159,8 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 	}
 
 	return contributions, nil
+}
+
+func toEnvVar(key string) string {
+	return strings.ToUpper(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(key, "-", "_"), "/", "_"), " ", "_"))
 }

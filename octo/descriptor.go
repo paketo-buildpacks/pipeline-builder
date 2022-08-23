@@ -42,9 +42,10 @@ type Descriptor struct {
 }
 
 type GitHub struct {
-	Username string
-	Token    string
-	Mappers  []string
+	Username           string
+	Token              string
+	Mappers            []string
+	BuildpackTOMLPaths map[string]string `yaml:"buildpack_toml_paths"`
 }
 
 type Action struct {

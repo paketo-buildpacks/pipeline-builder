@@ -442,7 +442,7 @@ A mapper will add additional permutations of Github project URIs to try. For exa
 
 The location of the `buildpack.toml` file in the Github project is assumed to be at `/buildpack.toml`. If you have a monorepo with multiple buildpacks, you may adjust the location by setting an environment variable for the action in the format `BP_TOML_PATH_<org>_<repo>=actual/path` where `<org>` and `<repo>` are the organization and repo pulled out of the image URI. For example, `gcr.io/foo/bar:1.2.3`. The org is `foo` and the repo is `bar`. 
 
-A leading `/` on the environment variable is not necessary, nor is `buildpack.toml` on the end. You may omit both to shorten the value and the action adjust as required. For example, with an org of `tanzu-buildpacks` and a repo of `java-function` then the environment variable would be `BP_TOML_PATH_TANZU_BUILDPACKS_JAVA_FUNCTION='/buildpacks/java/buildpack.toml`, which would be the same as `BP_TOML_PATH_VMWARE_TANZU_FUNCTION_BUILDPACKS_FOR_KNATIVE='buildpacks/java` since the trailing `buildpack.toml` is optional.
+A leading `/` on the environment variable is not necessary, nor is `buildpack.toml` on the end. You may omit both to shorten the value and the action adjust as required. For example, with an org of `tanzu-buildpacks` and a repo of `java-function` then the environment variable would be `BP_TOML_PATH_TANZU_BUILDPACKS_JAVA_FUNCTION=/buildpacks/java/buildpack.toml`, which would be the same as `BP_TOML_PATH_TANZU_BUILDPACKS_JAVA_FUNCTION=buildpacks/java` since the trailing `buildpack.toml` is optional.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/draft-release:main

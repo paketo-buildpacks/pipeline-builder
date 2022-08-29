@@ -69,6 +69,22 @@ func Rename(buildpack, tag, newID, newVersion string) (string, error) {
 		return "", fmt.Errorf("unable to unable to parse reference for new buildpack tag\n%w", err)
 	}
 
+	srcCfgFile, err := image.ConfigFile()
+	if err != nil {
+		return "", fmt.Errorf("unable to fetch config file\n%w", err)
+	}
+
+	targetCfgFile, err := newBuildpackage.ConfigFile()
+	if err != nil {
+		return "", fmt.Errorf("unable to fetch config file\n%w", err)
+	}
+	targetCfgFile.OS = srcCfgFile.OS
+
+	newBuildpackage, err = mutate.ConfigFile(newBuildpackage, targetCfgFile)
+	if err != nil {
+		return "", fmt.Errorf("unable to transfer config file\n%w", err)
+	}
+
 	err = remote.Write(reference, newBuildpackage, remote.WithAuthFromKeychain(authn.DefaultKeychain))
 	if err != nil {
 		return "", fmt.Errorf("unable to write new buildapck\n%w", err)

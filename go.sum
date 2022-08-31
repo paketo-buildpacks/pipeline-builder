@@ -128,8 +128,8 @@ github.com/bkielbasa/cyclop v1.2.0/go.mod h1:qOI0yy6A7dYC4Zgsa72Ppm9kONl0RoIlPbz
 github.com/blizzy78/varnamelen v0.3.0/go.mod h1:hbwRdBvoBqxk34XyQ6HA0UH3G0/1TKuv5AC4eaBT0Ec=
 github.com/bombsimon/wsl/v3 v3.3.0/go.mod h1:st10JtZYLE4D5sC7b8xV4zTKZwAQjCH/Hy2Pm1FNZIc=
 github.com/breml/bidichk v0.1.1/go.mod h1:zbfeitpevDUGI7V91Uzzuwrn4Vls8MoBMrwtt78jmso=
-github.com/buildpacks/libcnb v1.26.0 h1:DIXbU5ofxPxPsWNvwQ5Uj/rBN7EPl82X7uF6t32GRx0=
-github.com/buildpacks/libcnb v1.26.0/go.mod h1:Y+uoFTeAmumUXR3CPzJdjPfmQ8Cq+bBw5e8ZVSlGFUo=
+github.com/buildpacks/libcnb v1.27.0 h1:Jwp5EDGJWYBLPn902w/648w3S+H2HL7/Xw8FLcrXgAo=
+github.com/buildpacks/libcnb v1.27.0/go.mod h1:SZirCtDl+AiFHTS6R4KlUPMqWzjwmEACsz/c2wI1nb8=
 github.com/butuzov/ireturn v0.1.1/go.mod h1:Wh6Zl3IMtTpaIKbmwzqi6olnM9ptYQxxVacMsOEFPoc=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash v1.1.0/go.mod h1:XrSqR1VqqWfGrhpAt58auRo0WTKS1nRRg3ghfAqPWnc=

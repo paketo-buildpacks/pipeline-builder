@@ -61,7 +61,7 @@ func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Id:   "update-go",
-						Name: "Update Go Version",
+						Name: "Update Go Version & Modules",
 						Run:  StatikString("/update-go.sh"),
 						Env: map[string]string{
 							"GO_VERSION": GoVersion,
@@ -72,15 +72,15 @@ func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
-							"commit-message": `Bump Go from ${{ steps.update-go.outputs.old-go-version }} to ${{ steps.update-go.outputs.go-version }}
+							"commit-message": `${{ steps.update-go.outputs.commit-title }}
 
-Bumps Go from ${{ steps.update-go.outputs.old-go-version }} to ${{ steps.update-go.outputs.go-version }}.`,
+${{ steps.update-go.outputs.commit-body }}`,
 							"signoff":       true,
 							"branch":        "update/go",
 							"delete-branch": true,
-							"title":         "Bump Go from ${{ steps.update-go.outputs.old-go-version }} to ${{ steps.update-go.outputs.go-version }}",
-							"body":          "Bumps Go from `${{ steps.update-go.outputs.old-go-version }}` to `${{ steps.update-go.outputs.go-version }}`.\n\n<details>\n<summary>Release Notes</summary>\n${{ steps.pipeline.outputs.release-notes }}\n</details>",
-							"labels":        "semver:minor, type:task",
+							"title":         "${{ steps.update-go.outputs.commit-title }}",
+							"body":          "${{ steps.update-go.outputs.commit-body }}\n\n<details>\n<summary>Release Notes</summary>\n${{ steps.pipeline.outputs.release-notes }}\n</details>",
+							"labels":        "${{ steps.update-go.outputs.commit-semver }}, type:task",
 						},
 					},
 				},

@@ -647,12 +647,13 @@ with:
 ```
 
 ### Tomcat Dependency
-The Tomcat Dependency watches the [Apache Tomcat Download Page](https://downloads.apache.org/tomcat/tomcat-9/) for new versions.
+The Tomcat Dependency watches the [Apache Tomcat Download Page](https://downloads.apache.org/tomcat/tomcat-9/) for new versions. An optional `version_regex` can be specified to filter on a specific minor versions. If set, the regex must include three capture groups. For example, `^v(10)\.(0)\.([\d]+)/$` to match `10.0.*`.
 
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/tomcat-dependency:main
 with:
   uri: https://downloads.apache.org/tomcat/tomcat-9
+  version_regex: ^v([\d]+)\.([\d]+)\.([\d]+)/$
 ```
 
 ### Tomee Dependency

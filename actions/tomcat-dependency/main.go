@@ -34,9 +34,15 @@ func main() {
 		panic(fmt.Errorf("uri must be specified"))
 	}
 
+	versionRegex, ok := inputs["version_regex"]
+	if !ok {
+		fmt.Println(`No version_regex set, using default: ^v([\d]+)\.([\d]+)\.([\d]+)/$`)
+		versionRegex = `^v([\d]+)\.([\d]+)\.([\d]+)/$`
+	}
+
 	c := colly.NewCollector()
 
-	cp := regexp.MustCompile(`^v([\d]+)\.([\d]+)\.([\d]+)/$`)
+	cp := regexp.MustCompile(versionRegex)
 	versions := make(actions.Versions)
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
 		if p := cp.FindStringSubmatch(element.Attr("href")); p != nil {

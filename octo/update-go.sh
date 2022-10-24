@@ -17,5 +17,16 @@ go mod tidy
 git add go.mod go.sum
 git checkout -- .
 
-echo "::set-output name=old-go-version::${OLD_GO_VERSION}"
-echo "::set-output name=go-version::${GO_VERSION}"
+if [ "$OLD_GO_VERSION" == "$GO_VERSION" ]; then
+    COMMIT_TITLE="Bump Go Modules"
+    COMMIT_BODY="Bumps Go modules used by the project. See the commit for details on what modules were updated."
+    COMMIT_SEMVER="semver:patch"
+else
+    COMMIT_TITLE="Bump Go from ${OLD_GO_VERSION} to ${GO_VERSION}"
+    COMMIT_BODY="Bumps Go from ${OLD_GO_VERSION} to ${GO_VERSION} and update Go modules used by the project. See the commit for details on what modules were updated."
+    COMMIT_SEMVER="semver:minor"
+fi
+
+echo "::set-output name=commit-title::${COMMIT_TITLE}"
+echo "::set-output name=commit-body::${COMMIT_BODY}"
+echo "::set-output name=commit-semver::${COMMIT_SEMVER}"

@@ -12,7 +12,7 @@ require (
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-containerregistry v0.12.0
 	github.com/iancoleman/strcase v0.2.0
-	github.com/onsi/gomega v1.22.1
+	github.com/onsi/gomega v1.23.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0

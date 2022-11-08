@@ -74,6 +74,31 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 			Description: "A general task",
 			Color:       "e3d9fc",
 		},
+		{
+			Name:        "type:informational",
+			Description: "Provides information or notice to the community",
+			Color:       "e3d9fc",
+		},
+		{
+			Name:        "type:poll",
+			Description: "Request for feedback from the community",
+			Color:       "e3d9fc",
+		},
+		{
+			Name:        "note:ideal-for-contribution",
+			Description: "An issue that a contributor can help us with",
+			Color:       "54f7a8",
+		},
+		{
+			Name:        "note:on-hold",
+			Description: "We can't start working on this issue yet",
+			Color:       "54f7a8",
+		},
+		{
+			Name:        "note:good-first-issue",
+			Description: "A good first issue to get started with",
+			Color:       "54f7a8",
+		},
 	}
 
 	if c, err := NewLabelsContribution(l); err != nil {

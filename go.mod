@@ -37,7 +37,7 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.105.0 // indirect
+	cloud.google.com/go v0.106.0 // indirect
 	cloud.google.com/go/compute v1.12.1 // indirect
 	cloud.google.com/go/iam v0.7.0 // indirect
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
@@ -45,7 +45,7 @@ require (
 	github.com/antchfx/htmlquery v1.2.5 // indirect
 	github.com/antchfx/xmlquery v1.3.12 // indirect
 	github.com/antchfx/xpath v1.2.1 // indirect
-	github.com/containerd/stargz-snapshotter/estargz v0.12.1 // indirect
+	github.com/containerd/stargz-snapshotter/estargz v0.13.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/docker/cli v20.10.21+incompatible // indirect
 	github.com/docker/distribution v2.8.1+incompatible // indirect
@@ -73,14 +73,14 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/vbatts/tar-split v0.11.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/crypto v0.2.0 // indirect
 	golang.org/x/net v0.2.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.2.0 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20221027153422-115e99e71e1c // indirect
+	google.golang.org/genproto v0.0.0-20221111202108-142d8a6fa32e // indirect
 	google.golang.org/grpc v1.50.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )

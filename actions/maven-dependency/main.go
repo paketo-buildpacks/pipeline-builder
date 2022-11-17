@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"regexp"
 	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -44,6 +45,13 @@ func main() {
 		panic(fmt.Errorf("artifact_id must be specified"))
 	}
 
+	versionRegex, ok := inputs["version_regex"]
+	if !ok {
+		fmt.Println(`No version_regex set, using default: ^[\d]+\.[\d]+\.[\d]+/$`)
+		versionRegex = `^[\d]+\.[\d]+\.[\d]+$`
+	}
+	versionPattern := regexp.MustCompile(versionRegex)
+
 	uri := fmt.Sprintf("%s/%s/%s/maven-metadata.xml", u, strings.ReplaceAll(g, ".", "/"), a)
 
 	resp, err := http.Get(uri)
@@ -63,23 +71,25 @@ func main() {
 
 	versions := make(actions.Versions)
 	for _, v := range raw.Versioning.Versions {
-		w := fmt.Sprintf("%s/%s/%s/%s", u, strings.ReplaceAll(g, ".", "/"), a, v)
-		w = fmt.Sprintf("%s/%s-%s", w, a, v)
-		if s, ok := inputs["classifier"]; ok {
-			w = fmt.Sprintf("%s-%s", w, s)
-		}
-		if s, ok := inputs["packaging"]; ok {
-			w = fmt.Sprintf("%s.%s", w, s)
-		} else {
-			w = fmt.Sprintf("%s.jar", w)
-		}
+		if p := versionPattern.MatchString(v); p {
+			w := fmt.Sprintf("%s/%s/%s/%s", u, strings.ReplaceAll(g, ".", "/"), a, v)
+			w = fmt.Sprintf("%s/%s-%s", w, a, v)
+			if s, ok := inputs["classifier"]; ok {
+				w = fmt.Sprintf("%s-%s", w, s)
+			}
+			if s, ok := inputs["packaging"]; ok {
+				w = fmt.Sprintf("%s.%s", w, s)
+			} else {
+				w = fmt.Sprintf("%s.jar", w)
+			}
 
-		n, err := actions.NormalizeVersion(v)
-		if err != nil {
-			panic(err)
-		}
+			n, err := actions.NormalizeVersion(v)
+			if err != nil {
+				panic(err)
+			}
 
-		versions[n] = w
+			versions[n] = w
+		}
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

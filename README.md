@@ -572,11 +572,12 @@ The Maven Dependency queries a [Maven Repository](https://repo1.maven.org/maven2
 ```yaml
 uses: docker://ghcr.io/paketo-buildpacks/actions/maven-dependency:main
 with:
-  uri:         https://repo1.maven.org/maven2
-  group_id:    org.apache.maven
-  artifact_id: apache-maven
-  classifier:  bin
-  packaging:   tar.gz
+  uri:           https://repo1.maven.org/maven2
+  group_id:      org.apache.maven
+  artifact_id:   apache-maven
+  classifier:    bin
+  packaging:     tar.gz
+  version_regex: ^3\.[\d]+\.[\d]+$
 ```
 
 ### New Relic Dependency

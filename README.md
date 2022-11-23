@@ -53,6 +53,7 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
     - [Paketo Deps Dependency](#paketo-deps-dependency)
     - [Aternity Dependency](#aternity-dependency)
     - [Rustup Init Dependency](#rustup-init-dependency)
+    - [Rust Dependency](#rust-dependency)
     - [Skywalking Dependency](#skywalking-dependency)
     - [Spring Generations](#spring-generations)
     - [Tomcat Dependency](#tomcat-dependency)
@@ -628,6 +629,16 @@ The Rustup Init Dependency queries the [Rustup Github Project](https://github.co
 uses: docker://ghcr.io/paketo-buildpacks/actions/rustup-init-dependency:main
 with:
   target: x86_64-unknown-linux-musl
+  token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
+```
+
+### Rust Dependency
+The Rust Dependency queries the [Rust Github Project](https://github.com/rust-lang/rust) for the latest version. The `target` specifies the target triple to download.
+
+```yaml
+uses: docker://ghcr.io/paketo-buildpacks/actions/rust-dependency:main
+with:
+  target: x86_64-unknown-linux-gnu
   token: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
 ```
 

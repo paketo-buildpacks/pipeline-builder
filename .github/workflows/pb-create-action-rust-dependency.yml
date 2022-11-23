@@ -13,6 +13,7 @@ name: Create Action rust-dependency
     release:
         types:
             - published
+    workflow_dispatch: {}
 jobs:
     create-action:
         name: Create Action

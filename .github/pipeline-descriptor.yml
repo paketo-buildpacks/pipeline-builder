@@ -72,6 +72,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/aternity-dependency
 - source: rustup-init-dependency
   target: ghcr.io/paketo-buildpacks/actions/rustup-init-dependency
+- source: rust-dependency
+  target: ghcr.io/paketo-buildpacks/actions/rust-dependency
 - source: skywalking-dependency
   target: ghcr.io/paketo-buildpacks/actions/skywalking-dependency
 - source: spring-generations

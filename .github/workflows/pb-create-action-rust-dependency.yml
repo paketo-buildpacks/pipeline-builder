@@ -13,7 +13,6 @@ name: Create Action rust-dependency
     release:
         types:
             - published
-    workflow_dispatch: {}
 jobs:
     create-action:
         name: Create Action
@@ -54,4 +53,3 @@ jobs:
                 SOURCE: rust-dependency
                 TARGET: ghcr.io/paketo-buildpacks/actions/rust-dependency
                 VERSION: main
-

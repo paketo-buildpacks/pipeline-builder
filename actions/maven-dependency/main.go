@@ -47,7 +47,7 @@ func main() {
 
 	versionRegex, ok := inputs["version_regex"]
 	if !ok {
-		fmt.Println(`No version_regex set, using default: ^[\d]+\.[\d]+\.[\d]+/$`)
+		fmt.Println(`No version_regex set, using default: ^[\d]+\.[\d]+\.[\d]+$`)
 		versionRegex = `^[\d]+\.[\d]+\.[\d]+$`
 	}
 	versionPattern := regexp.MustCompile(versionRegex)

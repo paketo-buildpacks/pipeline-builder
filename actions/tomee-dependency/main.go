@@ -26,7 +26,7 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
 
-var TomeeVersionPattern = regexp.MustCompile(`^tomee-?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)/$`)
+var TomeeVersionPattern = regexp.MustCompile(`^tomee-?([\d]+)\.?([\d]+)?\.?([\d]+)?([-+.])?(.*)/$`)
 
 func main() {
 	inputs := actions.NewInputs()
@@ -52,12 +52,14 @@ func main() {
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
 		if p := TomeeVersionPattern.FindStringSubmatch(element.Attr("href")); p != nil {
 			if major == "" || major == p[1] {
-				v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
+				verKey := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
+				verVal := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 				if p[4] != "" {
-					v = fmt.Sprintf("%s-%s", v, p[4])
+					verKey = fmt.Sprintf("%s-%s", verKey, p[5])
+					verVal = fmt.Sprintf("%s%s%s", verVal, p[4], p[5])
 				}
 
-				versions[v] = fmt.Sprintf("%s/tomee-%[2]s/apache-tomee-%[2]s-%s.tar.gz", uri, v, dist)
+				versions[verKey] = fmt.Sprintf("%s/tomee-%[2]s/apache-tomee-%[2]s-%s.tar.gz", uri, verVal, dist)
 			}
 		}
 	})

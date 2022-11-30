@@ -25,8 +25,8 @@ github.com/antchfx/xmlquery v1.3.13 h1:wqhTv2BN5MzYg9rnPVtZb3IWP8kW6WV/ebAY0FCTI
 github.com/antchfx/xmlquery v1.3.13/go.mod h1:3w2RvQvTz+DaT5fSgsELkSJcdNgkmg6vuXDEuhdwsPQ=
 github.com/antchfx/xpath v1.2.1 h1:qhp4EW6aCOVr5XIkT+l6LJ9ck/JsUH/yyauNgTQkBF8=
 github.com/antchfx/xpath v1.2.1/go.mod h1:i54GszH55fYfBmoZXapTHN8T8tkcHfRgLyVwwqzXNcs=
-github.com/aws/aws-sdk-go v1.44.145 h1:KMVRrIyjBsNz3xGPuHIRnhIuKlb5h3Ii5e5jbi3cgnc=
-github.com/aws/aws-sdk-go v1.44.145/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
+github.com/aws/aws-sdk-go v1.44.150 h1:X9HBhXu0ZPi+tOHUaZkjx43int7g0Ejk+IVbW25+wYg=
+github.com/aws/aws-sdk-go v1.44.150/go.mod h1:aVsgQcEevwlmQ7qHE9I3h+dtQgpqhFB+i8Phjh7fkwI=
 github.com/buildpacks/libcnb v1.27.0 h1:Jwp5EDGJWYBLPn902w/648w3S+H2HL7/Xw8FLcrXgAo=
 github.com/buildpacks/libcnb v1.27.0/go.mod h1:SZirCtDl+AiFHTS6R4KlUPMqWzjwmEACsz/c2wI1nb8=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
@@ -137,8 +137,8 @@ github.com/opencontainers/go-digest v1.0.0 h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8
 github.com/opencontainers/go-digest v1.0.0/go.mod h1:0JzlMkj0TRzQZfJkVvzbP0HBR3IKzErnv2BNG4W4MAM=
 github.com/opencontainers/image-spec v1.1.0-rc2 h1:2zx/Stx4Wc5pIPDvIxHXvXtQFW/7XWJGmnM7r3wg034=
 github.com/opencontainers/image-spec v1.1.0-rc2/go.mod h1:3OVijpioIKYWTqjiG0zfF6wvoJ4fAXGbjdZuI2NgsRQ=
-github.com/paketo-buildpacks/libpak v1.63.0 h1:LLBKp3QNXzpSIrz54dZqvxtZawFzZon69d7HGof2eKw=
-github.com/paketo-buildpacks/libpak v1.63.0/go.mod h1:F8SrPD3jZsSQrBVU0Tnunf9nZLDVZr8L/0QPTV4Ie64=
+github.com/paketo-buildpacks/libpak v1.61.0 h1:xurhLpV54MWuIeIi9LEk+TFCXak3GUshyp9dZ4e3E5M=
+github.com/paketo-buildpacks/libpak v1.61.0/go.mod h1:CM+/9n+aI40OjoESjqVJp5QOYbqiuNceov1o/A4Q0j0=
 github.com/pelletier/go-toml v1.9.5 h1:4yBQzkHv+7BHq2PQUZF3Mx0IYxG7LsP222s7Agd3ve8=
 github.com/pelletier/go-toml v1.9.5/go.mod h1:u1nR/EPcESfeI/szUZKdtJ0xRNbUoANCkoOuaOx1Y+c=
 github.com/pkg/diff v0.0.0-20210226163009-20ebb0f2a09e/go.mod h1:pJLUxLENpZxwdsKMEsNbx1VGcRFpLqf3715MtcvvzbA=

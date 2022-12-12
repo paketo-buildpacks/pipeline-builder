@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.28.1
 	github.com/BurntSushi/toml v1.2.1
 	github.com/Masterminds/semver/v3 v3.2.0
-	github.com/aws/aws-sdk-go v1.44.152
+	github.com/aws/aws-sdk-go v1.44.157
 	github.com/buildpacks/libcnb v1.27.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
@@ -18,8 +18,8 @@ require (
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.8.1
-	golang.org/x/oauth2 v0.2.0
-	google.golang.org/api v0.103.0
+	golang.org/x/oauth2 v0.3.0
+	google.golang.org/api v0.104.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
@@ -27,7 +27,7 @@ require (
 	cloud.google.com/go/compute/metadata v0.2.2 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
+	github.com/googleapis/enterprise-certificate-proxy v0.2.1 // indirect
 	github.com/heroku/color v0.0.6 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
@@ -38,8 +38,8 @@ require (
 
 require (
 	cloud.google.com/go v0.107.0 // indirect
-	cloud.google.com/go/compute v1.13.0 // indirect
-	cloud.google.com/go/iam v0.7.0 // indirect
+	cloud.google.com/go/compute v1.14.0 // indirect
+	cloud.google.com/go/iam v0.8.0 // indirect
 	github.com/PuerkitoBio/goquery v1.8.0 // indirect
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/antchfx/htmlquery v1.2.5 // indirect
@@ -60,7 +60,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/kennygrant/sanitize v1.2.4 // indirect
-	github.com/klauspost/compress v1.15.12 // indirect
+	github.com/klauspost/compress v1.15.13 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc2 // indirect
@@ -73,14 +73,14 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/vbatts/tar-split v0.11.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.3.0 // indirect
-	golang.org/x/net v0.2.0 // indirect
+	golang.org/x/crypto v0.4.0 // indirect
+	golang.org/x/net v0.4.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/sys v0.3.0 // indirect
 	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20221202195650-67e5cbc046fd // indirect
+	google.golang.org/genproto v0.0.0-20221207170731-23e4bf6bdc37 // indirect
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )

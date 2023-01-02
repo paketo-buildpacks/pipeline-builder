@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.28.1
 	github.com/BurntSushi/toml v1.2.1
 	github.com/Masterminds/semver/v3 v3.2.0
-	github.com/aws/aws-sdk-go v1.44.167
+	github.com/aws/aws-sdk-go v1.44.171
 	github.com/buildpacks/libcnb v1.27.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
@@ -32,7 +32,7 @@ require (
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
-	github.com/mattn/go-isatty v0.0.16 // indirect
+	github.com/mattn/go-isatty v0.0.17 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
 )
 
@@ -67,7 +67,7 @@ require (
 	github.com/paketo-buildpacks/libpak v1.63.0
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
+	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/sirupsen/logrus v1.9.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
@@ -80,7 +80,7 @@ require (
 	golang.org/x/text v0.5.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20221207170731-23e4bf6bdc37 // indirect
+	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef // indirect
 	google.golang.org/grpc v1.51.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )

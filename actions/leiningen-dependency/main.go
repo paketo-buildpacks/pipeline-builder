@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
@@ -59,6 +58,6 @@ func main() {
 	if o, err := versions.GetLatest(inputs); err != nil {
 		panic(err)
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }

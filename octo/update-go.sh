@@ -27,6 +27,6 @@ else
     COMMIT_SEMVER="semver:minor"
 fi
 
-echo "::set-output name=commit-title::${COMMIT_TITLE}"
-echo "::set-output name=commit-body::${COMMIT_BODY}"
-echo "::set-output name=commit-semver::${COMMIT_SEMVER}"
+echo "commit-title=${COMMIT_TITLE}" >> "$GITHUB_OUTPUT"
+echo "commit-body=${COMMIT_BODY}" >> "$GITHUB_OUTPUT"
+echo "commit-semver=${COMMIT_SEMVER}" >> "$GITHUB_OUTPUT"

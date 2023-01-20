@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 
 	"github.com/gocolly/colly"
@@ -82,5 +81,5 @@ func main() {
 	if latestVersion.Prerelease() != "" {
 		o["version"] = latestVersion.String()
 	}
-	o.Write(os.Stdout)
+	o.Write()
 }

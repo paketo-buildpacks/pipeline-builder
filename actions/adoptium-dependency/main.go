@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -93,7 +92,7 @@ func main() {
 		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
 	}
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 type Asset struct {

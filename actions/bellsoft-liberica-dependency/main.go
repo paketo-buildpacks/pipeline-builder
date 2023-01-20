@@ -20,7 +20,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -124,7 +123,7 @@ func main() {
 		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
 	}
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 type Release struct {

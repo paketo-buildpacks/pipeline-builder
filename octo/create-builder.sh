@@ -8,7 +8,7 @@ if [[ -n "${PUBLISH+x}" ]]; then
     --config builder.toml \
     --publish
 
-    echo "::set-output name=digest::$(crane digest "${BUILDER}:${VERSION}")"
+    echo "digest=$(crane digest "${BUILDER}:${VERSION}")" >> "$GITHUB_OUTPUT"
 else
   pack builder create \
     "${BUILDER}:${VERSION}" \

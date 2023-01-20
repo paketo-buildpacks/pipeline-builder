@@ -31,6 +31,6 @@ else
   LABEL="semver:patch"
 fi
 
-echo "::set-output name=old-version::${OLD_VERSION}"
-echo "::set-output name=new-version::${VERSION}"
-echo "::set-output name=version-label::${LABEL}"
+echo "old-version=${OLD_VERSION}" >> "$GITHUB_OUTPUT"
+echo "new-version=${VERSION}" >> "$GITHUB_OUTPUT"
+echo "version-label=${LABEL}" >> "$GITHUB_OUTPUT"

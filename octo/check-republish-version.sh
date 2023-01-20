@@ -25,7 +25,7 @@ for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
 
   if contains "${VERSION}" "${IMAGES}"; then
     echo "Found ${TAG}. Skipping."
-    echo "::set-output name=skip::true"
+    echo "skip=true" >> "$GITHUB_OUTPUT"
     exit
   fi
 
@@ -33,11 +33,11 @@ for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
     git checkout -- .
     git checkout "${TAG}"
   echo "::endgroup::"
-  echo "::set-output name=target::${VERSION}"
+  echo "target=${VERSION}" >> "$GITHUB_OUTPUT"
   break
 done
 
 for IMG in $(crane ls "${SOURCE}" | grep -v "latest" | sort -V -r); do
-  echo "::set-output name=source::${IMG}"
+  echo "source=${IMG}" >> "$GITHUB_OUTPUT"
   exit
 done

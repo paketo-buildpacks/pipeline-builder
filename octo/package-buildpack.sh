@@ -18,7 +18,7 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
     crane tag "${PACKAGE}:${VERSION}" "${VERSION_MAJOR}"
   fi
   crane tag "${PACKAGE}:${VERSION}" latest
-  echo "::set-output name=digest::$(crane digest "${PACKAGE}:${VERSION}")"
+  echo "digest=$(crane digest "${PACKAGE}:${VERSION}")" >> "$GITHUB_OUTPUT"
 
   # copy to other repositories specified
   for P in "${PACKAGE_LIST[@]}"

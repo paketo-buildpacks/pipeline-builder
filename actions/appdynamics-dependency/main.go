@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -64,7 +63,7 @@ func main() {
 	if o, err := versions.GetLatest(inputs, addToken); err != nil {
 		panic(fmt.Errorf("unable to get latest\n%w", err))
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }
 

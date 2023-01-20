@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"sort"
-	"strings"
 	"sync"
 
 	"github.com/pelletier/go-toml"
@@ -121,7 +120,9 @@ func main() {
 		panic(fmt.Errorf("unable to marshal content\n%w", err))
 	}
 
-	fmt.Printf("::set-output name=content::%s\n", strings.ReplaceAll(string(b), "\n", "%0A"))
+	actions.Outputs{
+		"content": string(b),
+	}.Write()
 }
 
 type result struct {

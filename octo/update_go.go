@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import (
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/octo/jitter"
 )
 
 func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
@@ -41,10 +42,15 @@ func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
+	seed := fmt.Sprintf("Update Go %s", os.Getenv("GITHUB_REPOSITORY"))
+	cron := jitter.
+		New(seed).
+		Jitter(event.Cron{Hour: "2", DayOfWeek: "1", Month: "*", DayOfMonth: "*"})
+
 	w := actions.Workflow{
 		Name: "Update Go",
 		On: map[event.Type]event.Event{
-			event.ScheduleType:         event.Schedule{{Minute: "0", Hour: "2", DayOfWeek: "1"}},
+			event.ScheduleType:         event.Schedule{cron},
 			event.WorkflowDispatchType: event.WorkflowDispatch{},
 		},
 		Jobs: map[string]actions.Job{

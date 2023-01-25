@@ -20,7 +20,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 
 	"github.com/google/go-github/v43/github"
@@ -117,5 +116,5 @@ func main() {
 		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
 	}
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }

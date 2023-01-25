@@ -20,7 +20,6 @@ import (
 	"bufio"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -64,6 +63,6 @@ func main() {
 	if o, err := versions.GetLatest(inputs, actions.WithBasicAuth(u, p)); err != nil {
 		panic(err)
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }

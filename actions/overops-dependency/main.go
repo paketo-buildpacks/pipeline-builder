@@ -19,7 +19,6 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
@@ -59,6 +58,6 @@ func main() {
 	if o, err := versions.GetLatest(inputs); err != nil {
 		panic(err)
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }

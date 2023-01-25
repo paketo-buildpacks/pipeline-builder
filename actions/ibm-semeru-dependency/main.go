@@ -21,7 +21,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 
@@ -132,7 +131,7 @@ func main() {
 	}
 	outputs["cpe"] = matches[1]
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 func getReleaseJSON(jsonURI string) ReleaseJSON {

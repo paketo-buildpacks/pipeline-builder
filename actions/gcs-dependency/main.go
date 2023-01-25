@@ -19,7 +19,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"regexp"
 
 	"cloud.google.com/go/storage"
@@ -72,6 +71,6 @@ func main() {
 	if o, err := versions.GetLatest(inputs); err != nil {
 		panic(err)
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }

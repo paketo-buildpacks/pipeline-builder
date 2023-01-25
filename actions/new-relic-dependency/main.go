@@ -18,7 +18,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 
 	"github.com/gocolly/colly"
@@ -64,6 +63,6 @@ func main() {
 	if o, err := versions.GetLatest(inputs); err != nil {
 		panic(err)
 	} else {
-		o.Write(os.Stdout)
+		o.Write()
 	}
 }

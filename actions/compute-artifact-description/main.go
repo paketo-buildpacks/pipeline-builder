@@ -93,7 +93,9 @@ func main() {
 	}
 	sort.Strings(deps)
 
-	fmt.Printf("::set-output name=artifact-reference-description::%s", strings.Join(deps, "%0A")) // linefeed
+	actions.Outputs{
+		"artifact-reference-description": strings.Join(deps, "\n"),
+	}.Write()
 }
 
 func parseMappers(inputs actions.Inputs) []string {

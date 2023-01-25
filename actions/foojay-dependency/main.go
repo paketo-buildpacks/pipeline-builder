@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"strconv"
 
@@ -94,7 +93,7 @@ func main() {
 		outputs["cpe"] = fmt.Sprintf("update%d", latestVersion.Patch())
 	}
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 func LoadPackages(d string, t string, v int) actions.Versions {

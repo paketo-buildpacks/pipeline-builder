@@ -24,7 +24,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 
@@ -132,7 +131,7 @@ func main() {
 		outputs["purl"] = matches[1]
 	}
 
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 func GetVersion(uri string) string {

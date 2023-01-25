@@ -20,7 +20,6 @@ import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
-	"os"
 	"regexp"
 	"strings"
 
@@ -97,7 +96,7 @@ func main() {
 
 	outputs["cpe"] = originalVersions[latestVersion.Original()]
 	outputs["purl"] = originalVersions[latestVersion.Original()]
-	outputs.Write(os.Stdout)
+	outputs.Write()
 }
 
 var ExtendedVersionPattern = regexp.MustCompile(`^v?([\d]+)\.?([\d]+)?\.?([\d]+)?[-+.]?(.*)$`)

@@ -25,7 +25,7 @@ for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
 
   if contains "${VERSION}" "${IMAGES}"; then
     echo "Found ${TAG}. Skipping."
-    echo "::set-output name=skip::true"
+    echo "skip=true" >> "$GITHUB_OUTPUT"
     exit
   fi
 
@@ -33,6 +33,6 @@ for TAG in $(git tag -l "${TAG_PREFIX}*" | sort -V -r ); do
     git checkout -- .
     git checkout "${TAG}"
   echo "::endgroup::"
-  echo "::set-output name=version::${VERSION}"
+  echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
   exit
 done

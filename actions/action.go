@@ -17,8 +17,11 @@
 package actions
 
 import (
+	"crypto/rand"
+	"encoding/hex"
+	"errors"
 	"fmt"
-	"io"
+	"log"
 	"os"
 	"regexp"
 	"strings"
@@ -62,8 +65,32 @@ func NewOutputs(uri string, latestVersion *semver.Version, additionalOutputs Out
 	return outputs, nil
 }
 
-func (o Outputs) Write(writer io.Writer) {
-	for k, v := range o {
-		_, _ = fmt.Fprintf(writer, "::set-output name=%s::%s\n", k, v)
+// createOrAppend works like os.Create, but instead of replacing (truncating) the file content, it will append to the file, if it already exits.
+func createOrAppend(name string) (*os.File, error) {
+	return os.OpenFile(name, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+}
+
+func (o Outputs) Write() {
+	outputFileName, ok := os.LookupEnv("GITHUB_OUTPUT")
+	if !ok {
+		panic(errors.New("GITHUB_OUTPUT is not set, see https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter"))
 	}
+	writer, err := createOrAppend(outputFileName)
+	if err != nil {
+		panic(err)
+	}
+	defer writer.Close()
+	delimiter := generateDelimiter()
+	for k, v := range o {
+		_, _ = fmt.Fprintf(writer, "%s<<%s\n%s\n%s\n", k, delimiter, v, delimiter) // see https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#multiline-strings
+	}
+}
+
+func generateDelimiter() string {
+	data := make([]byte, 16) // roughly the same entropy as uuid v4 used in https://github.com/actions/toolkit/blob/b36e70495fbee083eb20f600eafa9091d832577d/packages/core/src/file-command.ts#L28
+	_, err := rand.Read(data)
+	if err != nil {
+		log.Fatal("could not generate random delimiter", err)
+	}
+	return hex.EncodeToString(data)
 }

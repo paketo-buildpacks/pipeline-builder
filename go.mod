@@ -6,13 +6,13 @@ require (
 	cloud.google.com/go/storage v1.29.0
 	github.com/BurntSushi/toml v1.2.1
 	github.com/Masterminds/semver/v3 v3.2.0
-	github.com/aws/aws-sdk-go v1.44.184
+	github.com/aws/aws-sdk-go v1.44.186
 	github.com/buildpacks/libcnb v1.27.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.12.1
+	github.com/google/go-containerregistry v0.13.0
 	github.com/iancoleman/strcase v0.2.0
-	github.com/onsi/gomega v1.25.0
+	github.com/onsi/gomega v1.26.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
@@ -80,7 +80,7 @@ require (
 	golang.org/x/text v0.6.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
-	google.golang.org/genproto v0.0.0-20230119192704-9d59e20e5cd1 // indirect
-	google.golang.org/grpc v1.52.0 // indirect
+	google.golang.org/genproto v0.0.0-20230124163310-31e0e69b6fc2 // indirect
+	google.golang.org/grpc v1.52.1 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )

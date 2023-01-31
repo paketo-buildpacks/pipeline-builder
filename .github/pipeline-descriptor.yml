@@ -1,15 +1,15 @@
 github:
   username: ${{ secrets.JAVA_GITHUB_USERNAME }}
-  token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
+  token:    ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
 
 codeowners:
 - path:  "*"
-  owner: "@paketo-buildpacks/java-buildpacks"
+  owner: "@paketo-buildpacks/java-maintainers"
 
 docker_credentials:
 - registry: ghcr.io
   username: ${{ secrets.JAVA_GITHUB_USERNAME }}
-  password: ${{ secrets.JAVA_GITHUB_TOKEN }}
+  password: ${{ secrets.PAKETO_BOT_GITHUB_TOKEN }}
 
 actions:
 - source: adoptium-dependency

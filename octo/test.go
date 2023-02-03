@@ -258,8 +258,22 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			},
 		}
 
+		skipPrefixes := []string{
+			"paketo-buildpacks",
+			"paketobuildpacks",
+			"paketo-community",
+			"paketocommunity",
+		}
+
 		for _, repo := range descriptor.Package.Repositories {
-			if !strings.Contains(repo, "paketo-buildpacks") && !strings.Contains(repo, "paketobuildpacks") {
+			skipMatch := false
+			for _, skipPrefix := range skipPrefixes {
+				if strings.Contains(repo, skipPrefix) {
+					skipMatch = true
+					break
+				}
+			}
+			if !skipMatch {
 				j.Steps = append(NewDockerCredentialActions(descriptor.DockerCredentials), j.Steps...)
 			}
 		}

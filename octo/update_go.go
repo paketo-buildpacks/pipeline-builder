@@ -19,6 +19,7 @@ package octo
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
@@ -42,7 +43,20 @@ func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
 		return nil, nil
 	}
 
-	seed := fmt.Sprintf("Update Go %s", os.Getenv("GITHUB_REPOSITORY"))
+	repoName := os.Getenv("GITHUB_REPOSITORY")
+	if len(repoName) == 0 {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return nil, fmt.Errorf("unable to fetch current working directory\n%w", err)
+		}
+
+		// get the repo name, which should like `paketo-buildpacks/foo`
+		repoName = fmt.Sprintf("%s/%s",
+			filepath.Base(filepath.Dir(filepath.Dir(cwd))),
+			filepath.Base(filepath.Dir(cwd)))
+	}
+
+	seed := fmt.Sprintf("Update Go %s", repoName)
 	cron := jitter.
 		New(seed).
 		Jitter(event.Cron{Hour: "2", DayOfWeek: "1", Month: "*", DayOfMonth: "*"})

@@ -686,6 +686,14 @@ The YourKit Dependency watches the [YourKit Download Page](https://www.yourkit.c
 uses: docker://ghcr.io/paketo-buildpacks/actions/yourkit-dependency:main
 ```
 
+## Updating Go version
+
+When it is time to update the Go version in the project, you should make sure that the Go version is the same across the different tools in this repository.
+
+Most importantly, the Go version must be bumped in [Octo](octo/octo.go#L33) and in the [actions Dockerfile](actions/Dockerfile#L1) at the same time.
+
+The Go version is also in [the different workflows](.github/workflows), however, this will be updated automatically by `octo`. You can run `octo` locally or submit a PR, and when the PR is merged CI will run `octo` and in turn submit another PR that updates the Go version.
+
 ## License
 This library is released under version 2.0 of the [Apache License][a].
 

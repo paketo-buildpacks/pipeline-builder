@@ -688,7 +688,7 @@ uses: docker://ghcr.io/paketo-buildpacks/actions/yourkit-dependency:main
 
 ## Updating Go version
 
-Dependabot could suggest to bump the Go version in some places, but you should make sure that the Go version is the same across the different tools in this repository.
+When it is time to update the Go version in the project, you should make sure that the Go version is the same across the different tools in this repository.
 
 Most importantly, the Go version must be bumped in [Octo](octo/octo.go#L33) and in the [actions Dockerfile](actions/Dockerfile#L1) at the same time.
 

@@ -13,6 +13,7 @@ name: Create Action liberty-dependency
     release:
         types:
             - published
+    merge_group:     
 jobs:
     create-action:
         name: Create Action

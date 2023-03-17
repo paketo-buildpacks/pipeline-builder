@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
@@ -31,6 +32,13 @@ func main() {
 	if !ok {
 		panic(fmt.Errorf("package must be specified"))
 	}
+
+	versionRegex, ok := inputs["version_regex"]
+	if !ok {
+		fmt.Println(`No version_regex set, using default: ^[\d]+\.[\d]+\.[\d]+$`)
+		versionRegex = `^[\d]+\.[\d]+\.[\d]+$`
+	}
+	versionPattern := regexp.MustCompile(versionRegex)
 
 	uri := fmt.Sprintf("https://registry.npmjs.org/%s", p)
 
@@ -51,7 +59,9 @@ func main() {
 
 	versions := make(actions.Versions)
 	for k, v := range raw.Versions {
-		versions[k] = v.Dist.Tarball
+		if p := versionPattern.MatchString(k); p {
+			versions[k] = v.Dist.Tarball
+		}
 	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {

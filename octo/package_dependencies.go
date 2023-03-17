@@ -18,7 +18,6 @@ package octo
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -35,7 +34,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 	var contributions []Contribution
 
 	file := filepath.Join(descriptor.Path, "package.toml")
-	b, err := ioutil.ReadFile(file)
+	b, err := os.ReadFile(file)
 	if os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -47,7 +46,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 	}
 
 	file = filepath.Join(descriptor.Path, "buildpack.toml")
-	b, err = ioutil.ReadFile(file)
+	b, err = os.ReadFile(file)
 	if os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -75,16 +74,17 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 }
 
 // findIds will return the pkg group id (used in package.toml) and the buildpack id (used in buildpack.toml)
-//   it will do some fuzzy matching because there is not a strict relationship between the two
-//     - often pkg group id is `repo.io/buildpack/id:version`, so you can extract `buildpack/id`
-//     - if that does not exist as a build pack id, then we search for just the last part of
-//         buildpack id and a matching version
 //
-//         for example, `gcr.io/tanzu-buildpacks/bellsoft-liberica:1.2.3`, we'll look for `bellsoft-liberica`
-//            and version `1.2.3` in buildpack.toml
+//	  it will do some fuzzy matching because there is not a strict relationship between the two
+//	    - often pkg group id is `repo.io/buildpack/id:version`, so you can extract `buildpack/id`
+//	    - if that does not exist as a build pack id, then we search for just the last part of
+//	        buildpack id and a matching version
 //
-//            if there is a match, then we return the found buildpack id, let's say it finds `paketo-buildpacks/bellsoft-liberica`
-//			  then we return `gcr.io/paketo-buildpacks/bellsoft-liberica:1.2.3`
+//	        for example, `gcr.io/tanzu-buildpacks/bellsoft-liberica:1.2.3`, we'll look for `bellsoft-liberica`
+//	           and version `1.2.3` in buildpack.toml
+//
+//	           if there is a match, then we return the found buildpack id, let's say it finds `paketo-buildpacks/bellsoft-liberica`
+//				  then we return `gcr.io/paketo-buildpacks/bellsoft-liberica:1.2.3`
 func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (string, string, error) {
 	re := regexp.MustCompile(`^(?:.+://)?(.+?)/(.+):([^:]+)$`)
 	if g := re.FindStringSubmatch(dep.URI); g == nil {
@@ -135,7 +135,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v3",
+						Uses: "actions/setup-go@v4",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{

@@ -18,7 +18,6 @@ package octo
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -32,7 +31,7 @@ import (
 
 func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error) {
 	file := filepath.Join(descriptor.Path, "builder.toml")
-	b, err := ioutil.ReadFile(file)
+	b, err := os.ReadFile(file)
 	if os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -87,7 +86,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v3",
+						Uses: "actions/setup-go@v4",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -157,7 +156,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v3",
+						Uses: "actions/setup-go@v4",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{

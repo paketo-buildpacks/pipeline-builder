@@ -41,7 +41,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
-							Uses: "actions/setup-go@v3",
+							Uses: "actions/setup-go@v4",
 							With: map[string]interface{}{"go-version": GoVersion},
 						},
 						{

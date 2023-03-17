@@ -18,7 +18,7 @@ package octo
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -44,7 +44,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 	}
 
 	file := filepath.Join(descriptor.Path, "buildpack.toml")
-	s, err := ioutil.ReadFile(file)
+	s, err := os.ReadFile(file)
 	if err != nil {
 		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
 	}
@@ -69,7 +69,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v3",
+						Uses: "actions/setup-go@v4",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{

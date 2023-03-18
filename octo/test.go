@@ -51,6 +51,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			event.PushType: event.Push{
 				Branches: []string{"main"},
 			},
+			event.MergeGroupType: event.MergeGroup{
+				Types:    []event.MergeGroupActivityType{event.MergeGroupChecksRequested},
+				Branches: []string{"main"},
+			},
 		},
 		Jobs: map[string]actions.Job{},
 	}

@@ -39,6 +39,9 @@ func ContributeDependabot(descriptor Descriptor) (*Contribution, error) {
 				Directory:        "/",
 				Schedule:         dependabot.Schedule{Interval: dependabot.DailyInterval},
 				Labels:           []string{"semver:patch", "type:dependency-upgrade"},
+				Ignore: []dependabot.Dependency{
+					{Name: "github.com/onsi/gomega"},
+				},
 			},
 		},
 	})

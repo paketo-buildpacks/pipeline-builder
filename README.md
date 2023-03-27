@@ -84,20 +84,20 @@ A [Dependendabot configuration file](https://docs.github.com/en/free-pro-team@la
 #### Labels
 * [Example Labels](https://github.com/paketo-buildpacks/adoptium/labels)
 * [Example `labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/labels.yml)
-* [Example `synchronize-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/synchronize-labels.yml)
-* [Example `minimal-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/minimal-labels.yml)
+* [Example `synchronize-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-synchronize-labels.yml)
+* [Example `minimal-labels.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-minimal-labels.yml)
 
 In order to facilitate the automated creation of draft releases and notes, a set of semver-scope labels (`semver:major`, `semver:minor`, and `semver:patch`) and type labels (`type:bug`, `type:dependency-upgrade`, `type:documentation`, `type:enhancement`, `type:question`, `type:task`) are added to the repository.  In addition, a workflow that enforces exactly one of each label is attached to every PR.
 
 #### Pipeline Updater
-* [Example `update-pipeline.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-pipeline.yml)
+* [Example `update-pipeline.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-update-pipeline.yml)
 
 A pipeline-updating workflow is added to the repository to ensure that workflows are kept up to date as the `pipeline-builder` evolves.
 
 #### Release Drafter
 * [Example Release Notes](https://github.com/paketo-buildpacks/adoptium/releases/tag/v4.1.0)
 * [Example `release-drafter.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/release-drafter.yml)
-* [Example `update-draft-release.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-draft-release.yml)
+* [Example `update-draft-release.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-update-draft-release.yml)
 
 Draft release notes are created on every commit to `main`.  These notes take into account every PR since the previous release in order to create a division of the types of changes that were made and the semver scope of the change to work out the next release number.
 
@@ -151,8 +151,8 @@ package:
     os: linux
 ```
 
-* [Example `create-package.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/create-package.yml)
-* [Example `test.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/tests.yml)
+* [Example `create-package.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-create-package.yml)
+* [Example `test.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-tests.yml)
 
 `package` is an object that describes the `repositories` a buildpackage should be published to as well as whether to include the buildpackage's dependencies when creating it (`false` by default).  If defined, a `create-package` workflow is created that creates and publishes a new package when a release is published as well as adds a `create-package` job to the tests workflow that is run on each PR and each commit.  It will also add additional content to the draft release notes about the contents of the build package and will update the digest of the buildpackage in the published release notes.  If `register` is `true`, after the package is created, it is registered with the [Buildpack Registry Index](https://github.com/buildpacks/registry-index).
 
@@ -212,7 +212,7 @@ dependencies:
     version:        "[11,12)"
 ```
 
-* [Example `update-*.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/update-jre-11.yml)
+* [Example `update-*.yml`](https://github.com/paketo-buildpacks/adoptium/blob/main/.github/workflows/pb-update-jre-11.yml)
 
 `dependencies` is a list of objects that define how dependencies are detected and updated by describing an optional `name` (defaults to `id`), `id` that matches a `buildpack.toml` defined dependency id, an optional `version_pattern` that defines which dependency with a given `id` to update, optional `purl_pattern` and `cpe_pattern` values which allow you to provide alternative patterns for updating the CPEs and PURL (they default to the version pattern), a `uses` to define which GitHub Action to use to find the next version, and a `with` used to configure the GitHub action to use to find the next version.  If defined, each object will create an `update` workflow that is responsible for detecting a new version, updating `buildpack.toml` and opening a PR to include the change in the repository, if appropriate.
 
@@ -301,7 +301,7 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/adoptium-dependency
 ```
 
-* [Example `create-action-*.yml`](https://github.com/paketo-buildpacks/pipeline-builder/blob/main/.github/workflows/create-action-adoptium-dependency.yml)
+* [Example `create-action-*.yml`](https://github.com/paketo-buildpacks/pipeline-builder/blob/main/.github/workflows/pb-create-action-adoptium-dependency.yml)
 
 `actions` is a list of objects that describe a `source` directory within this repository's `actions/` directory, and a `target` Docker registry location.  If defined, each object will create a `create-action` workflow that is responsible for building and publishing new versions of the action.
 

@@ -65,11 +65,23 @@ The Pipeline Builder is a collection of tools related to GitHub Actions and othe
 Octo Pipelines is a CLI that generates a collection of GitHub Workflows and other Github-related artifacts in a repository.  The pipeline generator takes a simplified descriptor as input and transforms it into more complicated workflows and artifacts.
 
 ### Getting Started
-The command line can either be built or run directly using Go.
+The command line can either be built...
+
+```shell
+$: go build -o octo-bin -ldflags="-s -w" cmd/octo/main.go
+$: sudo mv octo-bin /usr/local/bin/octo
+$: cd ~/path-to/paketo-buildpacks/azul-zulu/.github
+$: octo --descriptor <DESCRIPTOR>
+```
+
+...or run directly using Go.
 
 ```shell
 $: go run github.com/paketo-buildpacks/pipeline-builder/cmd/octo --descriptor <DESCRIPTOR>
 ```
+
+**Make sure you run Octo from the `.github` folder where the descriptor file is**
+
 
 The input is a YAML-based descriptor, examples of which can be found in `.github/pipeline-descriptor.yml` in other repositories.
 

@@ -30,8 +30,8 @@ import (
 
 const (
 	CraneVersion  = "0.8.0"
-	GoVersion     = "1.18"
-	PackVersion   = "0.27.0"
+	GoVersion     = "1.20"
+	PackVersion   = "0.29.0"
 	RichGoVersion = "0.3.10"
 	YJVersion     = "5.0.0"
 	Namespace     = "pb"

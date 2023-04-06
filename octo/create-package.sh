@@ -2,6 +2,13 @@
 
 set -euo pipefail
 
+# With Go 1.20, we need to set this so that we produce statically compiled binaries
+#
+# Starting with Go 1.20, Go will produce binaries that are dynamically linked against libc
+#   which can cause compatibility issues. The compiler links against libc on the build system
+#   but that may be newer than on the stacks we support.
+export CGO_ENABLED=0
+
 if [[ "${INCLUDE_DEPENDENCIES}" == "true" ]]; then
   create-package \
     --source ${SOURCE_PATH:-.} \

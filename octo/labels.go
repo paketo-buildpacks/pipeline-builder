@@ -156,7 +156,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "mheap/github-action-required-labels@v3",
+						Uses: "mheap/github-action-required-labels@v4",
 						With: map[string]interface{}{
 							"mode":  "exactly",
 							"count": 1,
@@ -174,7 +174,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "mheap/github-action-required-labels@v3",
+						Uses: "mheap/github-action-required-labels@v4",
 						With: map[string]interface{}{
 							"mode":  "exactly",
 							"count": 1,

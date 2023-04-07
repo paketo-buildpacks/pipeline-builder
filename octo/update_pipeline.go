@@ -61,7 +61,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 						},
 					},
 					{
-						Uses: "peter-evans/create-pull-request@v4",
+						Uses: "peter-evans/create-pull-request@v5",
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),

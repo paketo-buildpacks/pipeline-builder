@@ -58,7 +58,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 	}
 
 	for _, d := range p.Dependencies {
-		pkgId, bpId, err := findIds(bpGroups, d)
+		pkgId, bpId, err := findIds(bpGroups, d, descriptor)
 		if err != nil {
 			return nil, err
 		}
@@ -85,7 +85,7 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 //
 //	           if there is a match, then we return the found buildpack id, let's say it finds `paketo-buildpacks/bellsoft-liberica`
 //				  then we return `gcr.io/paketo-buildpacks/bellsoft-liberica:1.2.3`
-func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (string, string, error) {
+func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency, descriptor Descriptor) (string, string, error) {
 	re := regexp.MustCompile(`^(?:.+://)?(.+?)/(.+):([^:]+)$`)
 	if g := re.FindStringSubmatch(dep.URI); g == nil {
 		return "", "", fmt.Errorf("unable to parse image coordinates from %s", dep.URI)
@@ -110,6 +110,20 @@ func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (s
 				endOfId := strings.Split(possibleBpId, "/")[1]
 				// fmt.Println("group.Id", group.ID, "endOfId", endOfId, "group.Version", group.Version, "version", version)
 				if strings.HasSuffix(group.ID, endOfId) && group.Version == version {
+					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
+					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
+					// fmt.Println("pkgId", pkgId, "bpId", bpId)
+					return pkgId, bpId, nil
+				}
+			}
+		}
+
+		// search for a regex match
+		for _, order := range bpOrders.Orders {
+			for _, group := range order.Groups {
+				endOfId := strings.Split(possibleBpId, "/")[1]
+				re := regexp.MustCompile(descriptor.PackageMatcher)
+				if g := re.FindStringSubmatch(endOfId); g != nil && group.Version == version {
 					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
 					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
 					// fmt.Println("pkgId", pkgId, "bpId", bpId)

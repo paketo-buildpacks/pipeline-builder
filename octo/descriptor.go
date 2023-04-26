@@ -39,6 +39,7 @@ type Descriptor struct {
 	Actions           []Action
 	Dependencies      []Dependency
 	Test              Test
+	PackageMatcher    string
 }
 
 type GitHub struct {

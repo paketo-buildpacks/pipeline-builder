@@ -10,7 +10,7 @@ require (
 	github.com/buildpacks/libcnb v1.28.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.15.1
+	github.com/google/go-containerregistry v0.15.2
 	github.com/iancoleman/strcase v0.2.0
 	github.com/onsi/gomega v1.27.6
 	github.com/pelletier/go-toml v1.9.5

@@ -17,7 +17,7 @@ require (
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.5
-	github.com/stretchr/testify v1.8.3
+	github.com/stretchr/testify v1.8.4
 	golang.org/x/oauth2 v0.8.0
 	google.golang.org/api v0.124.0
 	gopkg.in/yaml.v3 v3.0.1

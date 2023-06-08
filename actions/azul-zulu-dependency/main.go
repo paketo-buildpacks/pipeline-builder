@@ -37,15 +37,6 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	// uri := fmt.Sprintf("https://api.azul.com/zulu/download/community/v1.0/bundles/latest/"+
-	// 	"?arch=x86"+
-	// 	"&ext=tar.gz"+
-	// 	"&features=%s"+
-	// 	"&hw_bitness=64"+
-	// 	"&jdk_version=%s"+
-	// 	"&os=linux"+
-	// 	"&javafx=false",
-	// 	t, v)
 	uri := fmt.Sprintf("https://api.azul.com/metadata/v1/zulu/packages/?"+
 		"os=linux-glibc&"+
 		"arch=x64&"+

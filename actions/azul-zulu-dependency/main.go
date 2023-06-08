@@ -37,15 +37,25 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
-	uri := fmt.Sprintf("https://api.azul.com/zulu/download/community/v1.0/bundles/latest/"+
-		"?arch=x86"+
-		"&ext=tar.gz"+
-		"&features=%s"+
-		"&hw_bitness=64"+
-		"&jdk_version=%s"+
-		"&os=linux"+
-		"&javafx=false",
-		t, v)
+	// uri := fmt.Sprintf("https://api.azul.com/zulu/download/community/v1.0/bundles/latest/"+
+	// 	"?arch=x86"+
+	// 	"&ext=tar.gz"+
+	// 	"&features=%s"+
+	// 	"&hw_bitness=64"+
+	// 	"&jdk_version=%s"+
+	// 	"&os=linux"+
+	// 	"&javafx=false",
+	// 	t, v)
+	uri := fmt.Sprintf("https://api.azul.com/metadata/v1/zulu/packages/?"+
+		"os=linux-glibc&"+
+		"arch=x64&"+
+		"archive_type=tar.gz&"+
+		"java_package_type=%s&"+
+		"javafx_bundled=false&"+
+		"crac_supported=false&"+
+		"latest=true&"+
+		"distro_version=%s&"+
+		"release_status=ga", t, v)
 
 	resp, err := http.Get(uri)
 	if err != nil {
@@ -57,13 +67,14 @@ func main() {
 		panic(fmt.Errorf("unable to download %s: %d", uri, resp.StatusCode))
 	}
 
-	var raw Bundle
+	var raw []Bundle
 	if err := json.NewDecoder(resp.Body).Decode(&raw); err != nil {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
-	versions := actions.Versions{
-		fmt.Sprintf("%d.%d.%d", raw.JDKVersion[0], raw.JDKVersion[1], raw.JDKVersion[2]): raw.URL,
+	versions := actions.Versions{}
+	for _, bundle := range raw {
+		versions[fmt.Sprintf("%d.%d.%d", bundle.JDKVersion[0], bundle.JDKVersion[1], bundle.JDKVersion[2])] = bundle.URL
 	}
 
 	latestVersion, err := versions.GetLatestVersion(inputs)
@@ -88,6 +99,6 @@ func main() {
 }
 
 type Bundle struct {
-	JDKVersion []int  `json:"jdk_version"`
-	URL        string `json:"url"`
+	JDKVersion []int  `json:"java_version"`
+	URL        string `json:"download_url"`
 }

@@ -52,6 +52,20 @@ func main() {
 					h, p[1], p[2], p[3], p[4])
 			}
 		})
+	case "dotnet":
+		uri = "https://download.newrelic.com/dot_net_agent/latest_release/"
+
+		cp := regexp.MustCompile(`^/dot_net_agent/latest_release/newrelic-dotnet-agent_([\d]+)\.([\d]+)\.([\d]+)_amd64.tar.gz$`)
+		c.OnHTML("a[href]", func(element *colly.HTMLElement) {
+			h := element.Attr("href")
+			if p := cp.FindStringSubmatch(h); p != nil {
+				v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
+
+				versions[v] = fmt.Sprintf(
+					"https://download.newrelic.com/dot_net_agent/latest_release/newrelic-dotnet-agent_%s.%s.%s_amd64.tar.gz",
+					 p[1], p[2], p[3])
+			}
+		})
 	default:
 		panic(fmt.Errorf("unsupported type %s", t))
 	}

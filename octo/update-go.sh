@@ -11,7 +11,7 @@ OLD_GO_VERSION=$(grep -P '^go \d\.\d+' go.mod | cut -d ' ' -f 2)
 
 go mod edit -go="$GO_VERSION"
 go mod tidy
-go get -u all
+go get -u -t ./...
 go mod tidy
 
 git add go.mod go.sum

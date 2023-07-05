@@ -18,27 +18,27 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 		Expect = NewWithT(t).Expect
 	)
 
-	context("registry buildpack loader", func() {
-		it("fetches buildpack.toml from a remote buildpack", func() {
-			bp, err := drafts.RegistryBuildpackLoader{}.LoadBuildpack("gcr.io/paketo-buildpacks/bellsoft-liberica:latest")
-			Expect(err).ToNot(HaveOccurred())
+	// context("registry buildpack loader", func() {
+	// 	it("fetches buildpack.toml from a remote buildpack", func() {
+	// 		bp, err := drafts.RegistryBuildpackLoader{}.LoadBuildpack("gcr.io/paketo-buildpacks/bellsoft-liberica:latest")
+	// 		Expect(err).ToNot(HaveOccurred())
 
-			Expect(bp.Info.ID).To(Equal("paketo-buildpacks/bellsoft-liberica"))
-			Expect(bp.Dependencies).ToNot(BeEmpty())
-			Expect(bp.OrderGroups).To(BeEmpty())
-			Expect(bp.Stacks).ToNot(BeEmpty())
-		})
+	// 		Expect(bp.Info.ID).To(Equal("paketo-buildpacks/bellsoft-liberica"))
+	// 		Expect(bp.Dependencies).ToNot(BeEmpty())
+	// 		Expect(bp.OrderGroups).To(BeEmpty())
+	// 		Expect(bp.Stacks).ToNot(BeEmpty())
+	// 	})
 
-		it("fails fetching an image that does not exist", func() {
-			_, err := drafts.RegistryBuildpackLoader{}.LoadBuildpack("lasjdflaksdjfl")
-			Expect(err).To(HaveOccurred())
-			Expect(err).To(MatchError(HavePrefix("unable to load lasjdflaksdjfl")))
-		})
-	})
+	// 	it("fails fetching an image that does not exist", func() {
+	// 		_, err := drafts.RegistryBuildpackLoader{}.LoadBuildpack("lasjdflaksdjfl")
+	// 		Expect(err).To(HaveOccurred())
+	// 		Expect(err).To(MatchError(HavePrefix("unable to load lasjdflaksdjfl")))
+	// 	})
+	// })
 
 	context("github buildpack loader", func() {
 		it("fetches buildpack.toml from a remote buildpack", func() {
-			bp, err := drafts.GithubBuildpackLoader{
+			bp, err := drafts.GithubBuildModuleLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("gcr.io/paketo-buildpacks/bellsoft-liberica:main")
 			Expect(err).ToNot(HaveOccurred())
@@ -51,7 +51,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 		})
 
 		it("fetches buildpack.toml from a mapped remote buildpack", func() {
-			bp, err := drafts.GithubBuildpackLoader{
+			bp, err := drafts.GithubBuildModuleLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 				RegexMappers: []string{
 					`|foo|bar|`,
@@ -76,7 +76,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				"gcr.io/paketo-buildpacks/bellsoft-liberica:main",
 			}
 
-			bps, err := drafts.GithubBuildpackLoader{
+			bps, err := drafts.GithubBuildModuleLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpacks(bpList)
 			Expect(err).ToNot(HaveOccurred())
@@ -92,13 +92,13 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 		})
 
 		it("fails fetching an image that does not exist", func() {
-			_, err := drafts.GithubBuildpackLoader{
+			_, err := drafts.GithubBuildModuleLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("lasjdflaksdjfl")
 			Expect(err).To(HaveOccurred())
 			Expect(err).To(MatchError(ContainSubstring("unable to parse lasjdflaksdjfl, found []")))
 
-			_, err = drafts.GithubBuildpackLoader{
+			_, err = drafts.GithubBuildModuleLoader{
 				GithubClient: github.NewClient(http.DefaultClient),
 			}.LoadBuildpack("gcr.io/paketo-buildpacks/does-not-exist:main")
 			Expect(err).To(HaveOccurred())

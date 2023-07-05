@@ -2,13 +2,18 @@
 
 set -euo pipefail
 
-
 PACKAGE_LIST=($PACKAGES)
 # Extract first repo (Docker Hub) as the main to package & register
 PACKAGE=${PACKAGE_LIST[0]}
 
+if [[ "${EXTENSION:-x}" == "true" ]]; then
+  export PACK_MODULE_TYPE=extension
+else
+  export PACK_MODULE_TYPE=buildpack
+fi
+
 if [[ "${PUBLISH:-x}" == "true" ]]; then
-  pack buildpack package \
+  pack ${PACK_MODULE_TYPE} package \
     "${PACKAGE}:${VERSION}" \
     --config "${HOME}"/package.toml \
     --publish
@@ -34,7 +39,7 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
     done
 
 else
-  pack buildpack package \
+  pack ${PACK_MODULE_TYPE} package \
     "${PACKAGE}:${VERSION}" \
     --config "${HOME}"/package.toml \
     --format "${FORMAT}"

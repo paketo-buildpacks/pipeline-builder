@@ -38,7 +38,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 
 		dir string
 
-		bpLoader mocks.BuildpackLoader
+		bpLoader mocks.BuildModuleLoader
 	)
 
 	context("draft a release", func() {
@@ -93,7 +93,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(p.PrimaryBuildpack.Dependencies[1].CPEs).To(Equal([]string{"cpe:2.3:a:example:dep:9.0.62:*:*:*:*:*:*:*"}))
 				Expect(p.PrimaryBuildpack.Dependencies[0].Licenses).To(HaveLen(1))
 				Expect(p.PrimaryBuildpack.Dependencies[0].Licenses[0]).To(
-					Equal(libpak.BuildpackDependencyLicense{Type: "Apache-2.0", URI: "https://www.apache.org/licenses/"}))
+					Equal(libpak.BuildModuleDependencyLicense{Type: "Apache-2.0", URI: "https://www.apache.org/licenses/"}))
 			})
 
 			it("creates a payload for a component buildpack without dependencies", func() {

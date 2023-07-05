@@ -18,8 +18,10 @@ package octo
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
@@ -34,6 +36,18 @@ const (
 func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	if descriptor.OfflinePackages != nil {
 		return nil, nil
+	}
+
+	// Is this a buildpack or an extension?
+	bpfile := filepath.Join(descriptor.Path, "buildpack.toml")
+	extnfile := filepath.Join(descriptor.Path, "extension.toml")
+	extension := false
+	if _, err := os.Stat(bpfile); err == nil {
+		extension = false
+	} else if _, err := os.Stat(extnfile); err == nil {
+		extension = true
+	} else {
+		return nil, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
 	}
 
 	if descriptor.Package.Repository == "" && len(descriptor.Package.Repositories) > 0 {
@@ -200,6 +214,13 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			format = FormatFile
 		}
 
+		key := ""
+		if !extension {
+			key = "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}"
+		} else {
+			key = "${{ runner.os }}-go-${{ hashFiles('**/extension.toml', '**/package.toml') }}"
+		}
+
 		j := actions.Job{
 			Name:   "Create Package Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
@@ -232,7 +253,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 							"${{ env.HOME }}/.pack",
 							"${{ env.HOME }}/carton-cache",
 						}, "\n"),
-						"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}",
+						"key":          key,
 						"restore-keys": "${{ runner.os }}-go-",
 					},
 				},
@@ -245,18 +266,20 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Create Package",
 					Run:  StatikString("/create-package.sh"),
 					Env: map[string]string{
+						"EXTENSION":            strconv.FormatBool(extension),
 						"INCLUDE_DEPENDENCIES": "true",
 						"OS":                   descriptor.Package.Platform.OS,
 						"VERSION":              "${{ steps.version.outputs.version }}",
 					},
 				},
 				{
-					Name: "Package Buildpack",
+					Name: "Package Buildpack / Extension",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":   format,
-						"PACKAGES": "test",
-						"VERSION":  "${{ steps.version.outputs.version }}",
+						"EXTENSION": strconv.FormatBool(extension),
+						"FORMAT":    format,
+						"PACKAGES":  "test",
+						"VERSION":   "${{ steps.version.outputs.version }}",
 					},
 				},
 			},

@@ -46,7 +46,7 @@ func main() {
 	gh := github.NewClient(c)
 
 	drafter := drafts.Drafter{
-		Loader: drafts.GithubBuildpackLoader{
+		Loader: drafts.GithubBuildModuleLoader{
 			GithubClient: gh,
 			RegexMappers: parseMappers(inputs),
 		},

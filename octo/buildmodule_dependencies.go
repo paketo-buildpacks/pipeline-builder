@@ -18,6 +18,9 @@ package octo
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"strconv"
 
 	"github.com/iancoleman/strcase"
 
@@ -25,10 +28,23 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
 
-func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, error) {
+func ContributeBuildModuleDependencies(descriptor Descriptor) ([]Contribution, error) {
 	var contributions []Contribution
 
 	for _, d := range descriptor.Dependencies {
+
+		// Is this a buildpack or an extension?
+		bpfile := filepath.Join(descriptor.Path, "buildpack.toml")
+		extnfile := filepath.Join(descriptor.Path, "extension.toml")
+		extension := false
+		if _, err := os.Stat(bpfile); err == nil {
+			extension = false
+		} else if _, err := os.Stat(extnfile); err == nil {
+			extension = true
+		} else {
+			return nil, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
+		}
+
 		w := actions.Workflow{
 			Name: fmt.Sprintf("Update %s", d.Name),
 			On: map[event.Type]event.Event{
@@ -37,7 +53,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 			},
 			Jobs: map[string]actions.Job{
 				"update": {
-					Name:   "Update Buildpack Dependency",
+					Name:   "Update Build Module Dependency",
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
@@ -45,8 +61,8 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							With: map[string]interface{}{"go-version": GoVersion},
 						},
 						{
-							Name: "Install update-buildpack-dependency",
-							Run:  StatikString("/install-update-buildpack-dependency.sh"),
+							Name: "Install update-buildmodule-dependency",
+							Run:  StatikString("/install-update-buildmodule-dependency.sh"),
 						},
 						{
 							Name: "Install yj",
@@ -62,10 +78,11 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							With: d.With,
 						},
 						{
-							Id:   "buildpack",
-							Name: "Update Buildpack Dependency",
-							Run:  StatikString("/update-buildpack-dependency.sh"),
+							Id:   "buildmodule",
+							Name: "Update BuildModule Dependency",
+							Run:  StatikString("/update-buildmodule-dependency.sh"),
 							Env: map[string]string{
+								"EXTENSION":       strconv.FormatBool(extension),
 								"ID":              d.Id,
 								"SHA256":          "${{ steps.dependency.outputs.sha256 }}",
 								"URI":             "${{ steps.dependency.outputs.uri }}",
@@ -81,15 +98,15 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							With: map[string]interface{}{
 								"token":  descriptor.GitHub.Token,
 								"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
-								"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}
+								"commit-message": fmt.Sprintf(`Bump %[1]s from ${{ steps.buildmodule.outputs.old-version }} to ${{ steps.buildmodule.outputs.new-version }}
 
-Bumps %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}.`, d.Name),
+Bumps %[1]s from ${{ steps.buildmodule.outputs.old-version }} to ${{ steps.buildmodule.outputs.new-version }}.`, d.Name),
 								"signoff":       true,
-								"branch":        fmt.Sprintf("update/buildpack/%s", strcase.ToKebab(d.Name)),
+								"branch":        fmt.Sprintf("update/buildmodule/%s", strcase.ToKebab(d.Name)),
 								"delete-branch": true,
-								"title":         fmt.Sprintf("Bump %s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpack.outputs.new-version }}", d.Name),
-								"body":          fmt.Sprintf("Bumps `%[1]s` from `${{ steps.buildpack.outputs.old-version }}` to `${{ steps.buildpack.outputs.new-version }}`.", d.Name),
-								"labels":        "${{ steps.buildpack.outputs.version-label }}, type:dependency-upgrade",
+								"title":         fmt.Sprintf("Bump %s from ${{ steps.buildmodule.outputs.old-version }} to ${{ steps.buildmodule.outputs.new-version }}", d.Name),
+								"body":          fmt.Sprintf("Bumps `%[1]s` from `${{ steps.buildpack.outputs.old-version }}` to `${{ steps.buildmodule.outputs.new-version }}`.", d.Name),
+								"labels":        "${{ steps.buildmodule.outputs.version-label }}, type:dependency-upgrade",
 							},
 						},
 					},

@@ -43,15 +43,34 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 		descriptor.Package.Repositories = append(descriptor.Package.Repositories, descriptor.Package.Repository)
 	}
 
-	file := filepath.Join(descriptor.Path, "buildpack.toml")
-	s, err := os.ReadFile(file)
-	if err != nil {
-		return nil, fmt.Errorf("unable to read %s\n%w", file, err)
-	}
-
-	var b libcnb.Buildpack
-	if err := toml.Unmarshal(s, &b); err != nil {
-		return nil, fmt.Errorf("unable to decode %s\n%w", file, err)
+	// Is this a buildpack or an extension?
+	bpfile := filepath.Join(descriptor.Path, "buildpack.toml")
+	extnfile := filepath.Join(descriptor.Path, "extension.toml")
+	id := ""
+	extension := false
+	if _, err := os.Stat(bpfile); err == nil {
+		s, err := os.ReadFile(bpfile)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read buildpack.toml %s\n%w", bpfile, err)
+		}
+		var b libcnb.Buildpack
+		if err := toml.Unmarshal(s, &b); err != nil {
+			return nil, fmt.Errorf("unable to decode %s\n%w", bpfile, err)
+		}
+		id = b.Info.ID
+	} else if _, err := os.Stat(extnfile); err == nil {
+		s, err := os.ReadFile(extnfile)
+		if err != nil {
+			return nil, fmt.Errorf("unable to read extension.toml %s\n%w", extnfile, err)
+		}
+		var e libcnb.Extension
+		if err := toml.Unmarshal(s, &e); err != nil {
+			return nil, fmt.Errorf("unable to decode %s\n%w", extnfile, err)
+		}
+		id = e.Info.ID
+		extension = true
+	} else {
+		return nil, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
 	}
 
 	w := actions.Workflow{
@@ -115,6 +134,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Name: "Create Package",
 						Run:  StatikString("/create-package.sh"),
 						Env: map[string]string{
+							"EXTENSION":            strconv.FormatBool(extension),
 							"INCLUDE_DEPENDENCIES": strconv.FormatBool(descriptor.Package.IncludeDependencies),
 							"OS":                   descriptor.Package.Platform.OS,
 							"VERSION":              "${{ steps.version.outputs.version }}",
@@ -123,9 +143,10 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					},
 					{
 						Id:   "package",
-						Name: "Package Buildpack",
+						Name: "Package Buildpack/Extension",
 						Run:  StatikString("/package-buildpack.sh"),
 						Env: map[string]string{
+							"EXTENSION":     strconv.FormatBool(extension),
 							"PACKAGES":      strings.Join(descriptor.Package.Repositories, " "),
 							"PUBLISH":       "true",
 							"VERSION":       "${{ steps.version.outputs.version }}",
@@ -146,7 +167,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Register),
 						With: map[string]interface{}{
 							"token":   descriptor.Package.RegistryToken,
-							"id":      b.Info.ID,
+							"id":      id,
 							"version": "${{ steps.version.outputs.version }}",
 							"address": fmt.Sprintf("%s@${{ steps.package.outputs.digest }}", descriptor.Package.Repository),
 						},

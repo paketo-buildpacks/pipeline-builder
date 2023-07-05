@@ -31,7 +31,7 @@ import (
 const (
 	CraneVersion  = "0.8.0"
 	GoVersion     = "1.20"
-	PackVersion   = "0.29.0"
+	PackVersion   = "0.30.0-pre2"
 	RichGoVersion = "0.3.10"
 	YJVersion     = "5.0.0"
 	Namespace     = "pb"
@@ -79,7 +79,7 @@ func Contribute(path string) error {
 		contributions = append(contributions, *c)
 	}
 
-	if c, err := ContributeBuildpackDependencies(descriptor); err != nil {
+	if c, err := ContributeBuildModuleDependencies(descriptor); err != nil {
 		return err
 	} else {
 		contributions = append(contributions, c...)

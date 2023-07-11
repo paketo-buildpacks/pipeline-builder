@@ -92,6 +92,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 					{
 						Name: "Install update-build-image-dependency",
 						Run:  StatikString("/install-update-build-image-dependency.sh"),
+						Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 					},
 					{
 						Name: "Install crane",

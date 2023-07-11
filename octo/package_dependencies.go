@@ -141,6 +141,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 					{
 						Name: "Install update-package-dependency",
 						Run:  StatikString("/install-update-package-dependency.sh"),
+						Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 					},
 					{
 						Name: "Install crane",

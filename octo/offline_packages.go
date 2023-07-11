@@ -93,6 +93,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Name: "Install create-package",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  StatikString("/install-create-package.sh"),
+						Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 					},
 					{
 						Name: "Install pack",

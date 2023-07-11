@@ -47,6 +47,7 @@ func ContributeUpdatePipeline(descriptor Descriptor) (Contribution, error) {
 					{
 						Name: "Install octo",
 						Run:  StatikString("/install-octo.sh"),
+						Env:  map[string]string{"PAKETO_PIPELINEBUILDER_COMMIT": "${{ vars.PAKETO_PIPELINEBUILDER_COMMIT }}"},
 					},
 					{
 						Uses: "actions/checkout@v3",

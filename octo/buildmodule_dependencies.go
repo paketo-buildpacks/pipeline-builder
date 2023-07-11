@@ -63,6 +63,7 @@ func ContributeBuildModuleDependencies(descriptor Descriptor) ([]Contribution, e
 						{
 							Name: "Install update-buildmodule-dependency",
 							Run:  StatikString("/install-update-buildmodule-dependency.sh"),
+							Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 						},
 						{
 							Name: "Install yj",

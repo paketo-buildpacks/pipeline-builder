@@ -94,6 +94,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 					{
 						Name: "Install create-package",
 						Run:  StatikString("/install-create-package.sh"),
+						Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 					},
 					{
 						Name: "Install crane",

@@ -78,11 +78,21 @@ type BuilderStack struct {
 	RunImage   string `toml:"run-image"`
 }
 
-func (b Builder) Flatten() []string {
+func (b Builder) FlattenBuildpacks() []string {
 	tmp := []string{}
 
 	for _, bp := range b.Buildpacks {
 		tmp = append(tmp, strings.TrimPrefix(bp.URI, "docker://"))
+	}
+
+	return tmp
+}
+
+func (b Builder) FlattenExtensions() []string {
+	tmp := []string{}
+
+	for _, xtn := range b.Extensions {
+		tmp = append(tmp, strings.TrimPrefix(xtn.URI, "docker://"))
 	}
 
 	return tmp
@@ -163,12 +173,12 @@ func (d Drafter) CreatePayload(inputs actions.Inputs, buildModulePath string) (P
 
 	// If we have a builder.toml the Payload is for a Builder
 	if builder != nil {
-		bps, err := d.Loader.LoadBuildpacks(builder.Flatten())
+		bps, err := d.Loader.LoadBuildpacks(builder.FlattenBuildpacks())
 		if err != nil {
 			return Payload{}, fmt.Errorf("unable to load buildpacks\n%w", err)
 		}
 
-		xtns, err := d.Loader.LoadExtensions(builder.Flatten())
+		xtns, err := d.Loader.LoadExtensions(builder.FlattenExtensions())
 		if err != nil {
 			return Payload{}, fmt.Errorf("unable to load extensions\n%w", err)
 		}

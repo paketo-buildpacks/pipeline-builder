@@ -42,7 +42,7 @@ func testTestGeneration(t *testing.T, context spec.G, it spec.S) {
 		descriptor octo.Descriptor
 	)
 
-	context("Generate Tests", func() {
+	context("Generate Tests for Buildpack", func() {
 		it.Before(func() {
 			var err error
 			dir, err = ioutil.TempDir("", "main-package")
@@ -64,6 +64,56 @@ package:
 			Expect(err).To(Not(HaveOccurred()))
 
 			Expect(ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)).To(Succeed())
+
+			Expect(ioutil.WriteFile(filepath.Join(dir, "buildpack.toml"), []byte{}, 0644)).To(Succeed())
+		})
+
+		it.After(func() {
+			Expect(os.RemoveAll(dir)).To(Succeed())
+		})
+
+		it("will contribute a unit test pipeline", func() {
+			contribution, err := octo.ContributeTest(descriptor)
+			Expect(err).To(Not(HaveOccurred()))
+
+			Expect(contribution.Path).To(Equal(".github/workflows/pb-tests.yml"))
+
+			var workflow jobs
+			Expect(yaml.Unmarshal(contribution.Content, &workflow)).To(Succeed())
+
+			Expect(len(workflow.Jobs)).To(Equal(2))
+			Expect(workflow.Jobs["unit"]).To(Not(BeNil()))
+			Expect(workflow.Jobs["integration"]).To(BeNil())
+
+			steps := workflow.Jobs["unit"].Steps
+			Expect(steps[len(steps)-1].Run).Should(ContainSubstring("richgo test ./..."))
+		})
+	})
+
+	context("Generate Tests for Extension", func() {
+		it.Before(func() {
+			var err error
+			dir, err = ioutil.TempDir("", "main-package")
+			Expect(err).To(Not(HaveOccurred()))
+
+			Expect(os.Mkdir(filepath.Join(dir, ".github"), 0755)).To(Succeed())
+			Expect(ioutil.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
+github:
+  username: ${{ secrets.JAVA_GITHUB_USERNAME }}
+  token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
+
+package:
+  repository:     gcr.io/paketo-buildpacks/dummy
+  register:       true
+  registry_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
+`), 0644)).To(Succeed())
+
+			descriptor, err = octo.NewDescriptor(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"))
+			Expect(err).To(Not(HaveOccurred()))
+
+			Expect(ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)).To(Succeed())
+
+			Expect(ioutil.WriteFile(filepath.Join(dir, "extension.toml"), []byte{}, 0644)).To(Succeed())
 		})
 
 		it.After(func() {

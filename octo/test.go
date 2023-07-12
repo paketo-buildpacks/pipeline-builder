@@ -33,21 +33,22 @@ const (
 	FormatImage = "image"
 )
 
-func ContributeTest(descriptor Descriptor) (*Contribution, error) {
-	if descriptor.OfflinePackages != nil {
-		return nil, nil
-	}
-
+func isExtension(descriptor Descriptor) (bool, error) {
 	// Is this a buildpack or an extension?
 	bpfile := filepath.Join(descriptor.Path, "buildpack.toml")
 	extnfile := filepath.Join(descriptor.Path, "extension.toml")
-	extension := false
 	if _, err := os.Stat(bpfile); err == nil {
-		extension = false
+		return false, nil
 	} else if _, err := os.Stat(extnfile); err == nil {
-		extension = true
+		return true, nil
 	} else {
-		return nil, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
+		return false, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
+	}
+}
+
+func ContributeTest(descriptor Descriptor) (*Contribution, error) {
+	if descriptor.OfflinePackages != nil {
+		return nil, nil
 	}
 
 	if descriptor.Package.Repository == "" && len(descriptor.Package.Repositories) > 0 {
@@ -216,7 +217,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		}
 
 		key := ""
-		if !extension {
+		extension, err := isExtension(descriptor)
+		if err != nil {
+			return nil, err
+		}
+		if extension {
 			key = "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}"
 		} else {
 			key = "${{ runner.os }}-go-${{ hashFiles('**/extension.toml', '**/package.toml') }}"

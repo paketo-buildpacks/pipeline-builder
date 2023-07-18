@@ -221,7 +221,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		if err != nil {
 			return nil, err
 		}
-		if extension {
+		if !extension {
 			key = "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}"
 		} else {
 			key = "${{ runner.os }}-go-${{ hashFiles('**/extension.toml', '**/package.toml') }}"

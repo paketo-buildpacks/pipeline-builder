@@ -50,7 +50,7 @@ func main() {
 	}
 	gh := github.NewClient(c)
 
-	loader := drafts.GithubBuildpackLoader{
+	loader := drafts.GithubBuildModuleLoader{
 		GithubClient: gh,
 		RegexMappers: parseMappers(inputs),
 	}

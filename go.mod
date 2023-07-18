@@ -2,6 +2,10 @@ module github.com/paketo-buildpacks/pipeline-builder
 
 go 1.20
 
+replace github.com/buildpacks/libcnb => github.com/buildpacks/libcnb v1.24.1-0.20230627130937-5d3d3f6e6d16
+
+replace github.com/paketo-buildpacks/libpak => github.com/paketo-buildpacks/libpak v1.66.1-0.20230707152440-cd6875914a49
+
 require (
 	cloud.google.com/go/storage v1.31.0
 	github.com/BurntSushi/toml v1.3.2
@@ -25,16 +29,17 @@ require (
 
 require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
 	github.com/heroku/color v0.0.6 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
-	github.com/kr/pretty v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
+	github.com/rogpeppe/go-internal v1.9.0 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230629202037-9506855d4529 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230629202037-9506855d4529 // indirect
 )

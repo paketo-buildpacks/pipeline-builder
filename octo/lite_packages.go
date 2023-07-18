@@ -81,6 +81,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						Name: "Install update-buildpack-image-id",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						Run:  StatikString("/install-update-buildpack-image-id.sh"),
+						Env:  map[string]string{"PAKETO_PIPELINEBUILDER_COMMIT": "${{ vars.PAKETO_PIPELINEBUILDER_COMMIT }}"},
 					},
 					{
 						Name: "Republish Image",

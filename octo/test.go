@@ -18,8 +18,10 @@ package octo
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
@@ -30,6 +32,19 @@ const (
 	FormatFile  = "file"
 	FormatImage = "image"
 )
+
+func isExtension(descriptor Descriptor) (bool, error) {
+	// Is this a buildpack or an extension?
+	bpfile := filepath.Join(descriptor.Path, "buildpack.toml")
+	extnfile := filepath.Join(descriptor.Path, "extension.toml")
+	if _, err := os.Stat(bpfile); err == nil {
+		return false, nil
+	} else if _, err := os.Stat(extnfile); err == nil {
+		return true, nil
+	} else {
+		return false, fmt.Errorf("unable to read buildpack/extension.toml at %s\n", descriptor.Path)
+	}
+}
 
 func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	if descriptor.OfflinePackages != nil {
@@ -133,6 +148,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				{
 					Name: "Install create-package",
 					Run:  StatikString("/install-create-package.sh"),
+					Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 				},
 				{
 					Name: "Install pack",
@@ -200,6 +216,17 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			format = FormatFile
 		}
 
+		key := ""
+		extension, err := isExtension(descriptor)
+		if err != nil {
+			return nil, err
+		}
+		if extension {
+			key = "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}"
+		} else {
+			key = "${{ runner.os }}-go-${{ hashFiles('**/extension.toml', '**/package.toml') }}"
+		}
+
 		j := actions.Job{
 			Name:   "Create Package Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
@@ -211,6 +238,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				{
 					Name: "Install create-package",
 					Run:  StatikString("/install-create-package.sh"),
+					Env:  map[string]string{"PAKETO_LIBPAK_COMMIT": "${{ vars.PAKETO_LIBPAK_COMMIT }}"},
 				},
 				{
 					Name: "Install pack",
@@ -232,7 +260,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 							"${{ env.HOME }}/.pack",
 							"${{ env.HOME }}/carton-cache",
 						}, "\n"),
-						"key":          "${{ runner.os }}-go-${{ hashFiles('**/buildpack.toml', '**/package.toml') }}",
+						"key":          key,
 						"restore-keys": "${{ runner.os }}-go-",
 					},
 				},
@@ -245,18 +273,20 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Create Package",
 					Run:  StatikString("/create-package.sh"),
 					Env: map[string]string{
+						"EXTENSION":            strconv.FormatBool(extension),
 						"INCLUDE_DEPENDENCIES": "true",
 						"OS":                   descriptor.Package.Platform.OS,
 						"VERSION":              "${{ steps.version.outputs.version }}",
 					},
 				},
 				{
-					Name: "Package Buildpack",
+					Name: "Package Buildpack / Extension",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":   format,
-						"PACKAGES": "test",
-						"VERSION":  "${{ steps.version.outputs.version }}",
+						"EXTENSION": strconv.FormatBool(extension),
+						"FORMAT":    format,
+						"PACKAGES":  "test",
+						"VERSION":   "${{ steps.version.outputs.version }}",
 					},
 				},
 			},

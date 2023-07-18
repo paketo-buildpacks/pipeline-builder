@@ -63,7 +63,7 @@ func main() {
 
 				versions[v] = fmt.Sprintf(
 					"https://download.newrelic.com%s/newrelic-dotnet-agent_%s.%s.%s_amd64.tar.gz",
-					 h, p[1], p[2], p[3])
+					h, p[1], p[2], p[3])
 			}
 		})
 	default:

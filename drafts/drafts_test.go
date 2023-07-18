@@ -38,7 +38,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 
 		dir string
 
-		bpLoader mocks.BuildpackLoader
+		bpLoader mocks.BuildModuleLoader
 	)
 
 	context("draft a release", func() {
@@ -93,7 +93,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(p.PrimaryBuildpack.Dependencies[1].CPEs).To(Equal([]string{"cpe:2.3:a:example:dep:9.0.62:*:*:*:*:*:*:*"}))
 				Expect(p.PrimaryBuildpack.Dependencies[0].Licenses).To(HaveLen(1))
 				Expect(p.PrimaryBuildpack.Dependencies[0].Licenses[0]).To(
-					Equal(libpak.BuildpackDependencyLicense{Type: "Apache-2.0", URI: "https://www.apache.org/licenses/"}))
+					Equal(libpak.BuildModuleDependencyLicense{Type: "Apache-2.0", URI: "https://www.apache.org/licenses/"}))
 			})
 
 			it("creates a payload for a component buildpack without dependencies", func() {
@@ -188,6 +188,11 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 					{Buildpack: libcnb.Buildpack{Info: libcnb.BuildpackInfo{ID: "bp4"}}},
 				}, nil)
 
+				bpLoader.On("LoadExtensions", mock.Anything).Return([]drafts.Extension{
+					{Extension: libcnb.Extension{Info: libcnb.ExtensionInfo{ID: "xtn1"}}},
+					{Extension: libcnb.Extension{Info: libcnb.ExtensionInfo{ID: "xtn2"}}},
+				}, nil)
+
 				d := drafts.Drafter{Loader: &bpLoader}
 
 				p, err := d.CreatePayload(actions.Inputs{
@@ -235,9 +240,20 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 					{ID: "example/bp4", Optional: true},
 				}))
 
+				Expect(p.Builder.ExtensionsOrderGroups).To(HaveLen(1))
+				Expect(p.Builder.ExtensionsOrderGroups[0].Groups).To(Equal([]libcnb.BuildpackOrderBuildpack{
+					{ID: "example/xtn1"},
+					{ID: "example/xtn2", Optional: true},
+				}))
+
 				Expect(p.NestedBuildpacks).To(HaveLen(4))
 				for i, expectedBp := range []string{"bp1", "bp2", "bp3", "bp4"} {
 					Expect(p.NestedBuildpacks[i].Info.ID).To(Equal(expectedBp))
+				}
+
+				Expect(p.NestedExtensions).To(HaveLen(2))
+				for i, expectedXtn := range []string{"xtn1", "xtn2"} {
+					Expect(p.NestedExtensions[i].Info.ID).To(Equal(expectedXtn))
 				}
 			})
 		})
@@ -334,6 +350,11 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 					{Buildpack: libcnb.Buildpack{Info: libcnb.BuildpackInfo{ID: "bp4", Name: "BP 4", Version: "6.5.0"}}},
 				}, nil)
 
+				bpLoader.On("LoadExtensions", mock.Anything).Return([]drafts.Extension{
+					{Extension: libcnb.Extension{Info: libcnb.ExtensionInfo{ID: "xtn1", Name: "XTN 1", Version: "0.0.1"}}},
+					{Extension: libcnb.Extension{Info: libcnb.ExtensionInfo{ID: "xtn2", Name: "XTN 2", Version: "0.2.0"}}},
+				}, nil)
+
 				d := drafts.Drafter{Loader: &bpLoader}
 
 				p, err := d.CreatePayload(actions.Inputs{
@@ -353,16 +374,26 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 				Expect(body).ToNot(ContainSubstring("**ID**: ``"))
 				Expect(body).To(ContainSubstring("**Digest**: <!-- DIGEST PLACEHOLDER -->"))
 				Expect(body).ToNot(ContainSubstring("#### Supported Stacks:"))
+				Expect(body).To(ContainSubstring("#### Included ImageExtensions:"))
+				Expect(body).To(ContainSubstring("XTN 1 | `xtn1` | `0.0.1`"))
+				Expect(body).To(ContainSubstring("XTN 2 | `xtn2` | `0.2.0`"))
 				Expect(body).To(ContainSubstring("#### Included Buildpackages:"))
 				Expect(body).To(ContainSubstring("BP 1 | `bp1` | `3.1.0`"))
 				Expect(body).To(ContainSubstring("BP 2 | `bp2` | `9.3.1`"))
 				Expect(body).To(ContainSubstring("BP 3 | `bp3` | `1.10.0`"))
 				Expect(body).To(ContainSubstring("BP 4 | `bp4` | `6.5.0`"))
+				Expect(body).To(ContainSubstring("<summary>Image Extension Order Groupings</summary>"))
+				Expect(body).To(ContainSubstring("`example/xtn1` | `` | `false`"))
+				Expect(body).To(ContainSubstring("`example/xtn2` | `` | `true`"))
 				Expect(body).To(ContainSubstring("<summary>Order Groupings</summary>"))
 				Expect(body).To(ContainSubstring("`example/bp1` | `` | `false`"))
 				Expect(body).To(ContainSubstring("`example/bp2` | `` | `false`"))
 				Expect(body).To(ContainSubstring("`example/bp3` | `` | `false`"))
 				Expect(body).To(ContainSubstring("`example/bp4` | `` | `true`"))
+				Expect(body).To(ContainSubstring("<summary>XTN 1 0.0.1</summary>"))
+				Expect(body).To(ContainSubstring("**ID**: `xtn1`"))
+				Expect(body).To(ContainSubstring("<summary>XTN 2 0.2.0</summary>"))
+				Expect(body).To(ContainSubstring("**ID**: `xtn2`"))
 				Expect(body).To(ContainSubstring("<summary>BP 1 3.1.0</summary>"))
 				Expect(body).To(ContainSubstring("**ID**: `bp1`"))
 				Expect(body).To(ContainSubstring("<summary>BP 2 9.3.1</summary>"))

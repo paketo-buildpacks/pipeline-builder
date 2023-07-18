@@ -3,6 +3,15 @@
 {{ end -}}
 **Digest**: <!-- DIGEST PLACEHOLDER -->
 
+{{ if .NestedExtensions -}}
+#### Included ImageExtensions:
+Name | ID | Version
+:--- | :- | :------
+{{ range .NestedExtensions -}}
+{{ .Info.Name }} | `{{ .Info.ID }}` | `{{ .Info.Version }}`
+{{ end -}}
+{{ end -}}
+
 {{ if .NestedBuildpacks -}}
 #### Included Buildpackages:
 Name | ID | Version
@@ -40,6 +49,19 @@ ID | Version | Optional
 {{ end -}}
 </details>
 {{ end }}
+{{ if .Builder.ExtensionsOrderGroups }}
+<details>
+<summary>Image Extension Order Groupings</summary>
+
+{{ range .Builder.ExtensionsOrderGroups -}}
+ID | Version | Optional
+:- | :------ | :-------
+{{ range .Groups -}}
+`{{ .ID }}` | `{{ .Version }}` | `{{ .Optional }}`
+{{ end }}
+{{ end -}}
+</details>
+{{ end }}
 {{ if .Builder.OrderGroups }}
 <details>
 <summary>Order Groupings</summary>
@@ -54,6 +76,25 @@ ID | Version | Optional
 </details>
 {{ end }}
 ---
+
+{{ range .NestedExtensions -}}
+<details>
+<summary>{{- .Info.Name }} {{ .Info.Version -}}</summary>
+
+**ID**: `{{ .Info.ID }}`
+
+{{ if .Dependencies -}}
+#### Dependencies:
+Name | Version | SHA256
+:--- | :------ | :-----
+{{ range .Dependencies -}}
+{{ .Name }} | `{{ .Version }}` | `{{ .SHA256 }}`
+{{ end -}}
+{{ end -}}
+
+---
+</details>
+{{ end }}
 
 {{ range .NestedBuildpacks -}}
 <details>

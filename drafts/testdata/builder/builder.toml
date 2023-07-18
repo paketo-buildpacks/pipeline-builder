@@ -1,5 +1,13 @@
 description = "description"
 
+[[extensions]]
+  id = "example/xtn1"
+  uri = "docker://example.com/example/xtn1:0.0.1"
+
+[[extensions]]
+  id = "example/xtn2"
+  uri = "docker://example.com/example/xtn2:0.2.0"
+
 [[buildpacks]]
   id = "example/bp1"
   uri = "docker://example.com/example/bp1:1.1.2"
@@ -15,6 +23,15 @@ description = "description"
 [[buildpacks]]
   id = "example/bp4"
   uri = "docker://example.com/example/bp4:5.0.3"
+
+[[order-extensions]]
+
+  [[order-extensions.group]]
+    id = "example/xtn1"
+
+  [[order-extensions.group]]
+    id = "example/xtn2"
+    optional = true
 
 [[order]]
 

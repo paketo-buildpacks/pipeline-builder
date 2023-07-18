@@ -2,14 +2,20 @@
 
 set -euo pipefail
 
-OLD_VERSION=$(yj -tj < buildpack.toml | jq -r "
+if [[ "${EXTENSION:-x}" == "true" ]]; then
+  export PACK_MODULE_TYPE=extension
+else
+  export PACK_MODULE_TYPE=buildpack
+fi
+
+OLD_VERSION=$(yj -tj < ${PACK_MODULE_TYPE}.toml | jq -r "
   .metadata.dependencies[] |
   select( .id == env.ID ) |
   select( .version | test( env.VERSION_PATTERN ) ) |
   .version")
 
-update-buildpack-dependency \
-  --buildpack-toml buildpack.toml \
+update-buildmodule-dependency \
+  --buildmodule-toml ${PACK_MODULE_TYPE}.toml \
   --id "${ID}" \
   --version-pattern "${VERSION_PATTERN}" \
   --version "${VERSION}" \
@@ -20,7 +26,7 @@ update-buildpack-dependency \
   --uri "${URI}" \
   --sha256 "${SHA256}"
 
-git add buildpack.toml
+git add ${PACK_MODULE_TYPE}.toml
 git checkout -- .
 
 if [ "$(echo "$OLD_VERSION" | awk -F '.' '{print $1}')" != "$(echo "$VERSION" | awk -F '.' '{print $1}')" ]; then

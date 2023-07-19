@@ -2,16 +2,12 @@ module github.com/paketo-buildpacks/pipeline-builder
 
 go 1.20
 
-replace github.com/buildpacks/libcnb => github.com/buildpacks/libcnb v1.24.1-0.20230627130937-5d3d3f6e6d16
-
-replace github.com/paketo-buildpacks/libpak => github.com/paketo-buildpacks/libpak v1.66.1-0.20230707152440-cd6875914a49
-
 require (
 	cloud.google.com/go/storage v1.31.0
 	github.com/BurntSushi/toml v1.3.2
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/aws/aws-sdk-go v1.44.295
-	github.com/buildpacks/libcnb v1.28.0
+	github.com/buildpacks/libcnb v1.24.1-0.20230627130937-5d3d3f6e6d16
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-containerregistry v0.15.2
@@ -72,7 +68,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc4 // indirect
-	github.com/paketo-buildpacks/libpak v1.66.1
+	github.com/paketo-buildpacks/libpak v1.66.1-0.20230707152440-cd6875914a49
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect

@@ -16,7 +16,7 @@
 
 package _package
 
-import "github.com/buildpacks/libcnb"
+import "github.com/buildpacks/libcnb/v2"
 
 type Package struct {
 	Dependencies []Dependency

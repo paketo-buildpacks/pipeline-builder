@@ -7,12 +7,12 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/aws/aws-sdk-go v1.44.295
-	github.com/buildpacks/libcnb v1.24.1-0.20230627130937-5d3d3f6e6d16
+	github.com/buildpacks/libcnb/v2 v2.0.0-alpha.1
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-containerregistry v0.15.2
 	github.com/iancoleman/strcase v0.2.0
-	github.com/onsi/gomega v1.27.8
+	github.com/onsi/gomega v1.27.10
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
@@ -68,7 +68,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc4 // indirect
-	github.com/paketo-buildpacks/libpak v1.66.1-0.20230707152440-cd6875914a49
+	github.com/paketo-buildpacks/libpak v1.66.1-0.20230811234840-7999b61041ee
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
@@ -77,11 +77,11 @@ require (
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/vbatts/tar-split v0.11.3 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	golang.org/x/crypto v0.10.0 // indirect
-	golang.org/x/net v0.11.0 // indirect
+	golang.org/x/crypto v0.12.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.9.0 // indirect
-	golang.org/x/text v0.10.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230629202037-9506855d4529 // indirect

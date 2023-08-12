@@ -24,7 +24,7 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/buildpacks/libcnb"
+	"github.com/buildpacks/libcnb/v2"
 
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"

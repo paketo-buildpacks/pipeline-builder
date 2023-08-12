@@ -31,7 +31,7 @@ import (
 	"text/template"
 
 	"github.com/BurntSushi/toml"
-	"github.com/buildpacks/libcnb"
+	"github.com/buildpacks/libcnb/v2"
 	"github.com/google/go-github/v43/github"
 	"github.com/paketo-buildpacks/libpak"
 	"github.com/paketo-buildpacks/pipeline-builder/actions"

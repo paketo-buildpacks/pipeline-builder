@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/go-github/v43/github"
-	"github.com/paketo-buildpacks/pipeline-builder/drafts"
+	drafts "github.com/paketo-buildpacks/pipeline-builder/v2/drafts"
 	"github.com/sclevine/spec"
 
 	. "github.com/onsi/gomega"

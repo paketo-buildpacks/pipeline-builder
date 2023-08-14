@@ -24,9 +24,9 @@ import (
 
 	"github.com/pelletier/go-toml"
 
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/builder"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/builder"
 )
 
 func ContributeBuilderDependencies(descriptor Descriptor) ([]Contribution, error) {

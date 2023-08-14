@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	_ "github.com/paketo-buildpacks/pipeline-builder/octo/statik"
+	_ "github.com/paketo-buildpacks/pipeline-builder/v2/octo/statik"
 	"github.com/rakyll/statik/fs"
 )
 

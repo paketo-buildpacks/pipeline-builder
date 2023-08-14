@@ -24,7 +24,7 @@ import (
 
 	"github.com/rakyll/statik/fs"
 
-	_ "github.com/paketo-buildpacks/pipeline-builder/octo/statik"
+	_ "github.com/paketo-buildpacks/pipeline-builder/v2/octo/statik"
 )
 
 func Exists(path string) (bool, error) {

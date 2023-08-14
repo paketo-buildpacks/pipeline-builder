@@ -22,7 +22,7 @@ import (
 
 	"github.com/gocolly/colly"
 
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
 )
 
 func main() {

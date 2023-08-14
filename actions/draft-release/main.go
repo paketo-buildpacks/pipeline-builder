@@ -28,8 +28,8 @@ import (
 	"fmt"
 
 	"github.com/google/go-github/v43/github"
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/drafts"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
+	drafts "github.com/paketo-buildpacks/pipeline-builder/v2/drafts"
 	"golang.org/x/oauth2"
 )
 

@@ -25,7 +25,7 @@ import (
 	"strings"
 
 	"github.com/google/go-github/v43/github"
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
 	"golang.org/x/oauth2"
 )
 

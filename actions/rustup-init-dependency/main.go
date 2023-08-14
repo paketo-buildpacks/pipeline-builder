@@ -24,7 +24,7 @@ import (
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
 )
 
 const (

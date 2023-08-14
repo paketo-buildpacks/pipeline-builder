@@ -1,4 +1,4 @@
-module github.com/paketo-buildpacks/pipeline-builder
+module github.com/paketo-buildpacks/pipeline-builder/v2
 
 go 1.20
 
@@ -13,6 +13,7 @@ require (
 	github.com/google/go-containerregistry v0.15.2
 	github.com/iancoleman/strcase v0.2.0
 	github.com/onsi/gomega v1.27.10
+	github.com/paketo-buildpacks/libpak/v2 v2.0.0-20230814130800-d2aac91e2edf
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
@@ -25,13 +26,13 @@ require (
 
 require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	dario.cat/mergo v1.0.0 // indirect
 	github.com/Masterminds/semver v1.5.0 // indirect
 	github.com/creack/pty v1.1.18 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
 	github.com/heroku/color v0.0.6 // indirect
-	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/mitchellh/hashstructure/v2 v2.0.2 // indirect
@@ -68,12 +69,11 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc4 // indirect
-	github.com/paketo-buildpacks/libpak v1.66.1-0.20230811234840-7999b61041ee
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.1 // indirect
 	github.com/temoto/robotstxt v1.1.2 // indirect
 	github.com/vbatts/tar-split v0.11.3 // indirect
 	go.opencensus.io v0.24.0 // indirect

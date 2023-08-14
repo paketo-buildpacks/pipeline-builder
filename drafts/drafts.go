@@ -33,8 +33,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/buildpacks/libcnb/v2"
 	"github.com/google/go-github/v43/github"
-	"github.com/paketo-buildpacks/libpak"
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	"github.com/paketo-buildpacks/libpak/v2"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
 	"github.com/pkg/errors"
 )
 

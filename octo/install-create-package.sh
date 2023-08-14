@@ -2,4 +2,4 @@
 
 set -euo pipefail
 
-go install -ldflags="-s -w" github.com/paketo-buildpacks/libpak/cmd/create-package@${PAKETO_LIBPAK_COMMIT:=latest}
+go install -ldflags="-s -w" github.com/paketo-buildpacks/libpak/v2/cmd/create-package@${PAKETO_LIBPAK_COMMIT:=latest}

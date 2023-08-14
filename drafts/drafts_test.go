@@ -24,10 +24,10 @@ import (
 
 	"github.com/buildpacks/libcnb/v2"
 	. "github.com/onsi/gomega"
-	"github.com/paketo-buildpacks/libpak"
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/drafts"
-	"github.com/paketo-buildpacks/pipeline-builder/drafts/mocks"
+	"github.com/paketo-buildpacks/libpak/v2"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
+	drafts "github.com/paketo-buildpacks/pipeline-builder/v2/drafts"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/drafts/mocks"
 	"github.com/sclevine/spec"
 	"github.com/stretchr/testify/mock"
 )

@@ -24,7 +24,7 @@ import (
 	"regexp"
 	"strconv"
 
-	"github.com/paketo-buildpacks/pipeline-builder/actions"
+	actions "github.com/paketo-buildpacks/pipeline-builder/v2/actions"
 )
 
 const userAgent = "Paketo_Buildpacks_CI/1.0"

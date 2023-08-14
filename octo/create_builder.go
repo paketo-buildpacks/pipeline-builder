@@ -17,8 +17,8 @@
 package octo
 
 import (
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions/event"
 )
 
 func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {

@@ -17,7 +17,7 @@
 package actions
 
 import (
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions/event"
 )
 
 type Workflow struct {

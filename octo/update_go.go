@@ -21,9 +21,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/jitter"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/jitter"
 )
 
 func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {

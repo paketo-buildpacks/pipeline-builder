@@ -26,8 +26,8 @@ import (
 	"github.com/BurntSushi/toml"
 	"github.com/buildpacks/libcnb/v2"
 
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions/event"
 )
 
 func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {

@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/paketo-buildpacks/pipeline-builder/buildpack"
+	buildpack "github.com/paketo-buildpacks/pipeline-builder/v2/buildpack"
 	"github.com/spf13/pflag"
 )
 

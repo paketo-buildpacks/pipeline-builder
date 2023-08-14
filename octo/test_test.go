@@ -23,8 +23,8 @@ import (
 	"testing"
 
 	. "github.com/onsi/gomega"
-	"github.com/paketo-buildpacks/pipeline-builder/octo"
-	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
+	octo "github.com/paketo-buildpacks/pipeline-builder/v2/octo"
+	"github.com/paketo-buildpacks/pipeline-builder/v2/octo/actions"
 	"github.com/sclevine/spec"
 	"gopkg.in/yaml.v3"
 )

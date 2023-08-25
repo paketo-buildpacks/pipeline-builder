@@ -76,7 +76,9 @@ func TestFindIds(t *testing.T) {
 				}{
 					URI: "docker://gcr.io/tanzu-buildpacks/tanzu-bellsoft-liberica-offline:9.12.0",
 				},
-				descriptor: Descriptor{},
+				descriptor: Descriptor{
+					PackageMatcher: "*-offline",
+				},
 			},
 			packageId:   "gcr.io/tanzu-buildpacks/tanzu-bellsoft-liberica-offline",
 			buildpackId: "gcr.io/tanzu-buildpacks/tanzu-bellsoft-liberica",

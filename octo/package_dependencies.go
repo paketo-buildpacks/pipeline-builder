@@ -105,10 +105,9 @@ func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency, de
 		}
 
 		// search for a fuzzy match
+		endOfId := strings.Split(possibleBpId, "/")[1]
 		for _, order := range bpOrders.Orders {
 			for _, group := range order.Groups {
-				endOfId := strings.Split(possibleBpId, "/")[1]
-				// fmt.Println("group.Id", group.ID, "endOfId", endOfId, "group.Version", group.Version, "version", version)
 				if strings.HasSuffix(group.ID, endOfId) && group.Version == version {
 					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
 					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
@@ -118,16 +117,16 @@ func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency, de
 			}
 		}
 
-		// search for a regex match
-		for _, order := range bpOrders.Orders {
-			for _, group := range order.Groups {
-				endOfId := strings.Split(possibleBpId, "/")[1]
-				re := regexp.MustCompile(descriptor.PackageMatcher)
-				if g := re.FindStringSubmatch(endOfId); g != nil && group.Version == version {
-					pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
-					bpId := fmt.Sprintf("%s/%s", registry, group.ID)
-					// fmt.Println("pkgId", pkgId, "bpId", bpId)
-					return pkgId, bpId, nil
+		// search for a regex match if set
+		if descriptor.PackageMatcher != "" {
+			re := regexp.MustCompile(descriptor.PackageMatcher)
+			for _, order := range bpOrders.Orders {
+				for _, group := range order.Groups {
+					if g := re.FindStringSubmatch(endOfId); g != nil && group.Version == version {
+						pkgId := fmt.Sprintf("%s/%s", registry, possibleBpId)
+						bpId := fmt.Sprintf("%s/%s", registry, group.ID)
+						return pkgId, bpId, nil
+					}
 				}
 			}
 		}

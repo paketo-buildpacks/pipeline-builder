@@ -6,7 +6,7 @@ require (
 	cloud.google.com/go/storage v1.32.0
 	github.com/BurntSushi/toml v1.3.2
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/aws/aws-sdk-go v1.44.332
+	github.com/aws/aws-sdk-go v1.45.2
 	github.com/buildpacks/libcnb v1.29.0
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
@@ -26,7 +26,7 @@ require (
 require (
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	github.com/creack/pty v1.1.18 // indirect
-	github.com/google/s2a-go v0.1.5 // indirect
+	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.5 // indirect
 	github.com/heroku/color v0.0.6 // indirect
@@ -79,8 +79,8 @@ require (
 	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
-	golang.org/x/text v0.12.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
+	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230822172742-b8732ec3820d // indirect

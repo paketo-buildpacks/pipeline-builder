@@ -75,6 +75,8 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 								"CPE_PATTERN":     d.CPEPattern,
 								"PURL":            "${{ steps.dependency.outputs.purl }}",
 								"PURL_PATTERN":    d.PURLPattern,
+								"SOURCE_URI":      "${{ steps.dependency.outputs.source }}",
+								"SOURCE_SHA256":      "${{ steps.dependency.outputs.source_sha256 }}",
 							},
 						}, {
 							Uses: "peter-evans/create-pull-request@v5",

@@ -18,7 +18,9 @@ update-buildpack-dependency \
   --purl-pattern "${PURL_PATTERN:-}" \
   --purl "${PURL:-}" \
   --uri "${URI}" \
-  --sha256 "${SHA256}"
+  --sha256 "${SHA256}" \
+  --source "${SOURCE_URI}" \
+  --source-sha256 "${SOURCE_SHA256}"
 
 git add buildpack.toml
 git checkout -- .

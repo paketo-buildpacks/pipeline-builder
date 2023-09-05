@@ -1,4 +1,4 @@
-FROM golang:1.18 as build-stage
+FROM golang:1.20.8-bullseye as build-stage
 
 RUN apt-get update && apt-get install -y --no-install-recommends upx
 

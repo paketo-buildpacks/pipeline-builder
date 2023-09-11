@@ -13,7 +13,7 @@ require (
 	github.com/google/go-containerregistry v0.15.2
 	github.com/iancoleman/strcase v0.2.0
 	github.com/onsi/gomega v1.27.10
-	github.com/paketo-buildpacks/libpak/v2 v2.0.0-20230814130800-d2aac91e2edf
+	github.com/paketo-buildpacks/libpak/v2 v2.0.0-alpha
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
@@ -80,7 +80,7 @@ require (
 	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
 	golang.org/x/sync v0.3.0 // indirect
-	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/sys v0.12.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/appengine v1.6.7 // indirect

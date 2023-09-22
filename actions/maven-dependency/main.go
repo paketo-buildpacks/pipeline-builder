@@ -68,18 +68,28 @@ func main() {
 		panic(fmt.Errorf("unable to decode payload\n%w", err))
 	}
 
+	sources := make(map[string]string)
 	versions := make(actions.Versions)
 	for _, v := range raw.Versioning.Versions {
 		if p := versionPattern.MatchString(v); p {
 			w := fmt.Sprintf("%s/%s/%s/%s", u, strings.ReplaceAll(g, ".", "/"), a, v)
 			w = fmt.Sprintf("%s/%s-%s", w, a, v)
+			src := w
+
 			if s, ok := inputs["classifier"]; ok {
 				w = fmt.Sprintf("%s-%s", w, s)
 			}
+			if sc, ok := inputs["source_classifier"]; ok {
+				src = fmt.Sprintf("%s-%s", src, sc)
+			} else {
+				src = fmt.Sprintf("%s-%s", src, "src")
+			}
 			if s, ok := inputs["packaging"]; ok {
 				w = fmt.Sprintf("%s.%s", w, s)
+				src = fmt.Sprintf("%s.%s", src, s)
 			} else {
 				w = fmt.Sprintf("%s.jar", w)
+				src = fmt.Sprintf("%s.jar", src)
 			}
 
 			n, err := actions.NormalizeVersion(v)
@@ -88,12 +98,23 @@ func main() {
 			}
 
 			versions[n] = w
+			sources[n] = src
 		}
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

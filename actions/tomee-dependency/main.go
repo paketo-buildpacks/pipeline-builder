@@ -48,6 +48,8 @@ func main() {
 	c := colly.NewCollector()
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
+	
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
 		if p := TomeeVersionPattern.FindStringSubmatch(element.Attr("href")); p != nil {
 			if major == "" || major == p[1] {
@@ -59,6 +61,7 @@ func main() {
 				}
 
 				versions[verKey] = fmt.Sprintf("%s/tomee-%[2]s/apache-tomee-%[2]s-%s.tar.gz", uri, verVal, dist)
+				sources[verKey] = fmt.Sprintf("%s/tomee-%[2]s/tomee-project-%[2]s-source-release.zip", uri, verVal, dist)
 			}
 		}
 	})
@@ -71,8 +74,12 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
 
-	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
 	if err != nil {
 		panic(err)
 	}

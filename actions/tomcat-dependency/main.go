@@ -43,11 +43,14 @@ func main() {
 
 	cp := regexp.MustCompile(versionRegex)
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
+
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
 		if p := cp.FindStringSubmatch(element.Attr("href")); p != nil {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[v] = fmt.Sprintf("%s/v%[2]s/bin/apache-tomcat-%[2]s.tar.gz", uri, v)
+			sources[v] = fmt.Sprintf("%s/v%[2]s/src/apache-tomcat-%[2]s-src.tar.gz", uri, v)
 		}
 	})
 
@@ -55,9 +58,19 @@ func main() {
 		panic(err)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

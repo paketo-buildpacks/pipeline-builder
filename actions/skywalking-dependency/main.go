@@ -28,17 +28,20 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	uri := "https://downloads.apache.org/skywalking/java-agent"
+	uri := "https://archive.apache.org/dist/skywalking/java-agent/"
 
 	c := colly.NewCollector()
 
 	cp := regexp.MustCompile(`^([\d]+)\.([\d]+)\.([\d]+)/$`)
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
+
 	c.OnHTML("a[href]", func(element *colly.HTMLElement) {
 		if p := cp.FindStringSubmatch(element.Attr("href")); p != nil {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[v] = fmt.Sprintf("%s/%[2]s/apache-skywalking-java-agent-%[2]s.tgz", uri, v)
+			sources[v] = fmt.Sprintf("%s/%[2]s/apache-skywalking-java-agent-%[2]s-src.tgz", uri, v)
 		}
 	})
 
@@ -46,9 +49,19 @@ func main() {
 		panic(err)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

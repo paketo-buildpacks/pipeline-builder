@@ -35,6 +35,7 @@ func main() {
 
 	c := colly.NewCollector()
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 
 	var uri string
 	switch t {
@@ -50,6 +51,8 @@ func main() {
 				versions[v] = fmt.Sprintf(
 					"https://download.newrelic.com%s/newrelic-php5-%s.%s.%s.%s-linux.tar.gz",
 					h, p[1], p[2], p[3], p[4])
+				sources[v] = fmt.Sprintf("https://github.com/newrelic/newrelic-php-agent/archive/refs/tags/v%s.%s.%s.%s.tar.gz",
+				    p[1], p[2], p[3], p[4])
 			}
 		})
 	case "dotnet":
@@ -64,6 +67,8 @@ func main() {
 				versions[v] = fmt.Sprintf(
 					"https://download.newrelic.com%s/newrelic-dotnet-agent_%s.%s.%s_amd64.tar.gz",
 					 h, p[1], p[2], p[3])
+				sources[v] = fmt.Sprintf("https://github.com/newrelic/newrelic-dotnet-agent/archive/refs/tags/v%s.%s.%s.tar.gz",
+				     p[1], p[2], p[3])
 			}
 		})
 	default:
@@ -74,9 +79,19 @@ func main() {
 		panic(err)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

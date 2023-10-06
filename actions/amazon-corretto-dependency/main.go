@@ -31,7 +31,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	r, ok := inputs["repository"]
+	repo, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))
 	}
@@ -56,14 +56,15 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 
 	md := regexp.MustCompile(`(?U)\[(.+)]\((.+)\)`)
 
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "corretto", r, opt)
+		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "corretto", repo, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", "corretto", r, err))
+			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", "corretto", repo, err))
 		}
 
 		for _, r := range rel {
@@ -86,6 +87,7 @@ func main() {
 							}
 
 							versions[s] = p[2]
+							sources[s] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s.tar.gz", "corretto", repo, *r.TagName)
 						}
 					}
 				}
@@ -103,7 +105,12 @@ func main() {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}

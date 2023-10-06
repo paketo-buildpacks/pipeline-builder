@@ -70,16 +70,24 @@ func main() {
 	}
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
+
 	for _, r := range raw {
-		versions[strings.ReplaceAll(r.VersionData.Semver, "+", "-")] = r.Binaries[0].Package.Link
+		version := strings.ReplaceAll(r.VersionData.Semver, "+", "-")
+		versions[version] = r.Binaries[0].Package.Link
+		sources[version] = r.Source.Link
 	}
 
 	latestVersion, err := versions.GetLatestVersion(inputs)
 	if err != nil {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}
@@ -98,6 +106,7 @@ func main() {
 type Asset struct {
 	Binaries    []Binary
 	VersionData VersionData `json:"version_data"`
+	Source      Source
 }
 
 type Binary struct {
@@ -105,6 +114,10 @@ type Binary struct {
 }
 
 type Package struct {
+	Link string
+}
+
+type Source struct {
 	Link string
 }
 

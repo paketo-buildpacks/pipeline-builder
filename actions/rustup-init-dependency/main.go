@@ -47,6 +47,7 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 
 	opt := &github.ListOptions{PerPage: 100}
 	for {
@@ -63,6 +64,7 @@ func main() {
 
 			versions[normalVersion] = fmt.Sprintf("https://static.rust-lang.org/rustup/archive/"+
 				"%s/%s/rustup-init", normalVersion, target)
+			sources[normalVersion] = fmt.Sprintf("https://github.com/rust-lang/rustup/archive/refs/tags/%s.tar.gz", normalVersion)
 		}
 
 		if rsp.NextPage == 0 {
@@ -71,7 +73,16 @@ func main() {
 		opt.Page = rsp.NextPage
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(fmt.Errorf("unable to get latest version: %w", err))
+	}
+
+	latestSource := actions.Outputs{}
+	latestSource["source"] = sources[latestVersion.Original()]
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
+	if err != nil {
 		panic(err)
 	} else {
 		o.Write()

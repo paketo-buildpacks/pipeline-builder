@@ -67,10 +67,10 @@ func main() {
 		latestSource["source"] = sources[latestVersion.Original()]
 	}
 
-	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
 	if err != nil {
 		panic(err)
-	}else {
+	} else {
 		o.Write()
 	}
 }

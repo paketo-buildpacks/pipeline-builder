@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 
@@ -47,11 +48,17 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	sources := actions.Outputs{}
 
 	// pull latest version
 	release, _, err := gh.Repositories.GetLatestRelease(context.Background(), ORG, REPO)
 	if err != nil {
 		panic(fmt.Errorf("unable to list existing tags for %s/%s\n%w", ORG, REPO, err))
+	}
+
+	originalVersion, err := semver.NewVersion(*release.TagName)
+	if err != nil {
+		panic(fmt.Errorf("unable to parse %s as semver\n%w", *release.TagName, err))
 	}
 
 	normalVersion, err := actions.NormalizeVersion(*release.TagName)
@@ -61,8 +68,10 @@ func main() {
 
 	versions[normalVersion] = fmt.Sprintf("https://static.rust-lang.org/dist/"+
 		"rust-%s-%s.tar.gz", normalVersion, target)
+	sources["source"] = fmt.Sprintf("https://static.rust-lang.org/dist/rustc-%s-src.tar.gz", normalVersion)
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	o, err := actions.NewOutputs(versions[normalVersion], originalVersion, sources)
+	if err != nil {
 		panic(err)
 	} else {
 		o.Write()

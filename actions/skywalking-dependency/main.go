@@ -28,7 +28,7 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
-	uri := "https://archive.apache.org/dist/skywalking/java-agent/"
+	uri := "https://archive.apache.org/dist/skywalking/java-agent"
 
 	c := colly.NewCollector()
 
@@ -54,7 +54,7 @@ func main() {
 		panic(err)
 	}
 	latestSource := actions.Outputs{}
-	if sources != nil {
+	if len(sources) != 0{
 		latestSource["source"] = sources[latestVersion.Original()]
 	}
 

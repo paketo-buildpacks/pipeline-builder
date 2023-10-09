@@ -38,7 +38,7 @@ func main() {
 		panic(fmt.Errorf("owner must be specified"))
 	}
 
-	r, ok := inputs["repository"]
+	repo, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))
 	}
@@ -68,6 +68,7 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 
 	re, err := regexp.Compile(t)
 	if err != nil {
@@ -76,9 +77,9 @@ func main() {
 
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
+		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, repo, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, r, err))
+			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, repo, err))
 		}
 
 		for _, r := range rel {
@@ -95,8 +96,9 @@ func main() {
 						// Decode JSON so we can extract 'version.semver'
 						json := getReleaseJSON(versionJSON)
 						// Record semver against the asset's tar.gz URL
-						versions[strings.ReplaceAll(json.VersionData.Semver, "+", "-")] = *a.BrowserDownloadURL
-
+						v := strings.ReplaceAll(json.VersionData.Semver, "+", "-")
+						versions[v] = *a.BrowserDownloadURL
+						sources[v] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s.tar.gz", o, repo, *r.TagName)
 						break
 					}
 				}
@@ -113,9 +115,14 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
 
 	url := versions[latestVersion.Original()]
-	outputs, err := actions.NewOutputs(url, latestVersion, nil)
+	outputs, err := actions.NewOutputs(url, latestVersion, latestSource)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}

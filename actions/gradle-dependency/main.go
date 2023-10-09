@@ -45,13 +45,25 @@ func main() {
 	}
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 	for _, v := range raw.FinalReleases {
 		versions[v.Version] = fmt.Sprintf("https://downloads.gradle.org/distributions/gradle-%s-bin.zip", v.Version)
+		sources[v.Version] = fmt.Sprintf("https://downloads.gradle.org/distributions/gradle-%s-src.zip", v.Version)
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

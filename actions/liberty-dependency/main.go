@@ -38,6 +38,10 @@ func main() {
 	if !ok {
 		panic(fmt.Errorf("group_id must be specified"))
 	}
+	source_available := false
+	if strings.Contains(g, "openliberty"){
+		source_available = true
+	}
 
 	a, ok := inputs["artifact_id"]
 	if !ok {
@@ -63,9 +67,12 @@ func main() {
 
 	originalVersions := map[string]string{}
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
+
 	for _, v := range raw.Versioning.Versions {
 		w := fmt.Sprintf("%s/%s/%s/%s", u, strings.ReplaceAll(g, ".", "/"), a, v)
 		w = fmt.Sprintf("%s/%s-%s", w, a, v)
+
 		if s, ok := inputs["classifier"]; ok {
 			w = fmt.Sprintf("%s-%s", w, s)
 		}
@@ -79,7 +86,9 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-
+		if source_available {
+			sources[v] = fmt.Sprintf("https://github.com/OpenLiberty/open-liberty/archive/refs/tags/gm-%s.tar.gz", v)
+		}
 		originalVersions[n] = v
 		versions[n] = w
 	}
@@ -88,8 +97,12 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[originalVersions[latestVersion.Original()]]
+	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}

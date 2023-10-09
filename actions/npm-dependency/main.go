@@ -58,15 +58,27 @@ func main() {
 	}
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 	for k, v := range raw.Versions {
 		if p := versionPattern.MatchString(k); p {
 			versions[k] = v.Dist.Tarball
+			sources[k] = v.Dist.Tarball
 		}
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
 		panic(err)
-	} else {
+	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
+		panic(err)
+	}else {
 		o.Write()
 	}
 }

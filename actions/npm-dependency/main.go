@@ -78,7 +78,7 @@ func main() {
 	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
 	if err != nil {
 		panic(err)
-	}else {
+	} else {
 		o.Write()
 	}
 }

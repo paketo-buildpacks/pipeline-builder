@@ -63,7 +63,7 @@ func main() {
 		panic(err)
 	}
 	latestSource := actions.Outputs{}
-	if sources != nil {
+	if len(sources) != 0{
 		latestSource["source"] = sources[latestVersion.Original()]
 	}
 

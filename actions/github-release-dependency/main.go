@@ -38,7 +38,7 @@ func main() {
 		panic(fmt.Errorf("owner must be specified"))
 	}
 
-	r, ok := inputs["repository"]
+	repo, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))
 	}
@@ -74,6 +74,8 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	originalTagName := make(map[string]string)
+	sources := make(map[string]string)
 
 	re, err := regexp.Compile(t)
 	if err != nil {
@@ -83,9 +85,9 @@ func main() {
 	var releases []*github.RepositoryRelease
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, r, opt)
+		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), o, repo, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, r, err))
+			panic(fmt.Errorf("unable to list existing releases for %s/%s\n%w", o, repo, err))
 		}
 
 		for _, r := range rel {
@@ -98,6 +100,7 @@ func main() {
 				if err != nil {
 					panic(err)
 				}
+				originalTagName[n] = *r.TagName
 				r.TagName = github.String(n)
 
 				releases = append(releases, r)
@@ -122,14 +125,27 @@ func main() {
 		for _, a := range r.Assets {
 			if g.MatchString(*a.Name) {
 				versions[*r.TagName] = *a.BrowserDownloadURL
+				sources[*r.TagName] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s.tar.gz", o, repo, originalTagName[*r.TagName])
 				break
 			}
 		}
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
-		panic(err)
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(fmt.Errorf("unable to get latest version\n%w", err))
+	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+
+	url := versions[latestVersion.Original()]
+	outputs, err := actions.NewOutputs(url, latestVersion, latestSource)
+	if err != nil {
+		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	} else {
-		o.Write()
+		outputs.Write()
 	}
 }

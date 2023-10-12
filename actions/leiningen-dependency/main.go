@@ -37,6 +37,7 @@ func main() {
 	gh := github.NewClient(c)
 
 	versions := make(actions.Versions)
+	sources := make(map[string]string)
 
 	opt := &github.ListOptions{PerPage: 100}
 	for {
@@ -47,6 +48,7 @@ func main() {
 
 		for _, r := range rel {
 			versions[*r.TagName] = fmt.Sprintf("https://raw.githubusercontent.com/technomancy/leiningen/%s/bin/lein", *r.TagName)
+			sources[*r.TagName] = fmt.Sprintf("https://github.com/technomancy/leiningen/archive/refs/tags/%s.tar.gz", *r.TagName)
 		}
 
 		if r.NextPage == 0 {
@@ -55,7 +57,17 @@ func main() {
 		opt.Page = r.NextPage
 	}
 
-	if o, err := versions.GetLatest(inputs); err != nil {
+	latestVersion, err := versions.GetLatestVersion(inputs)
+	if err != nil {
+		panic(err)
+	}
+	latestSource := actions.Outputs{}
+	if len(sources) != 0{
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion,  latestSource)
+	if err != nil {
 		panic(err)
 	} else {
 		o.Write()

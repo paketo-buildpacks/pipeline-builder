@@ -46,8 +46,8 @@ func main() {
 		globRegex = regexp.MustCompile(".+")
 	}
 
-	// github repo under the `alibaba` org to watch
-	r, ok := inputs["repository"]
+	// github repo under the `dragonwell-project` org to watch
+	repo, ok := inputs["repository"]
 	if !ok {
 		panic(fmt.Errorf("repository must be specified"))
 	}
@@ -60,11 +60,12 @@ func main() {
 
 	tagRegex := regexp.MustCompile(`dragonwell-.*_jdk[-]?(.*)-ga`)
 	versions := actions.Versions{}
+	sources := make(map[string]string)
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "alibaba", r, opt)
+		rel, rsp, err := gh.Repositories.ListReleases(context.Background(), "dragonwell-project", repo, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing releases for alibaba/%s\n%w", r, err))
+			panic(fmt.Errorf("unable to list existing releases for dragonwell-project/%s\n%w", repo, err))
 		}
 
 		for _, r := range rel {
@@ -76,6 +77,7 @@ func main() {
 							version = fmt.Sprintf("8.0.%s", strings.TrimLeft(version, "8u"))
 						}
 						versions[version] = *a.BrowserDownloadURL
+						sources[version] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s.tar.gz", "dragonwell-project", repo, *r.TagName)
 						break
 					}
 				}
@@ -93,7 +95,12 @@ func main() {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 
-	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, nil)
+	latestSource := actions.Outputs{}
+	if sources != nil {
+		latestSource["source"] = sources[latestVersion.Original()]
+	}
+
+	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	}

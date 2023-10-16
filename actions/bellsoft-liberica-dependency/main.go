@@ -66,8 +66,9 @@ func main() {
 			p, t, v)
 		sourceUri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			sourceUriStaticParams+
+			"&bundle-type=%s"+
 			"&version-feature=%s",
-			p, v)
+			p, t, v)
 	} else if p == "nik" {
 		uri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			uriStaticParams+
@@ -76,8 +77,9 @@ func main() {
 			p, t, v)
 		sourceUri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			sourceUriStaticParams+
+			"&bundle-type=%s"+
 			"&component-version=liberica%%40%s",
-			p, v)
+			p, "standard", v)
 	}
 
 	resp, err := http.Get(uri)

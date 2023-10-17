@@ -62,6 +62,14 @@ func main() {
 		g = regexp.MustCompile(".+")
 	}
 
+	var armG *regexp.Regexp
+	if s, ok := inputs["arm_glob"]; ok {
+		armG, err = regexp.Compile(s)
+		if err != nil {
+			panic(fmt.Errorf("unable to compile %s as a regexp\n%w", s, err))
+		}
+	}
+
 	t := `v?([^v].*)`
 	if s, ok := inputs["tag_filter"]; ok {
 		t = s
@@ -121,12 +129,14 @@ func main() {
 		releases = releases[len(releases)-1:]
 	}
 
+	armVersions := make(actions.Versions)
 	for _, r := range releases {
 		for _, a := range r.Assets {
 			if g.MatchString(*a.Name) {
 				versions[*r.TagName] = *a.BrowserDownloadURL
 				sources[*r.TagName] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s.tar.gz", o, repo, originalTagName[*r.TagName])
-				break
+			} else if armG != nil && armG.MatchString(*a.Name) {
+				armVersions[*r.TagName] = *a.BrowserDownloadURL
 			}
 		}
 	}
@@ -135,14 +145,16 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
-	latestSource := actions.Outputs{}
-	if len(sources) != 0{
-		latestSource["source"] = sources[latestVersion.Original()]
+	additionalOutputs := actions.Outputs{}
+	if len(sources) != 0 {
+		additionalOutputs["source"] = sources[latestVersion.Original()]
+	}
+	if len(armVersions) != 0 {
+		additionalOutputs["arm64-uri"] = armVersions[latestVersion.Original()]
 	}
 
-
 	url := versions[latestVersion.Original()]
-	outputs, err := actions.NewOutputs(url, latestVersion, latestSource)
+	outputs, err := actions.NewOutputs(url, latestVersion, additionalOutputs)
 	if err != nil {
 		panic(fmt.Errorf("unable to create outputs\n%w", err))
 	} else {

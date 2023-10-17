@@ -159,14 +159,11 @@ func main() {
 
 func determineNikVersion(r Release, additionalOutputs actions.Outputs) string {
 	key := ""
-	if v := actions.ExtendedVersionPattern.FindStringSubmatch(r.Components[0].Version); v != nil {
-		s := fmt.Sprintf("%s.%s.%s", v[1], v[2], v[3])
-		if v[4] != "" {
-			s = fmt.Sprintf("%s-%s", s, v[4])
-		}
-		key = s
-
-		// Use NIK version for CPE/PURL
+	if v, err := actions.NormalizeVersion(r.Components[0].Version); err != nil{
+		panic(err)
+	} else {
+		key = v
+			// Use NIK version for CPE/PURL
 		re := regexp.MustCompile(`\/vm/([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
 		matches := re.FindStringSubmatch(r.DownloadURL)
 		if matches == nil || len(matches) != 2 {
@@ -174,6 +171,7 @@ func determineNikVersion(r Release, additionalOutputs actions.Outputs) string {
 		}
 		additionalOutputs["purl"] = matches[1]
 	}
+
 	return key
 }
 

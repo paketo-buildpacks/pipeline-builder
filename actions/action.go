@@ -65,6 +65,12 @@ func NewOutputs(uri string, latestVersion *semver.Version, additionalOutputs Out
 				return nil, fmt.Errorf("unable to calculate source sha256\n%w", err)
 			}
 			outputs["source_sha256"] = sourceSha256
+		} else if k == "arm64-uri" {
+			arm64Sha256, err := SHA256FromURI(v, mods...)
+			if err != nil {
+				return nil, fmt.Errorf("unable to calculate arm64 sha256\n%w", err)
+			}
+			outputs["arm64_sha256"] = arm64Sha256
 		}
 		outputs[k] = v
 	}

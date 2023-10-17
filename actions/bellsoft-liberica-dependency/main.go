@@ -48,8 +48,7 @@ func main() {
 	}
 
 	commonStaticParams := "&version-modifier=latest"
-	uriStaticParams := "?arch=x86" +
-		"&bitness=64" +
+	uriStaticParams := "?bitness=64" +
 		"&os=linux" +
 		"&package-type=tar.gz" +
 		commonStaticParams
@@ -57,10 +56,18 @@ func main() {
 		commonStaticParams
 
 	uri := ""
+	armUri := ""
 	sourceUri := ""
 	if p == "liberica" {
 		uri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			uriStaticParams+
+			"&arch=x86"+
+			"&bundle-type=%s"+
+			"&version-feature=%s",
+			p, t, v)
+		armUri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
+			uriStaticParams+
+			"&arch=arm"+
 			"&bundle-type=%s"+
 			"&version-feature=%s",
 			p, t, v)
@@ -72,6 +79,13 @@ func main() {
 	} else if p == "nik" {
 		uri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			uriStaticParams+
+			"&arch=x86"+
+			"&bundle-type=%s"+
+			"&component-version=liberica%%40%s",
+			p, t, v)
+		armUri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
+			uriStaticParams+
+			"&arch=arm"+
 			"&bundle-type=%s"+
 			"&component-version=liberica%%40%s",
 			p, t, v)
@@ -139,6 +153,34 @@ func main() {
 
 	if sources != nil {
 		additionalOutputs["source"] = sources[latestVersion.Original()]
+	}
+
+	armResp, err := http.Get(armUri)
+	if err != nil {
+		panic(fmt.Errorf("unable to get %s\n%w", armUri, err))
+	}
+	defer armResp.Body.Close()
+
+	if armResp.StatusCode != 200 {
+		panic(fmt.Errorf("unable to download %s: %d", uri, armResp.StatusCode))
+	}
+
+	var armRaw []Release
+	if err := json.NewDecoder(armResp.Body).Decode(&armRaw); err != nil {
+		panic(fmt.Errorf("unable to decode payload\n%w", err))
+	}
+
+	armVersions := make(map[string]string)
+	for _, r := range armRaw {
+		key := fmt.Sprintf("%d.%d.%d-%d", r.FeatureVersion, r.InterimVersion, r.UpdateVersion, r.BuildVersion)
+		if p == "nik" {
+			key = determineNikVersion(r, additionalOutputs)
+		}
+		armVersions[key] = r.DownloadURL
+	}
+
+	if armVersions != nil {
+		additionalOutputs["arm64-uri"] = armVersions[latestVersion.Original()]
 	}
 
 	outputs, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, additionalOutputs)

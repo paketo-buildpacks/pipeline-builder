@@ -30,8 +30,8 @@ import (
 )
 
 const (
-	ORG  = "clojure"
-	REPO = "brew-install"
+	CLOJURE = "clojure"
+	REPO    = "brew-install"
 )
 
 func main() {
@@ -48,9 +48,9 @@ func main() {
 	// fetch all the clojure-tools versions from tags
 	opt := &github.ListOptions{PerPage: 100}
 	for {
-		tags, rsp, err := gh.Repositories.ListTags(context.Background(), ORG, REPO, opt)
+		tags, rsp, err := gh.Repositories.ListTags(context.Background(), CLOJURE, REPO, opt)
 		if err != nil {
-			panic(fmt.Errorf("unable to list existing tags for %s/%s\n%w", ORG, REPO, err))
+			panic(fmt.Errorf("unable to list existing tags for %s/%s\n%w", CLOJURE, REPO, err))
 		}
 
 		for _, t := range tags {
@@ -101,7 +101,15 @@ func main() {
 		versions = make(actions.Versions)
 		versions[normalVersion] = fmt.Sprintf("https://download.clojure.org/install/linux-install-%s.sh", origVersion)
 
-		if o, err := versions.GetLatest(inputs); err != nil {
+		latestVersion, err := versions.GetLatestVersion(inputs)
+		if err != nil {
+			panic(fmt.Errorf("unable to get latest version\n%w", err))
+		}
+
+		latestSource := actions.Outputs{}
+		latestSource["source"] = fmt.Sprintf("https://github.com/%s/%s/archive/refs/tags/%s-%s.tar.gz", CLOJURE, CLOJURE, CLOJURE, version)
+
+		if o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, latestSource); err != nil {
 			panic(err)
 		} else {
 			o.Write()

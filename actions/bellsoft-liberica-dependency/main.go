@@ -64,11 +64,12 @@ func main() {
 			"&bundle-type=%s"+
 			"&version-feature=%s",
 			p, t, v)
+		// source is only for jdk, since it's the same as the one for jre
 		sourceUri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			sourceUriStaticParams+
-			"&bundle-type=%s"+
+			"&bundle-type=jdk"+
 			"&version-feature=%s",
-			p, t, v)
+			p, v)
 	} else if p == "nik" {
 		uri = fmt.Sprintf("https://api.bell-sw.com/v1/%s/releases"+
 			uriStaticParams+
@@ -159,11 +160,11 @@ func main() {
 
 func determineNikVersion(r Release, additionalOutputs actions.Outputs) string {
 	key := ""
-	if v, err := actions.NormalizeVersion(r.Components[0].Version); err != nil{
+	if v, err := actions.NormalizeVersion(r.Components[0].Version); err != nil {
 		panic(err)
 	} else {
 		key = v
-			// Use NIK version for CPE/PURL
+		// Use NIK version for CPE/PURL
 		re := regexp.MustCompile(`\/vm/([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
 		matches := re.FindStringSubmatch(r.DownloadURL)
 		if matches == nil || len(matches) != 2 {

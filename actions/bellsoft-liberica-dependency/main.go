@@ -47,8 +47,15 @@ func main() {
 		panic(fmt.Errorf("product must either be liberica or nik"))
 	}
 
+	// curl https://api.bell-sw.com/v1/liberica/architectures
+	//  `["arm", "ppc", "sparc", "x86"]`
+	arch, ok := inputs["arch"]
+	if !ok {
+		arch = "x86"
+	}
+
 	commonStaticParams := "&version-modifier=latest"
-	uriStaticParams := "?arch=x86" +
+	uriStaticParams := fmt.Sprintf("?arch=%s", arch) +
 		"&bitness=64" +
 		"&os=linux" +
 		"&package-type=tar.gz" +

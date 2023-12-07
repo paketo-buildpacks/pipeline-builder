@@ -64,6 +64,8 @@ actions:
   target: ghcr.io/paketo-buildpacks/actions/new-relic-dependency
 - source: npm-dependency
   target: ghcr.io/paketo-buildpacks/actions/npm-dependency
+- source: oracle-dependency
+  target: ghcr.io/paketo-buildpacks/actions/oracle-dependency
 - source: overops-dependency
   target: ghcr.io/paketo-buildpacks/actions/overops-dependency
 - source: paketo-deps-dependency

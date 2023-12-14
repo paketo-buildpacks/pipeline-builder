@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 the original author or authors.
+ * Copyright 2018-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/google/go-github/v43/github"
 	"golang.org/x/oauth2"
 
@@ -50,27 +50,41 @@ func main() {
 	versions := make(actions.Versions)
 	sources := actions.Outputs{}
 
-	// pull latest version
-	release, _, err := gh.Repositories.GetLatestRelease(context.Background(), ORG, REPO)
-	if err != nil {
-		panic(fmt.Errorf("unable to list existing tags for %s/%s\n%w", ORG, REPO, err))
+	// pull latest version tag
+	opt := &github.ListOptions{PerPage: 100}
+	for {
+		tags, rsp, err := gh.Repositories.ListTags(context.Background(), ORG, REPO, opt)
+		if err != nil {
+			panic(fmt.Errorf("unable to list existing tags for %s/%s\n%w", ORG, REPO, err))
+		}
+
+		for _, t := range tags {
+			normalVersion, err := actions.NormalizeVersion(*t.Name)
+			if err != nil && strings.HasPrefix(err.Error(), "unable to parse") && strings.Contains(err.Error(), "as a extended version") {
+				fmt.Println("Skipping unrecognized tag", *t.Name, "as it does not match the expected pattern")
+				continue
+			} else if err != nil {
+				panic(fmt.Errorf("unable to normalize version [%s]\n%w", *t.Name, err))
+			}
+
+			versions[normalVersion] = fmt.Sprintf("https://static.rust-lang.org/dist/"+"rust-%s-%s.tar.gz", *t.Name, target)
+		}
+
+		if rsp.NextPage == 0 {
+			break
+		}
+		opt.Page = rsp.NextPage
 	}
 
-	originalVersion, err := semver.NewVersion(*release.TagName)
+	latestVersion, err := versions.GetLatestVersion(inputs)
 	if err != nil {
-		panic(fmt.Errorf("unable to parse %s as semver\n%w", *release.TagName, err))
+		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
+	fmt.Println("fetch latest version as:", latestVersion)
 
-	normalVersion, err := actions.NormalizeVersion(*release.TagName)
-	if err != nil {
-		panic(err)
-	}
+	sources["source"] = fmt.Sprintf("https://static.rust-lang.org/dist/rustc-%s-src.tar.gz", latestVersion.Original())
 
-	versions[normalVersion] = fmt.Sprintf("https://static.rust-lang.org/dist/"+
-		"rust-%s-%s.tar.gz", normalVersion, target)
-	sources["source"] = fmt.Sprintf("https://static.rust-lang.org/dist/rustc-%s-src.tar.gz", normalVersion)
-
-	o, err := actions.NewOutputs(versions[normalVersion], originalVersion, sources)
+	o, err := actions.NewOutputs(versions[latestVersion.Original()], latestVersion, sources)
 	if err != nil {
 		panic(err)
 	} else {

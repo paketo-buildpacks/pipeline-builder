@@ -67,6 +67,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							Run:  StatikString("/update-buildpack-dependency.sh"),
 							Env: map[string]string{
 								"ID":              d.Id,
+								"ARCH":            safeGetArch(d),
 								"SHA256":          "${{ steps.dependency.outputs.sha256 }}",
 								"URI":             "${{ steps.dependency.outputs.uri }}",
 								"VERSION":         "${{ steps.dependency.outputs.version }}",
@@ -107,4 +108,12 @@ Bumps %[1]s from ${{ steps.buildpack.outputs.old-version }} to ${{ steps.buildpa
 	}
 
 	return contributions, nil
+}
+
+func safeGetArch(d Dependency) string {
+	if arch, ok := d.With["arch"]; ok {
+		return arch.(string)
+	}
+
+	return ""
 }

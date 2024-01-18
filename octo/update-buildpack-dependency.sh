@@ -2,11 +2,8 @@
 
 set -euo pipefail
 
-OLD_VERSION=$(yj -tj < buildpack.toml | jq -r "
-  .metadata.dependencies[] |
-  select( .id == env.ID ) |
-  select( .version | test( env.VERSION_PATTERN ) ) |
-  .version")
+OLD_VERSION=$(yj -tj < buildpack.toml | \
+  jq -r ".metadata.dependencies[] | select( .id == env.ID ) | select( .version | test( env.VERSION_PATTERN ) ) | select( .purl | contains( env.ARCH ) )")
 
 update-buildpack-dependency \
   --buildpack-toml buildpack.toml \

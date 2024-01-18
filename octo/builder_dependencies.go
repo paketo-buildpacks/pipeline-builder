@@ -86,7 +86,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v4",
+						Uses: "actions/setup-go@v5",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -104,7 +104,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 					},
 					{
 						Id:   "build-image",
@@ -156,7 +156,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v4",
+						Uses: "actions/setup-go@v5",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -169,7 +169,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 					},
 					{
 						Id:   "dependency",

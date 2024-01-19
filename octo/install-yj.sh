@@ -12,6 +12,6 @@ curl \
   --show-error \
   --silent \
   --output "${HOME}"/bin/yj \
-  "https://github.com/sclevine/yj/releases/download/v${YJ_VERSION}/yj-linux"
+  "https://github.com/sclevine/yj/releases/download/v${YJ_VERSION}/yj-linux-amd64"
 
 chmod +x "${HOME}"/bin/yj

@@ -8,6 +8,7 @@ OLD_VERSION=$(yj -tj < buildpack.toml | \
 update-buildpack-dependency \
   --buildpack-toml buildpack.toml \
   --id "${ID}" \
+  --arch "${ARCH}" \
   --version-pattern "${VERSION_PATTERN}" \
   --version "${VERSION}" \
   --cpe-pattern "${CPE_PATTERN:-}" \

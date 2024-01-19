@@ -54,6 +54,10 @@ func main() {
 		arch = "x86"
 	}
 
+	if arch == "arm64" {
+		arch = "arm" // cause Bellsoft needs it without the bitness
+	}
+
 	commonStaticParams := "&version-modifier=latest"
 	uriStaticParams := fmt.Sprintf("?arch=%s", arch) +
 		"&bitness=64" +

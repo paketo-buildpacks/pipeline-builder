@@ -57,7 +57,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
 					},
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 						With: map[string]interface{}{
 							"repository":  offlinePackage.Source,
 							"fetch-depth": 0,
@@ -74,12 +74,12 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						},
 					},
 					{
-						Uses: "actions/setup-go@v4",
+						Uses: "actions/setup-go@v5",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
-						Uses: "actions/cache@v3",
+						Uses: "actions/cache@v4",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{
 							"path": strings.Join([]string{

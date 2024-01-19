@@ -135,7 +135,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v4",
+						Uses: "actions/setup-go@v5",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -153,7 +153,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 						Env:  map[string]string{"YJ_VERSION": YJVersion},
 					},
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 					},
 					{
 						Id:   "package",

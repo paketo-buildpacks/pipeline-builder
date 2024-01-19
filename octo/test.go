@@ -75,10 +75,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/checkout@v3",
+					Uses: "actions/checkout@v4",
 				},
 				{
-					Uses: "actions/cache@v3",
+					Uses: "actions/cache@v4",
 					With: map[string]interface{}{
 						"path":         "${{ env.HOME }}/go/pkg/mod",
 						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
@@ -86,7 +86,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					},
 				},
 				{
-					Uses: "actions/setup-go@v4",
+					Uses: "actions/setup-go@v5",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 			},
@@ -116,10 +116,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/checkout@v2",
+					Uses: "actions/checkout@v4",
 				},
 				{
-					Uses: "actions/cache@v3",
+					Uses: "actions/cache@v4",
 					With: map[string]interface{}{
 						"path":         "${{ env.HOME }}/go/pkg/mod",
 						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
@@ -127,7 +127,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					},
 				},
 				{
-					Uses: "actions/setup-go@v4",
+					Uses: "actions/setup-go@v5",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
@@ -171,7 +171,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Env:  map[string]string{"PACK_VERSION": PackVersion},
 				},
 				{
-					Uses: "actions/checkout@v3",
+					Uses: "actions/checkout@v4",
 				},
 				{
 					Id:   "version",
@@ -205,7 +205,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/setup-go@v4",
+					Uses: "actions/setup-go@v5",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
@@ -223,10 +223,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/enable-pack-experimental.sh"),
 				},
 				{
-					Uses: "actions/checkout@v3",
+					Uses: "actions/checkout@v4",
 				},
 				{
-					Uses: "actions/cache@v3",
+					Uses: "actions/cache@v4",
 					With: map[string]interface{}{
 						"path": strings.Join([]string{
 							"${{ env.HOME }}/.pack",

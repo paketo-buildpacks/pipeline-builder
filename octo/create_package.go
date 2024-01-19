@@ -69,7 +69,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v4",
+						Uses: "actions/setup-go@v5",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
@@ -92,10 +92,10 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  StatikString("/enable-pack-experimental.sh"),
 					},
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 					},
 					{
-						Uses: "actions/cache@v3",
+						Uses: "actions/cache@v4",
 						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.IncludeDependencies),
 						With: map[string]interface{}{
 							"path": strings.Join([]string{

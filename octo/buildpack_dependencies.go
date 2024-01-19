@@ -41,7 +41,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
-							Uses: "actions/setup-go@v4",
+							Uses: "actions/setup-go@v5",
 							With: map[string]interface{}{"go-version": GoVersion},
 						},
 						{
@@ -54,7 +54,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							Env:  map[string]string{"YJ_VERSION": YJVersion},
 						},
 						{
-							Uses: "actions/checkout@v3",
+							Uses: "actions/checkout@v4",
 						},
 						{
 							Id:   "dependency",
@@ -77,7 +77,7 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 								"PURL":            "${{ steps.dependency.outputs.purl }}",
 								"PURL_PATTERN":    d.PURLPattern,
 								"SOURCE_URI":      "${{ steps.dependency.outputs.source }}",
-								"SOURCE_SHA256":      "${{ steps.dependency.outputs.source_sha256 }}",
+								"SOURCE_SHA256":   "${{ steps.dependency.outputs.source_sha256 }}",
 							},
 						}, {
 							Uses: "peter-evans/create-pull-request@v5",

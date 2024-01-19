@@ -140,7 +140,7 @@ func ContributeDraftRelease(descriptor Descriptor) ([]Contribution, error) {
 
 		j.Steps = append(j.Steps,
 			actions.Step{
-				Uses: "actions/checkout@v3",
+				Uses: "actions/checkout@v4",
 			},
 			actions.Step{
 				Name: "Update draft release with buildpack information",

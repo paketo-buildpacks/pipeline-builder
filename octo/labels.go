@@ -121,7 +121,7 @@ func ContributeLabels(descriptor Descriptor) ([]Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/checkout@v3",
+						Uses: "actions/checkout@v4",
 					},
 					{
 						Uses: "micnncim/action-label-syncer@v1",

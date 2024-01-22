@@ -6,13 +6,13 @@ require (
 	cloud.google.com/go/storage v1.36.0
 	github.com/BurntSushi/toml v1.3.2
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/aws/aws-sdk-go v1.49.24
+	github.com/aws/aws-sdk-go v1.50.0
 	github.com/buildpacks/libcnb v1.30.1
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
 	github.com/google/go-containerregistry v0.18.0
 	github.com/iancoleman/strcase v0.3.0
-	github.com/onsi/gomega v1.31.0
+	github.com/onsi/gomega v1.31.1
 	github.com/pelletier/go-toml v1.9.5
 	github.com/rakyll/statik v0.1.7
 	github.com/sclevine/spec v1.4.0
@@ -59,9 +59,9 @@ require (
 	github.com/antchfx/xpath v1.2.5 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.15.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/docker/cli v24.0.7+incompatible // indirect
+	github.com/docker/cli v25.0.0+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
-	github.com/docker/docker v24.0.7+incompatible // indirect
+	github.com/docker/docker v25.0.0+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.8.1 // indirect
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
@@ -76,7 +76,7 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc6 // indirect
-	github.com/paketo-buildpacks/libpak v1.68.0
+	github.com/paketo-buildpacks/libpak v1.68.1
 	github.com/pkg/errors v0.9.1
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/saintfish/chardet v0.0.0-20230101081208-5e3ef4b5456d // indirect

@@ -2,12 +2,17 @@
 
 set -euo pipefail
 
-if [ -z "${ARCH}" ]; then
-  ARCH="amd64"
+VERSION_DEPS=$(yj -tj < buildpack.toml | jq -r ".metadata.dependencies[] | select( .id == env.ID ) | select( .version | test( env.VERSION_PATTERN ) )")
+ARCH=${ARCH:-amd64}
+OLD_VERSION=$(echo "$VERSION_DEPS" | jq -r 'select( .purl | contains( env.ARCH ) ) | .version')
+
+if [ -z "$OLD_VERSION" ]; then
+  ARCH="" # empty means noarch
+  OLD_VERSION=$(echo "$VERSION_DEPS" | jq -r ".version")
 fi
 
-OLD_VERSION=$(yj -tj < buildpack.toml | \
-  jq -r ".metadata.dependencies[] | select( .id == env.ID ) | select( .version | test( env.VERSION_PATTERN ) ) | select( .purl | contains( env.ARCH ) ) | .version")
+echo $OLD_VERSION
+exit 0
 
 update-buildpack-dependency \
   --buildpack-toml buildpack.toml \

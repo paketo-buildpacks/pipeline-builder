@@ -11,9 +11,6 @@ if [ -z "$OLD_VERSION" ]; then
   OLD_VERSION=$(echo "$VERSION_DEPS" | jq -r ".version")
 fi
 
-echo $OLD_VERSION
-exit 0
-
 update-buildpack-dependency \
   --buildpack-toml buildpack.toml \
   --id "${ID}" \

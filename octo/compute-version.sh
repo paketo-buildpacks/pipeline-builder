@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-if [ -z "${GITHUB_REF+set}" ]; then
-  echo "GITHUB_REF set to [${GITHUB_REF-<unset>}], but should never be empty or unset"
+if [[ ${GITHUB_REF:-} != "refs/"* ]]; then
+  echo "GITHUB_REF set to [${GITHUB_REF:-}], but that is unexpected. It should start with 'refs/*'"
   exit 255
 fi
 

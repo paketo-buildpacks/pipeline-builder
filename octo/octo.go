@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package octo
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sort"
@@ -170,7 +169,7 @@ func Write(descriptor Descriptor, contributions []Contribution) error {
 			return fmt.Errorf("unable to create %s\n%w", filepath.Dir(file), err)
 		}
 
-		if err := ioutil.WriteFile(file, c.Content, c.Permissions); err != nil {
+		if err := os.WriteFile(file, c.Content, c.Permissions); err != nil {
 			return fmt.Errorf("unable to write %s\n%w", file, err)
 		}
 	}

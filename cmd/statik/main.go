@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 	"time"
@@ -16,11 +16,11 @@ import (
 // This can be useful to see what has changed between two versions.
 //
 // For example:
-//   1. `git co <branch>`
-//   2. `go run cmd/statik/main.go > old.txt`
-//   3. `git co <other-branch>`
-//   4. `go run cmd/statik/main.go > new.txt`
-//   5. `diff -u old.txt new.txt`
+//  1. `git co <branch>`
+//  2. `go run cmd/statik/main.go > old.txt`
+//  3. `git co <other-branch>`
+//  4. `go run cmd/statik/main.go > new.txt`
+//  5. `diff -u old.txt new.txt`
 func main() {
 	fmt.Println("Contents of statik files")
 	fmt.Println()
@@ -58,7 +58,7 @@ func main() {
 			return fmt.Errorf("unable to open file %s", path)
 		}
 
-		b, err := ioutil.ReadAll(fp)
+		b, err := io.ReadAll(fp)
 		if err != nil {
 			return fmt.Errorf("unable to read file %s", path)
 		}

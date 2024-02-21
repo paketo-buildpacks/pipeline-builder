@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2020 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package octo_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
@@ -45,11 +44,10 @@ func testTestGeneration(t *testing.T, context spec.G, it spec.S) {
 	context("Generate Tests", func() {
 		it.Before(func() {
 			var err error
-			dir, err = ioutil.TempDir("", "main-package")
-			Expect(err).To(Not(HaveOccurred()))
+			dir = t.TempDir()
 
 			Expect(os.Mkdir(filepath.Join(dir, ".github"), 0755)).To(Succeed())
-			Expect(ioutil.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
+			Expect(os.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
 github:
   username: ${{ secrets.JAVA_GITHUB_USERNAME }}
   token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
@@ -63,11 +61,7 @@ package:
 			descriptor, err = octo.NewDescriptor(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"))
 			Expect(err).To(Not(HaveOccurred()))
 
-			Expect(ioutil.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)).To(Succeed())
-		})
-
-		it.After(func() {
-			Expect(os.RemoveAll(dir)).To(Succeed())
+			Expect(os.WriteFile(filepath.Join(dir, "main.go"), []byte{}, 0644)).To(Succeed())
 		})
 
 		it("will contribute a unit test pipeline", func() {
@@ -90,7 +84,7 @@ package:
 		context("there are integration tests", func() {
 			it.Before(func() {
 				Expect(os.Mkdir(filepath.Join(dir, "integration"), 0755)).To(Succeed())
-				Expect(ioutil.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)).To(Succeed())
+				Expect(os.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)).To(Succeed())
 			})
 
 			it("will contribute a unit test and an integration test pipeline", func() {
@@ -113,7 +107,5 @@ package:
 				Expect(integrationSteps[len(integrationSteps)-1].Run).Should(ContainSubstring("richgo test ./integration/... -run Integration"))
 			})
 		})
-
 	})
-
 }

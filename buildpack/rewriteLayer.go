@@ -4,7 +4,7 @@ import (
 	"archive/tar"
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"path"
 	"strings"
 
@@ -37,7 +37,7 @@ func rewriteLayer(layer v1.Layer, oldID, newID, oldVersion, newVersion string) (
 
 		// replace buildpack id and version in buildpack.toml
 		if strings.HasSuffix(path.Clean(header.Name), "buildpack.toml") {
-			buf, err := ioutil.ReadAll(tr)
+			buf, err := io.ReadAll(tr)
 			if err != nil {
 				return nil, fmt.Errorf("unable to read buildpack.toml\n%w", err)
 			}
@@ -76,7 +76,7 @@ func rewriteLayer(layer v1.Layer, oldID, newID, oldVersion, newVersion string) (
 				return nil, fmt.Errorf("unable to write header\n%w", err)
 			}
 
-			buf, err := ioutil.ReadAll(tr)
+			buf, err := io.ReadAll(tr)
 			if err != nil {
 				return nil, fmt.Errorf("unable to read contents\n%w", err)
 			}
@@ -88,7 +88,9 @@ func rewriteLayer(layer v1.Layer, oldID, newID, oldVersion, newVersion string) (
 		}
 	}
 
-	return tarball.LayerFromReader(b)
+	return tarball.LayerFromOpener(func() (io.ReadCloser, error) {
+		return io.NopCloser(b), nil
+	})
 }
 
 type BuildpackDescriptor struct {

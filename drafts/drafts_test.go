@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package drafts_test
 
 import (
 	"bytes"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -36,22 +35,10 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 	var (
 		Expect = NewWithT(t).Expect
 
-		dir string
-
 		bpLoader mocks.BuildpackLoader
 	)
 
 	context("draft a release", func() {
-		it.Before(func() {
-			var err error
-			dir, err = ioutil.TempDir("", "drafts")
-			Expect(err).To(Not(HaveOccurred()))
-		})
-
-		it.After(func() {
-			Expect(os.RemoveAll(dir)).To(Succeed())
-		})
-
 		context("payloads", func() {
 			it("creates a payload for a component buildpack", func() {
 				d := drafts.Drafter{Loader: &bpLoader}
@@ -246,7 +233,7 @@ func testDrafts(t *testing.T, context spec.G, it spec.S) {
 			var templateContent string
 
 			it.Before(func() {
-				tc, err := ioutil.ReadFile("../actions/draft-release/draft.template")
+				tc, err := os.ReadFile("../actions/draft-release/draft.template")
 				Expect(err).ToNot(HaveOccurred())
 				templateContent = string(tc)
 			})

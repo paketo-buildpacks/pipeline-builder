@@ -49,9 +49,11 @@ func ContributeBuildpackDependencies(descriptor Descriptor) ([]Contribution, err
 							Run:  StatikString("/install-update-buildpack-dependency.sh"),
 						},
 						{
-							Name: "Install yj",
-							Run:  StatikString("/install-yj.sh"),
-							Env:  map[string]string{"YJ_VERSION": YJVersion},
+							Uses: fmt.Sprintf("buildpacks/github-actions/setup-tools@v%s", BuildpackActionsVersion),
+							With: map[string]interface{}{
+								"crane-version": CraneVersion,
+								"yj-version":    YJVersion,
+							},
 						},
 						{
 							Uses: "actions/checkout@v4",

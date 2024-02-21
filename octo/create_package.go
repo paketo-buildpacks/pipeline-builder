@@ -77,14 +77,17 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						Run:  StatikString("/install-create-package.sh"),
 					},
 					{
-						Name: "Install crane",
-						Run:  StatikString("/install-crane.sh"),
-						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-tools@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"crane-version": CraneVersion,
+							"yj-version":    YJVersion,
+						},
 					},
 					{
-						Name: "Install pack",
-						Run:  StatikString("/install-pack.sh"),
-						Env:  map[string]string{"PACK_VERSION": PackVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-pack@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"pack-version": PackVersion,
+						},
 					},
 					{
 						Name: "Enable pack Experimental",

@@ -51,9 +51,11 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Name: "Install crane",
-						Run:  StatikString("/install-crane.sh"),
-						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-tools@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"crane-version": CraneVersion,
+							"yj-version":    YJVersion,
+						},
 					},
 					{
 						Uses: "actions/checkout@v4",

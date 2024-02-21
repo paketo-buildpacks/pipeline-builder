@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 the original author or authors.
+ * Copyright 2018-2024 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -198,7 +197,7 @@ func (d Drafter) CreatePayload(inputs actions.Inputs, buildpackPath string) (Pay
 }
 
 func loadBuildpackTOMLFromFile(buildpackPath string) (*Buildpack, error) {
-	rawTOML, err := ioutil.ReadFile(filepath.Join(buildpackPath, "buildpack.toml"))
+	rawTOML, err := os.ReadFile(filepath.Join(buildpackPath, "buildpack.toml"))
 	if err != nil && os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -277,7 +276,7 @@ func asString(m map[string]interface{}, key string) string {
 }
 
 func loadPackage(buildpackPath string) (*Package, error) {
-	rawTOML, err := ioutil.ReadFile(filepath.Join(buildpackPath, "package.toml"))
+	rawTOML, err := os.ReadFile(filepath.Join(buildpackPath, "package.toml"))
 	if err != nil && os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -293,7 +292,7 @@ func loadPackage(buildpackPath string) (*Package, error) {
 }
 
 func loadBuilderTOML(buildpackPath string) (*Builder, error) {
-	rawTOML, err := ioutil.ReadFile(filepath.Join(buildpackPath, "builder.toml"))
+	rawTOML, err := os.ReadFile(filepath.Join(buildpackPath, "builder.toml"))
 	if err != nil && os.IsNotExist(err) {
 		return nil, nil
 	} else if err != nil {
@@ -512,7 +511,7 @@ func (r RegistryBuildpackLoader) LoadBuildpack(uri string) (Buildpack, error) {
 		return Buildpack{}, fmt.Errorf("unable to create /tmp\n%w", err)
 	}
 
-	tarFile, err := ioutil.TempFile("/tmp", "tarfiles")
+	tarFile, err := os.CreateTemp("/tmp", "tarfiles")
 	if err != nil {
 		return Buildpack{}, fmt.Errorf("unable to create tempfile\n%w", err)
 	}

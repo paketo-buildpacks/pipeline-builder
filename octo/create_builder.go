@@ -17,6 +17,8 @@
 package octo
 
 import (
+	"fmt"
+
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions"
 	"github.com/paketo-buildpacks/pipeline-builder/octo/actions/event"
 )
@@ -45,14 +47,17 @@ func ContributeCreateBuilder(descriptor Descriptor) (*Contribution, error) {
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
-						Name: "Install crane",
-						Run:  StatikString("/install-crane.sh"),
-						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-tools@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"crane-version": CraneVersion,
+							"yj-version":    YJVersion,
+						},
 					},
 					{
-						Name: "Install pack",
-						Run:  StatikString("/install-pack.sh"),
-						Env:  map[string]string{"PACK_VERSION": PackVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-pack@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"pack-version": PackVersion,
+						},
 					},
 					{
 						Uses: "actions/checkout@v4",

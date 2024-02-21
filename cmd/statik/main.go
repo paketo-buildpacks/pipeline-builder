@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"sort"
 	"time"
@@ -58,7 +58,7 @@ func main() {
 			return fmt.Errorf("unable to open file %s", path)
 		}
 
-		b, err := ioutil.ReadAll(fp)
+		b, err := io.ReadAll(fp)
 		if err != nil {
 			return fmt.Errorf("unable to read file %s", path)
 		}

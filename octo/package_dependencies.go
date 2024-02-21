@@ -143,14 +143,11 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 						Run:  StatikString("/install-update-package-dependency.sh"),
 					},
 					{
-						Name: "Install crane",
-						Run:  StatikString("/install-crane.sh"),
-						Env:  map[string]string{"CRANE_VERSION": CraneVersion},
-					},
-					{
-						Name: "Install yj",
-						Run:  StatikString("/install-yj.sh"),
-						Env:  map[string]string{"YJ_VERSION": YJVersion},
+						Uses: fmt.Sprintf("buildpacks/github-actions/setup-tools@v%s", BuildpackActionsVersion),
+						With: map[string]interface{}{
+							"crane-version": CraneVersion,
+							"yj-version":    YJVersion,
+						},
 					},
 					{
 						Uses: "actions/checkout@v4",

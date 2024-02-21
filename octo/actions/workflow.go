@@ -69,7 +69,7 @@ type Step struct {
 type Strategy struct {
 	Matrix      Matrix `yaml:",omitempty"`
 	FailFast    bool   `yaml:"fail-fast,omitempty"`
-	MaxParallel int    `yaml:"max-parallel:omitempty"`
+	MaxParallel int    `yaml:"max-parallel,omitempty"`
 }
 
 type Container struct {

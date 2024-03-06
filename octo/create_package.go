@@ -145,7 +145,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						},
 					},
 					{
-						Uses: "docker://ghcr.io/buildpacks/actions/registry/request-add-entry:4.0.1",
+						Uses: fmt.Sprintf("docker://ghcr.io/buildpacks/actions/registry/request-add-entry:%s", BuildpackActionsVersion),
 						If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Register),
 						With: map[string]interface{}{
 							"token":   descriptor.Package.RegistryToken,

@@ -84,10 +84,8 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 						},
 					},
 					{
-						Uses: fmt.Sprintf("buildpacks/github-actions/setup-pack@v%s", BuildpackActionsVersion),
-						With: map[string]interface{}{
-							"pack-version": PackVersion,
-						},
+						Name: "Install pack",
+						Run:  StatikString("/install-experimental-pack.sh"),
 					},
 					{
 						Name: "Enable pack Experimental",

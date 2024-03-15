@@ -15,7 +15,7 @@ PACKAGE=${PACKAGE_LIST[0]}
 
 if [[ "${PUBLISH:-x}" == "true" ]]; then
   pack -v buildpack package \
-    "${PACKAGE}:${VERSION}" "${CONFIG}" \
+    "${PACKAGE}:${VERSION}" ${CONFIG} \
     --publish
 
   if [[ -n ${VERSION_MINOR:-} && -n ${VERSION_MAJOR:-} ]]; then
@@ -40,6 +40,6 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
 
 else
   pack -v buildpack package \
-    "${PACKAGE}:${VERSION}" "${CONFIG}" \
+    "${PACKAGE}:${VERSION}" ${CONFIG} \
     --format "${FORMAT}"
 fi

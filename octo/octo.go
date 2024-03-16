@@ -133,6 +133,18 @@ func Contribute(path string) error {
 		contributions = append(contributions, *c)
 	}
 
+	if c, err := ContributeScripts(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
+	if c, err := ContributeGit(descriptor); err != nil {
+		return err
+	} else {
+		contributions = append(contributions, c...)
+	}
+
 	if err := Remove(descriptor, RemovedFiles); err != nil {
 		return err
 	}

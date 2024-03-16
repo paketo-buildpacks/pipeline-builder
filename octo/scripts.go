@@ -17,10 +17,18 @@
 package octo
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/disiqueira/gotree"
 )
 
 func ContributeScripts(descriptor Descriptor) ([]Contribution, error) {
+	scriptPath := filepath.Join(descriptor.Path, "scripts", "build.sh")
+	if _, err := os.Stat(scriptPath); os.IsNotExist(err) {
+		return nil, nil
+	}
+
 	c := Contribution{
 		Path:        "scripts/build.sh",
 		Permissions: 0755,

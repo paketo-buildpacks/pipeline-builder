@@ -3,6 +3,10 @@ set -euo pipefail
 
 GOMOD=$(head -1 go.mod | awk '{print $2}')
 
+{{- range $key, $value := .}}
+GOOS="linux" go build -ldflags='-s -w' -o "{{ $key }}" "{{ $value }}"
+GOOS="linux" GOARCH="arm64" go build -ldflags='-s -w' -o "{{ $key }}" "{{ $value }}"
+{{- end }}
 GOOS="linux" go build -ldflags='-s -w' -o linux/amd64/bin/main "$GOMOD/cmd/main"
 GOOS="linux" GOARCH="arm64" go build -ldflags='-s -w' -o linux/arm64/bin/main "$GOMOD/cmd/main"
 

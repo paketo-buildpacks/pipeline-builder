@@ -17,8 +17,11 @@
 package octo
 
 import (
+	"bytes"
+	"fmt"
 	"os"
 	"path/filepath"
+	"text/template"
 
 	"github.com/disiqueira/gotree"
 )
@@ -34,7 +37,19 @@ func ContributeScripts(descriptor Descriptor) ([]Contribution, error) {
 		Permissions: 0755,
 	}
 
-	c.Content = []byte(StatikString("/build-script.sh"))
+	templateContents := []byte(StatikString("/build-script.sh"))
+	tmpl, err := template.New("build.sh").Parse(string(templateContents))
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse template %q\n%w", templateContents, err)
+	}
+
+	output := &bytes.Buffer{}
+	err = tmpl.Execute(output, descriptor.Helpers)
+	if err != nil {
+		return nil, fmt.Errorf("unable to execute template %q\n%w", templateContents, err)
+	}
+
+	c.Content = output.Bytes()
 	c.Structure = gotree.New("scripts/ [project scripts]")
 	c.Structure.Add("scripts/build.sh [build]")
 

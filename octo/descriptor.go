@@ -38,6 +38,7 @@ type Descriptor struct {
 	RepublishImages   []RepublishImage    `yaml:"republish_images"`
 	Actions           []Action
 	Dependencies      []Dependency
+	Helpers           map[string]string
 	Test              Test
 }
 

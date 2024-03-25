@@ -25,6 +25,8 @@ import (
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
 
+const liberica = "liberica"
+
 func main() {
 	inputs := actions.NewInputs()
 
@@ -171,12 +173,16 @@ func main() {
 
 func determineNikVersion(r Release, additionalOutputs actions.Outputs) string {
 	key := ""
-	if v, err := actions.NormalizeVersion(r.Components[0].Version); err != nil {
+	componentVersion, err := r.retrieveComponentVersionFor(liberica)
+	if err != nil {
+		panic(err)
+	}
+	if v, err := actions.NormalizeVersion(componentVersion); err != nil {
 		panic(err)
 	} else {
 		key = v
 		// Use NIK version for CPE/PURL
-		re := regexp.MustCompile(`\/vm/([\d]+\.[\d]+\.[\d]+\.?[\d]?)\/`)
+		re := regexp.MustCompile(`/LibericaNIK/releases/download/([\d]+\.[\d]+\.[\d]+\.?[\d]?)\+.*-`)
 		matches := re.FindStringSubmatch(r.DownloadURL)
 		if matches == nil || len(matches) != 2 {
 			panic(fmt.Errorf("unable to parse NIK version: %s", matches))
@@ -194,6 +200,16 @@ type Release struct {
 	BuildVersion   int    `json:"buildVersion"`
 	DownloadURL    string `json:"downloadUrl"`
 	Components     []struct {
-		Version string `json:"version"`
+		Version   string `json:"version"`
+		Component string `json:"component"`
 	}
+}
+
+func (r Release) retrieveComponentVersionFor(componentName string) (string, error) {
+	for _, v := range r.Components {
+		if v.Component == componentName {
+			return v.Version, nil
+		}
+	}
+	return "", fmt.Errorf("unable to find a component for: %s", componentName)
 }

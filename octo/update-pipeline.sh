@@ -25,6 +25,9 @@ RELEASE_NOTES=$(
 )
 
 git add .github/
+git add .gitignore
+git add scripts/build.sh
+
 git checkout -- .
 
 echo "old-version=${OLD_VERSION}" >> "$GITHUB_OUTPUT"

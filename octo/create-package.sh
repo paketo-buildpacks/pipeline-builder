@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
+set -xuo pipefail
 
 # With Go 1.20, we need to set this so that we produce statically compiled binaries
 #

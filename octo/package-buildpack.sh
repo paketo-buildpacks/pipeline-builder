@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -xeuo pipefail
+set -euo pipefail
 
 COMPILED_BUILDPACK="${HOME}/buildpack"
 

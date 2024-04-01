@@ -26,7 +26,10 @@ RELEASE_NOTES=$(
 
 git add .github/
 git add .gitignore
-git add scripts/build.sh
+
+if [ -f scripts/build.sh ]; then
+  git add scripts/build.sh
+fi
 
 git checkout -- .
 

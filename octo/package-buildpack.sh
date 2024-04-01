@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
+set -xeuo pipefail
 
-CONFIG="--config "${HOME}"/package.toml"
-#TODO with this, we don't need to use the package.toml, because pack exp. does not support it with multi arch yet
-if ! [ -f "${PWD}/package.toml" ]; then
-  cd ~/buildpack
-  CONFIG=""
+COMPILED_BUILDPACK="${HOME}/buildpack"
+
+# create-package puts the buildpack here, we need to run from that directory
+#   for component buildpacks so that pack doesn't need a package.toml
+cd "${COMPILED_BUILDPACK}"
+CONFIG=""
+if [ -f "${COMPILED_BUILDPACK}/package.toml" ]; then
+  CONFIG="--config ${COMPILED_BUILDPACK}/package.toml"
 fi
 
 PACKAGE_LIST=($PACKAGES)

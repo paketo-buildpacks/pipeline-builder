@@ -36,6 +36,15 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
+	arch, ok := inputs["arch"]
+	if !ok {
+		arch = "x64"
+	}
+
+	if arch == "arm64" {
+		arch = "aarch64" // cause Oracle needs it this way
+	}
+
 	var pattern *regexp.Regexp
 	var key string
 	var urlTemplate string
@@ -43,11 +52,11 @@ func main() {
 	case "jdk":
 		pattern = regexp.MustCompile(`^JDK Development Kit (\d+\.\d+\.\d+) downloads$`)
 		key = fmt.Sprintf("java%s", versionBranch)
-		urlTemplate = "https://download.oracle.com/java/%s/archive/jdk-%s_linux-x64_bin.tar.gz"
+		urlTemplate = "https://download.oracle.com/java/%s/archive/jdk-%s_linux-%s_bin.tar.gz"
 	case "graalvm":
 		pattern = regexp.MustCompile(`^GraalVM for JDK (\d+\.\d+\.\d+) downloads$`)
 		key = fmt.Sprintf("graalvmjava%s", versionBranch)
-		urlTemplate = "https://download.oracle.com/graalvm/%s/archive/graalvm-jdk-%s_linux-x64_bin.tar.gz"
+		urlTemplate = "https://download.oracle.com/graalvm/%s/archive/graalvm-jdk-%s_linux-%s_bin.tar.gz"
 	default:
 		panic(fmt.Errorf("unsupported type %s", typeName))
 	}
@@ -61,7 +70,7 @@ func main() {
 		foundVersions := pattern.FindStringSubmatch(element.Text)
 		if len(foundVersions) == 2 {
 			foundVersion := foundVersions[1] // there should only ever be one
-			versions[foundVersion] = fmt.Sprintf(urlTemplate, versionBranch, foundVersion)
+			versions[foundVersion] = fmt.Sprintf(urlTemplate, versionBranch, foundVersion, arch)
 		}
 	})
 

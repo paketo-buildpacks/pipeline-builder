@@ -37,16 +37,25 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
+	arch, ok := inputs["arch"]
+	if !ok {
+		arch = "x64"
+	}
+
+	if arch == "arm64" {
+		arch = "aarch64" // cause Oracle needs it this way
+	}
+
 	uri := fmt.Sprintf("https://api.azul.com/metadata/v1/zulu/packages/?"+
 		"os=linux-glibc&"+
-		"arch=x64&"+
+		"arch=%s&"+
 		"archive_type=tar.gz&"+
 		"java_package_type=%s&"+
 		"javafx_bundled=false&"+
 		"crac_supported=false&"+
 		"latest=true&"+
 		"distro_version=%s&"+
-		"release_status=ga", t, v)
+		"release_status=ga", arch, t, v)
 
 	resp, err := http.Get(uri)
 	if err != nil {

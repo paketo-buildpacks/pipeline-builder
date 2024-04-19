@@ -13,4 +13,8 @@
 # limitations under the License.
 
 bin/
-*-bin
+linux/
+dependencies/
+package/
+scratch/
+

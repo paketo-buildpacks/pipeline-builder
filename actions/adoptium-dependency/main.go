@@ -44,15 +44,24 @@ func main() {
 		panic(fmt.Errorf("version must be specified"))
 	}
 
+	arch, ok := inputs["arch"]
+	if !ok {
+		arch = "x64"
+	}
+
+	if arch == "arm64" {
+		arch = "aarch64" // cause Adoptium needs it this way
+	}
+
 	uri := fmt.Sprintf("https://api.adoptium.net/v3/assets/version/%s"+
-		"?architecture=x64"+
+		"?architecture=%s"+
 		"&heap_size=normal"+
 		"&image_type=%s"+
 		"&jvm_impl=%s"+
 		"&os=linux"+
 		"&release_type=ga"+
 		"&vendor=adoptium",
-		url.PathEscape(v), t, i)
+		url.PathEscape(v), arch, t, i)
 
 	resp, err := http.Get(uri)
 	if err != nil {

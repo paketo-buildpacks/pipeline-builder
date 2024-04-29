@@ -44,5 +44,5 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
 else
   pack -v buildpack package \
     "${PACKAGE}:${VERSION}" ${CONFIG} \
-    --format "${FORMAT}"
+    --format "${FORMAT}" $([ -n "$TTL_SH_PUBLISH" ] && [ "$TTL_SH_PUBLISH" = "true" ] && echo "--publish")
 fi

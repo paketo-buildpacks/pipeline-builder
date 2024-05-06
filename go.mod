@@ -18,13 +18,13 @@ require (
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/oauth2 v0.18.0
+	golang.org/x/oauth2 v0.20.0
 	google.golang.org/api v0.172.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/creack/pty v1.1.21 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
 	github.com/go-logr/logr v1.4.1 // indirect
@@ -50,7 +50,6 @@ require (
 
 require (
 	cloud.google.com/go v0.112.2 // indirect
-	cloud.google.com/go/compute v1.25.1 // indirect
 	cloud.google.com/go/iam v1.1.7 // indirect
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect

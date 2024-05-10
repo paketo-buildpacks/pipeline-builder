@@ -96,15 +96,14 @@ package:
 				var workflow jobs
 				Expect(yaml.Unmarshal(contribution.Content, &workflow)).To(Succeed())
 
-				Expect(len(workflow.Jobs)).To(Equal(3))
+				Expect(len(workflow.Jobs)).To(Equal(2))
 				Expect(workflow.Jobs["unit"]).To(Not(BeNil()))
-				Expect(workflow.Jobs["integration"]).To(Not(BeNil()))
 
 				unitSteps := workflow.Jobs["unit"].Steps
 				Expect(unitSteps[len(unitSteps)-1].Run).Should(ContainSubstring("richgo test ./... -run Unit"))
 
-				integrationSteps := workflow.Jobs["integration"].Steps
-				Expect(integrationSteps[len(integrationSteps)-1].Run).Should(ContainSubstring("richgo test ./integration/... -run Integration"))
+				createPackageSteps := workflow.Jobs["create-package"].Steps
+				Expect(createPackageSteps[len(createPackageSteps)-1].Run).Should(ContainSubstring("go test ./integration/... -run Integration"))
 			})
 		})
 	})

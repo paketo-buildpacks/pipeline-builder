@@ -110,55 +110,6 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		w.Jobs["unit"] = j
 	}
 
-	if len(integrationTestFiles) > 0 {
-		j := actions.Job{
-			Name:   "Integration Test",
-			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
-			Steps: []actions.Step{
-				{
-					Uses: "actions/checkout@v4",
-				},
-				{
-					Uses: "actions/cache@v4",
-					With: map[string]interface{}{
-						"path":         "${{ env.HOME }}/go/pkg/mod",
-						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
-						"restore-keys": "${{ runner.os }}-go-",
-					},
-				},
-				{
-					Uses: "actions/setup-go@v5",
-					With: map[string]interface{}{"go-version": GoVersion},
-				},
-				{
-					Name: "Install create-package",
-					Run:  StatikString("/install-create-package.sh"),
-				},
-				{
-					Name: "Install pack",
-					Run:  StatikString("/install-experimental-pack.sh"),
-				},
-				{
-					Name: "Enable pack Experimental",
-					If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
-					Run:  StatikString("/enable-pack-experimental.sh"),
-				},
-				{
-					Name: "Install richgo",
-					Run:  StatikString("/install-richgo.sh"),
-					Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
-				},
-				{
-					Name: "Run Tests",
-					Run:  StatikString("/run-integration-tests.sh"),
-					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
-				},
-			},
-		}
-
-		w.Jobs["integration"] = j
-	}
-
 	if descriptor.Builder != nil {
 		j := actions.Job{
 			Name:   "Create Builder Test",
@@ -247,7 +198,32 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 						"VERSION":              "${{ steps.version.outputs.version }}",
 					},
 				},
-				{
+			},
+		}
+
+		if len(integrationTestFiles) > 0 {
+			j.Steps = append(j.Steps,
+				actions.Step{
+					Name: "Package Buildpack",
+					Run:  StatikString("/package-buildpack.sh"),
+					Env: map[string]string{
+						"FORMAT":         format,
+						"PACKAGES":       "ttl.sh/test-${{ steps.version.outputs.version }}",
+						"VERSION":        "1h",
+						"TTL_SH_PUBLISH": "true",
+					},
+				},
+				actions.Step{
+					Name: "Run Integration Tests",
+					Run:  StatikString("/run-integration-tests.sh"),
+					Env: map[string]string{
+						"PACKAGE": "test",
+						"VERSION": "${{ steps.version.outputs.version }}",
+					},
+				})
+		} else {
+			j.Steps = append(j.Steps,
+				actions.Step{
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
@@ -255,8 +231,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 						"PACKAGES": "test",
 						"VERSION":  "${{ steps.version.outputs.version }}",
 					},
-				},
-			},
+				})
 		}
 
 		skipPrefixes := []string{

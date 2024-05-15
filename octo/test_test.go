@@ -83,6 +83,40 @@ package:
 
 		context("there are integration tests", func() {
 			it.Before(func() {
+				var err error
+
+				Expect(os.WriteFile(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"), []byte(`---
+github:
+  username: ${{ secrets.JAVA_GITHUB_USERNAME }}
+  token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
+`), 0644)).To(Succeed())
+				descriptor, err = octo.NewDescriptor(filepath.Join(dir, ".github", "pipeline-descriptor.yaml"))
+				Expect(err).To(Not(HaveOccurred()))
+
+				Expect(os.Mkdir(filepath.Join(dir, "integration"), 0755)).To(Succeed())
+				Expect(os.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)).To(Succeed())
+			})
+
+			it("will contribute a unit test and an integration test pipeline", func() {
+				contribution, err := octo.ContributeTest(descriptor)
+				Expect(err).To(Not(HaveOccurred()))
+
+				Expect(contribution.Path).To(Equal(".github/workflows/pb-tests.yml"))
+
+				var workflow jobs
+				Expect(yaml.Unmarshal(contribution.Content, &workflow)).To(Succeed())
+
+				Expect(len(workflow.Jobs)).To(Equal(1))
+				Expect(workflow.Jobs["unit"]).To(Not(BeNil()))
+
+				unitSteps := workflow.Jobs["unit"].Steps
+				Expect(unitSteps[len(unitSteps)-2].Run).Should(ContainSubstring("richgo test ./... -run Unit"))
+				Expect(unitSteps[len(unitSteps)-1].Run).Should(ContainSubstring("go test ./integration/... -run Integration"))
+			})
+		})
+
+		context("there are integration tests when packaged", func() {
+			it.Before(func() {
 				Expect(os.Mkdir(filepath.Join(dir, "integration"), 0755)).To(Succeed())
 				Expect(os.WriteFile(filepath.Join(dir, "integration", "main.go"), []byte{}, 0644)).To(Succeed())
 			})

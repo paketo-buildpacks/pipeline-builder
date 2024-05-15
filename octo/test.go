@@ -94,17 +94,28 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 
 		if len(integrationTestFiles) == 0 {
 			j.Steps = append(j.Steps, descriptor.Test.Steps...)
-		} else {
-			j.Steps = append(j.Steps, actions.Step{
-				Name: "Install richgo",
-				Run:  StatikString("/install-richgo.sh"),
-				Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
-			},
+		}
+
+		if len(integrationTestFiles) > 0 {
+			j.Steps = append(j.Steps,
+				actions.Step{
+					Name: "Install richgo",
+					Run:  StatikString("/install-richgo.sh"),
+					Env:  map[string]string{"RICHGO_VERSION": RichGoVersion},
+				},
 				actions.Step{
 					Name: "Run Tests",
 					Run:  StatikString("/run-unit-tests.sh"),
 					Env:  map[string]string{"RICHGO_FORCE_COLOR": "1"},
 				})
+
+			if !descriptor.Package.Enabled {
+				j.Steps = append(j.Steps,
+					actions.Step{
+						Name: "Run Integration Tests",
+						Run:  StatikString("/run-integration-tests.sh"),
+					})
+			}
 		}
 
 		w.Jobs["unit"] = j

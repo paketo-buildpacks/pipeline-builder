@@ -227,9 +227,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":   format,
-						"PACKAGES": "test",
-						"VERSION":  "${{ steps.version.outputs.version }}",
+						"FORMAT":         format,
+						"PACKAGES":       "test",
+						"VERSION":        "${{ steps.version.outputs.version }}",
+						"TTL_SH_PUBLISH": "false",
 					},
 				})
 		}

@@ -52,3 +52,10 @@ jobs:
                 richgo test ./... -run Unit
               env:
                 RICHGO_FORCE_COLOR: "1"
+            - name: Run Integration Tests
+              run: |
+                #!/usr/bin/env bash
+
+                set -euo pipefail
+
+                go test ./integration/... -run Integration

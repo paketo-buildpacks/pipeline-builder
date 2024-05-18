@@ -29,7 +29,7 @@ import (
 
 const (
 	CraneVersion            = "0.19.1"
-	GoVersion               = "1.21"
+	GoVersion               = "1.22"
 	PackVersion             = "0.33.2"
 	BuildpackActionsVersion = "5.6.0"
 	RichGoVersion           = "0.3.10"

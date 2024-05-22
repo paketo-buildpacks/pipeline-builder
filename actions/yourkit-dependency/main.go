@@ -28,6 +28,11 @@ import (
 func main() {
 	inputs := actions.NewInputs()
 
+	arch, ok := inputs["arch"]
+	if !ok || (arch != "arm64" && arch != "x64") {
+		panic(fmt.Errorf("arch must be specified [arm64, x64]"))
+	}
+
 	c := colly.NewCollector()
 
 	cp := regexp.MustCompile(`(?s)Version: ([\d]+)\.([\d]+).*Build: #([\d]+)`)
@@ -37,7 +42,7 @@ func main() {
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[v] = fmt.Sprintf(
-				"https://download.yourkit.com/yjp/%s.%s/YourKit-JavaProfiler-%s.%s-b%s-x64.zip", p[1], p[2], p[1], p[2], p[3])
+				"https://download.yourkit.com/yjp/%s.%s/YourKit-JavaProfiler-%s.%s-b%s-%s.zip", p[1], p[2], p[1], p[2], p[3], arch)
 		}
 	})
 

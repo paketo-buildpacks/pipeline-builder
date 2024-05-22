@@ -29,8 +29,12 @@ func main() {
 	inputs := actions.NewInputs()
 
 	arch, ok := inputs["arch"]
-	if !ok || (arch != "arm64" && arch != "x64") {
-		panic(fmt.Errorf("arch must be specified [arm64, x64]"))
+	if !ok || (arch != "arm64" && arch != "amd64") {
+		panic(fmt.Errorf("arch must be specified [arm64, amd64]"))
+	}
+
+	if arch == "amd64" {
+		arch = "x64"
 	}
 
 	c := colly.NewCollector()

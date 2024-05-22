@@ -3,7 +3,7 @@ module github.com/paketo-buildpacks/pipeline-builder
 go 1.20
 
 require (
-	cloud.google.com/go/storage v1.40.0
+	cloud.google.com/go/storage v1.41.0
 	github.com/BurntSushi/toml v1.3.2
 	github.com/Masterminds/semver/v3 v3.2.1
 	github.com/aws/aws-sdk-go v1.53.7
@@ -52,7 +52,7 @@ require (
 
 require (
 	cloud.google.com/go v0.113.0 // indirect
-	cloud.google.com/go/iam v1.1.7 // indirect
+	cloud.google.com/go/iam v1.1.8 // indirect
 	github.com/PuerkitoBio/goquery v1.9.1 // indirect
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/antchfx/htmlquery v1.3.0 // indirect

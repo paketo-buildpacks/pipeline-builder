@@ -34,10 +34,26 @@ var client *http.Client = http.DefaultClient
 func main() {
 	inputs := actions.NewInputs()
 
-	// See list of distro's -> https://api.foojay.io/swagger-ui#/default/getDistributionsV2
+	// Needs to be in this list
+	//   (aoj, aoj_openj9, bisheng, corretto, dragonwell, graalvm_ce8, graalvm_ce11, graalvm_ce16, graalvm_ce17, graalvm_ce19, graalvm_ce20, graalvm_community, graalvm, jetbrains, kona, liberica, liberica_native, mandrel, microsoft, ojdk_build, openlogic, oracle, oracle_open_jdk, redhat, sap_machine, semeru, semeru_certified, temurin, trava, zulu, zulu_prime)
+	// https://api.foojay.io/swagger-ui#/default/getPackagesV3
 	d, ok := inputs["distro"]
 	if !ok {
 		panic(fmt.Errorf("distro must be specified"))
+	}
+
+	arch, ok := inputs["arch"]
+	if !ok {
+		arch = "x64"
+	}
+
+	// Needs to be in this list
+	//   (aarch32, aarch64, amd64, arm, arm32, arm64, mips, ppc, ppc64el, ppc64le, ppc64, riscv64, s390, s390x, sparc, sparcv9, x64, x86-64, x86, i386, i486, i586, i686, x86-32)
+	// https://api.foojay.io/swagger-ui#/default/getPackagesV3
+	if arch == "amd64" {
+		arch = "x64"
+	} else if arch == "arm64" {
+		arch = "aarch64"
 	}
 
 	distros, err := LoadDistros()
@@ -73,7 +89,7 @@ func main() {
 		panic(fmt.Errorf("version cannot be parsed\n%w", err))
 	}
 
-	versions := LoadPackages(d, t, v)
+	versions := LoadPackages(d, t, v, arch)
 
 	latestVersion, err := versions.GetLatestVersion(inputs)
 	if err != nil {
@@ -96,18 +112,18 @@ func main() {
 	outputs.Write()
 }
 
-func LoadPackages(d string, t string, v int) actions.Versions {
+func LoadPackages(d string, t string, v int, a string) actions.Versions {
 	uri := fmt.Sprintf(
 		"https://api.foojay.io/disco/v3.0/packages?"+
 			"distro=%s&"+
-			"architecture=x64&"+
+			"architecture=%s&"+
 			"archive_type=tar.gz&"+
 			"package_type=%s&"+
 			"operating_system=linux&"+
 			"lib_c_type=glibc&"+
 			"javafx_bundled=false&"+
 			"version=%d..%%3C%d", // 11..<12
-		url.PathEscape(d), t, v, v+1)
+		url.PathEscape(d), a, t, v, v+1)
 
 	request, err := http.NewRequest("GET", uri, nil)
 	if err != nil {

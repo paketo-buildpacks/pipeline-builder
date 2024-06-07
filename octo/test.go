@@ -127,8 +127,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Name: "Install pack",
-					Run:  StatikString("/install-experimental-pack.sh"),
+					Uses: fmt.Sprintf("buildpacks/github-actions/setup-pack@v%s", BuildpackActionsVersion),
+					With: map[string]interface{}{
+						"pack-version": PackVersion,
+					},
 				},
 				{
 					Uses: "actions/checkout@v4",
@@ -173,8 +175,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/install-create-package.sh"),
 				},
 				{
-					Name: "Install pack",
-					Run:  StatikString("/install-experimental-pack.sh"),
+					Uses: fmt.Sprintf("buildpacks/github-actions/setup-pack@v%s", BuildpackActionsVersion),
+					With: map[string]interface{}{
+						"pack-version": PackVersion,
+					},
 				},
 				{
 					Name: "Enable pack Experimental",

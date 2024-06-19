@@ -167,7 +167,7 @@ func contributePackageDependency(descriptor Descriptor, name string, bpId string
 
 Bumps %[1]s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.outputs.new-version }}.`, name),
 							"signoff":       true,
-							"branch":        fmt.Sprintf("update/package/%s", filepath.Base(name)),
+							"branch":        "update/packages",
 							"delete-branch": true,
 							"title":         fmt.Sprintf("Bump %s from ${{ steps.package.outputs.old-version }} to ${{ steps.package.outputs.new-version }}", name),
 							"body":          fmt.Sprintf("Bumps [`%[1]s`](https://%[1]s) from [`${{ steps.package.outputs.old-version }}`](https://%[1]s:${{ steps.package.outputs.old-version }}) to [`${{ steps.package.outputs.new-version }}`](https://%[1]s:${{ steps.package.outputs.new-version }}).", name),

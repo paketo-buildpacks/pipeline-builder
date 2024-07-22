@@ -6,11 +6,11 @@ require (
 	cloud.google.com/go/storage v1.43.0
 	github.com/BurntSushi/toml v1.4.0
 	github.com/Masterminds/semver/v3 v3.2.1
-	github.com/aws/aws-sdk-go v1.54.19
+	github.com/aws/aws-sdk-go v1.54.20
 	github.com/buildpacks/libcnb v1.30.3
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.20.0
+	github.com/google/go-containerregistry v0.20.1
 	github.com/iancoleman/strcase v0.3.0
 	github.com/onsi/gomega v1.33.1
 	github.com/pelletier/go-toml v1.9.5

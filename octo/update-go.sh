@@ -7,7 +7,7 @@ if [ -z "${GO_VERSION:-}" ]; then
     exit 1
 fi
 
-OLD_GO_VERSION=$(grep -P '^go \d\.\d+' go.mod | cut -d ' ' -f 2)
+OLD_GO_VERSION=$(grep -P '^go \d\.\d+' go.mod | cut -d ' ' -f 2 | cut -d '.' -f 1-2)
 
 go mod edit -go="$GO_VERSION"
 go mod tidy

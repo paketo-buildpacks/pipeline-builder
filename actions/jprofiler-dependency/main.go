@@ -20,30 +20,36 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/gocolly/colly"
+	"net/http"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/paketo-buildpacks/pipeline-builder/actions"
 )
 
 func main() {
 	inputs := actions.NewInputs()
 
-	c := colly.NewCollector()
-
 	cp := regexp.MustCompile(`^Release ([\d]+)\.([\d]+)\.([\d]+).*$`)
 	versions := make(actions.Versions)
-	c.OnHTML("h5", func(element *colly.HTMLElement) {
-		if p := cp.FindStringSubmatch(element.Text); p != nil {
 
+	res, err := http.Get("https://www.ej-technologies.com/jprofiler/changelog")
+	if err != nil {
+		panic(err)
+	}
+	defer res.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(res.Body)
+	if err != nil {
+		panic(err)
+	}
+
+	doc.Find("div.release-heading").Each(func(i int, s *goquery.Selection) {
+		if p := cp.FindStringSubmatch(s.Text()); p != nil { 
 			v := fmt.Sprintf("%s.%s.%s", p[1], p[2], p[3])
 
 			versions[v] = fmt.Sprintf("https://download-gcdn.ej-technologies.com/jprofiler/jprofiler_linux_%s_%s_%s.tar.gz", p[1], p[2], p[3])
 		}
 	})
-
-	if err := c.Visit("https://www.ej-technologies.com/download/jprofiler/changelog.html"); err != nil {
-		panic(err)
-	}
 
 	if o, err := versions.GetLatest(inputs); err != nil {
 		panic(err)

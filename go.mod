@@ -19,12 +19,12 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.22.0
-	google.golang.org/api v0.192.0
+	google.golang.org/api v0.194.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
-	cloud.google.com/go/auth v0.8.1 // indirect
+	cloud.google.com/go/auth v0.9.1 // indirect
 	cloud.google.com/go/auth/oauth2adapt v0.2.4 // indirect
 	cloud.google.com/go/compute/metadata v0.5.0 // indirect
 	github.com/creack/pty v1.1.23 // indirect
@@ -54,7 +54,7 @@ require (
 require (
 	cloud.google.com/go v0.115.1 // indirect
 	cloud.google.com/go/iam v1.1.13 // indirect
-	github.com/PuerkitoBio/goquery v1.9.2 // indirect
+	github.com/PuerkitoBio/goquery v1.9.2
 	github.com/andybalholm/cascadia v1.3.2 // indirect
 	github.com/antchfx/htmlquery v1.3.2 // indirect
 	github.com/antchfx/xmlquery v1.4.1 // indirect

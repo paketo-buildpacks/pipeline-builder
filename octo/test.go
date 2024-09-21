@@ -59,17 +59,22 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		Jobs: map[string]actions.Job{},
 	}
 
-	goFiles, err := Find(descriptor.Path, regexp.MustCompile(`.+\.go`).MatchString)
+	goFilesButNoIntegrationTests, err := Find(descriptor.Path, isGoFileButNotInIntegrationFolder)
 	if err != nil {
 		return nil, fmt.Errorf("unable to Find .go files in %s\n%w", descriptor.Path, err)
 	}
-
+	var integrationTestsWithMake []string
 	integrationTestFiles, err := Find(descriptor.Path, regexp.MustCompile(`integration/.+\.go`).MatchString)
 	if err != nil {
 		return nil, fmt.Errorf("unable to Find .go files in %s\n%w", filepath.Join(descriptor.Path, "integration"), err)
+	} else {
+		integrationTestsWithMake, err = Find(descriptor.Path, regexp.MustCompile(`Makefile`).MatchString)
+		if err != nil {
+			return nil, fmt.Errorf("unable to Find Makefile in %s\n%w", descriptor.Path, err)
+		}
 	}
 
-	if len(goFiles) > 0 {
+	if len(goFilesButNoIntegrationTests) > 0 {
 		j := actions.Job{
 			Name:   "Unit Test",
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
@@ -217,6 +222,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 		}
 
 		if len(integrationTestFiles) > 0 {
+			integrationTestsScript := "/run-integration-tests.sh"
+			if len(integrationTestsWithMake) > 0 {
+				integrationTestsScript = "/run-integration-tests-composites.sh"
+			}
+
 			j.Steps = append(j.Steps,
 				actions.Step{
 					Name: "Package Buildpack",
@@ -227,15 +237,27 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 						"VERSION":        "1h",
 						"TTL_SH_PUBLISH": "true",
 					},
-				},
-				actions.Step{
-					Name: "Run Integration Tests",
-					Run:  StatikString("/run-integration-tests.sh"),
-					Env: map[string]string{
-						"PACKAGE": "test",
-						"VERSION": "${{ steps.version.outputs.version }}",
+				})
+
+			if len(integrationTestsWithMake) > 0 {
+				j.Steps = append(j.Steps, actions.Step{
+					Name: "Set up JDK",
+					Uses: "actions/setup-java@v5",
+					With: map[string]interface{}{
+						"java-version": JavaVersion,
+						"distribution": "liberica",
 					},
 				})
+			}
+
+			j.Steps = append(j.Steps, actions.Step{
+				Name: "Run Integration Tests",
+				Run:  StatikString(integrationTestsScript),
+				Env: map[string]string{
+					"PACKAGE": "test",
+					"VERSION": "${{ steps.version.outputs.version }}",
+				},
+			})
 		} else {
 			j.Steps = append(j.Steps,
 				actions.Step{
@@ -280,4 +302,11 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 	}
 
 	return &c, nil
+}
+
+func isGoFileButNotInIntegrationFolder(path string) bool {
+	if regexp.MustCompile(`\.go$`).MatchString(path) && !regexp.MustCompile(`^.*integration/`).MatchString(path) {
+		return true
+	}
+	return false
 }

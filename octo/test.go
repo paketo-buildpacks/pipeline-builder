@@ -242,7 +242,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			if len(integrationTestsWithMake) > 0 {
 				j.Steps = append(j.Steps, actions.Step{
 					Name: "Set up JDK",
-					Uses: "actions/setup-java@v5",
+					Uses: "actions/setup-java@v4",
 					With: map[string]interface{}{
 						"java-version": JavaVersion,
 						"distribution": "liberica",

@@ -8,7 +8,7 @@
 Name | ID | Version
 :--- | :- | :------
 {{ range .NestedBuildpacks -}}
-{{ .Info.Name }} | `{{ .Info.ID }}` | `{{ .Info.Version }}`
+{{ .Info.Name }} | `{{ .Info.ID }}` | [{{ .Info.Version }}](https://github.com/{{ .Info.ID }}/releases/{{ .Info.Version }})
 {{ end -}}
 {{ end -}}
 

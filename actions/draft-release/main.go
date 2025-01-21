@@ -40,10 +40,24 @@ func main() {
 	inputs := actions.NewInputs()
 
 	var c *http.Client
-	if s, ok := inputs["github_token"]; ok {
+	if s, ok := inputs["github_com_token"]; ok {
 		c = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
 	}
 	gh := github.NewClient(c)
+
+	var cGhe *http.Client
+	if s, ok := inputs["github_enterprise_token"]; ok {
+		cGhe = oauth2.NewClient(context.Background(), oauth2.StaticTokenSource(&oauth2.Token{AccessToken: s}))
+	}
+
+	var gheUrl = inputs["github_enterprise_url"]
+	if gheUrl == "" {
+		panic("missing input github_enterprise_url")
+	}
+	ghe, err := github.NewEnterpriseClient(fmt.Sprintf("%s/api/v3/", gheUrl), fmt.Sprintf("%s/api/uploads/", gheUrl), cGhe)
+	if err != nil {
+		panic(err)
+	}
 
 	drafter := drafts.Drafter{
 		Loader: drafts.GithubBuildpackLoader{
@@ -95,7 +109,7 @@ func main() {
 		fmt.Println("    ", releaseId)
 		fmt.Println("    ", repoRelease)
 	} else {
-		_, _, err := gh.Repositories.EditRelease(
+		_, _, err := ghe.Repositories.EditRelease(
 			context.Background(),
 			owner,
 			repo,

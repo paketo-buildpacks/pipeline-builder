@@ -51,7 +51,11 @@ func main() {
 			RegexMappers: parseMappers(inputs),
 		},
 	}
-	payload, err := drafter.CreatePayload(inputs, ".")
+        bpPath := "."
+        if val, ok := inputs["file_path"]; ok {
+	    bpPath = val
+        }
+	payload, err := drafter.CreatePayload(inputs, bpPath)
 	if err != nil {
 		panic(err)
 	}

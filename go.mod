@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	cloud.google.com/go/storage v1.51.0
-	github.com/BurntSushi/toml v1.4.0
+	github.com/BurntSushi/toml v1.5.0
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/aws/aws-sdk-go v1.55.6

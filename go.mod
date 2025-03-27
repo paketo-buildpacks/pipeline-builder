@@ -4,7 +4,7 @@ go 1.24
 
 require (
 	cloud.google.com/go/storage v1.51.0
-	github.com/BurntSushi/toml v1.4.0
+	github.com/BurntSushi/toml v1.5.0
 	github.com/Masterminds/semver/v3 v3.3.1
 	github.com/PuerkitoBio/goquery v1.10.2
 	github.com/aws/aws-sdk-go v1.55.6
@@ -14,7 +14,7 @@ require (
 	github.com/google/go-containerregistry v0.20.3
 	github.com/google/go-github/v43 v43.0.0
 	github.com/iancoleman/strcase v0.3.0
-	github.com/onsi/gomega v1.36.2
+	github.com/onsi/gomega v1.36.3
 	github.com/paketo-buildpacks/libpak v1.73.0
 	github.com/pelletier/go-toml v1.9.5
 	github.com/pkg/errors v0.9.1
@@ -23,15 +23,15 @@ require (
 	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0
 	golang.org/x/oauth2 v0.28.0
-	google.golang.org/api v0.226.0
+	google.golang.org/api v0.227.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
 	cel.dev/expr v0.22.0 // indirect
-	cloud.google.com/go v0.119.0 // indirect
+	cloud.google.com/go v0.120.0 // indirect
 	cloud.google.com/go/auth v0.15.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
+	cloud.google.com/go/auth/oauth2adapt v0.2.8 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.4.2 // indirect
 	cloud.google.com/go/monitoring v1.24.1 // indirect
@@ -47,7 +47,7 @@ require (
 	github.com/containerd/stargz-snapshotter/estargz v0.16.3 // indirect
 	github.com/creack/pty v1.1.24 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/docker/cli v28.0.1+incompatible // indirect
+	github.com/docker/cli v28.0.2+incompatible // indirect
 	github.com/docker/distribution v2.8.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.9.3 // indirect
 	github.com/envoyproxy/go-control-plane/envoy v1.32.4 // indirect

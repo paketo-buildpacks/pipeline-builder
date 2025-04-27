@@ -53,7 +53,7 @@ github:
   token:    ${{ secrets.JAVA_GITHUB_TOKEN }}
 
 package:
-  repository:     gcr.io/paketo-buildpacks/dummy
+  repository:     docker.io/paketobuildpacks/dummy
   register:       true
   registry_token: ${{ secrets.JAVA_GITHUB_TOKEN }}
 `), 0644)).To(Succeed())

@@ -80,11 +80,11 @@ func ContributePackageDependencies(descriptor Descriptor) ([]Contribution, error
 //	    - if that does not exist as a build pack id, then we search for just the last part of
 //	        buildpack id and a matching version
 //
-//	        for example, `gcr.io/tanzu-buildpacks/bellsoft-liberica:1.2.3`, we'll look for `bellsoft-liberica`
+//	        for example, `docker.io/tanzubuildpacks/bellsoft-liberica:1.2.3`, we'll look for `bellsoft-liberica`
 //	           and version `1.2.3` in buildpack.toml
 //
 //	           if there is a match, then we return the found buildpack id, let's say it finds `paketo-buildpacks/bellsoft-liberica`
-//				  then we return `gcr.io/paketo-buildpacks/bellsoft-liberica:1.2.3`
+//				  then we return `docker.io/paketobuildpacks/bellsoft-liberica:1.2.3`
 func findIds(bpOrders _package.BuildpackOrderGroups, dep _package.Dependency) (string, string, error) {
 	re := regexp.MustCompile(`^(?:.+://)?(.+?)/(.+):([^:]+)$`)
 	if g := re.FindStringSubmatch(dep.URI); g == nil {

@@ -1,6 +1,6 @@
 module github.com/paketo-buildpacks/pipeline-builder
 
-go 1.24
+go 1.24.0
 
 require (
 	cloud.google.com/go/storage v1.52.0
@@ -11,7 +11,7 @@ require (
 	github.com/buildpacks/libcnb v1.30.4
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.20.3
+	github.com/google/go-containerregistry v0.20.5
 	github.com/google/go-github/v43 v43.0.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/onsi/gomega v1.37.0
@@ -22,7 +22,7 @@ require (
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.6
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/oauth2 v0.29.0
+	golang.org/x/oauth2 v0.30.0
 	google.golang.org/api v0.231.0
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -96,8 +96,8 @@ require (
 	go.opentelemetry.io/otel/trace v1.35.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/net v0.39.0 // indirect
-	golang.org/x/sync v0.13.0 // indirect
-	golang.org/x/sys v0.32.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.24.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	google.golang.org/appengine v1.6.8 // indirect

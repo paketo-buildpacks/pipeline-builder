@@ -228,15 +228,21 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 
 			j.Steps = append(j.Steps,
 				actions.Step{
+					Id:   "package-buildpack",
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
 						"FORMAT":         format,
-						"PACKAGES":       "ttl.sh/test-${{ steps.version.outputs.version }}",
+						"PACKAGES":       "ttl.sh/paketo-java-test-${{ steps.version.outputs.version }}",
 						"VERSION":        "1h",
 						"TTL_SH_PUBLISH": "true",
 					},
 				})
+
+			integrationEnvVars := map[string]string{
+				"PACKAGE": "test",
+				"VERSION": "${{ steps.version.outputs.version }}",
+			}
 
 			if len(integrationTestsWithMake) > 0 {
 				j.Steps = append(j.Steps, actions.Step{
@@ -247,15 +253,14 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 						"distribution": "liberica",
 					},
 				})
+
+				integrationEnvVars["BP_UNDER_TEST"] = "${{ steps.package-buildpack.outputs.ttl-image-tag}}"
 			}
 
 			j.Steps = append(j.Steps, actions.Step{
 				Name: "Run Integration Tests",
 				Run:  StatikString(integrationTestsScript),
-				Env: map[string]string{
-					"PACKAGE": "test",
-					"VERSION": "${{ steps.version.outputs.version }}",
-				},
+				Env:  integrationEnvVars,
 			})
 		} else {
 			j.Steps = append(j.Steps,

@@ -187,7 +187,6 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 				},
 				{
 					Name: "Enable pack Experimental",
-					If:   fmt.Sprintf("${{ %t }}", descriptor.Package.Platform.OS == PlatformWindows),
 					Run:  StatikString("/enable-pack-experimental.sh"),
 				},
 				{

@@ -9,7 +9,7 @@ COMPILED_BUILDPACK="${HOME}/buildpack"
 cd "${COMPILED_BUILDPACK}"
 CONFIG=""
 if [ -f "${COMPILED_BUILDPACK}/package.toml" ]; then
-  CONFIG="--config ${COMPILED_BUILDPACK}/package.toml"
+  CONFIG="--config ${COMPILED_BUILDPACK}/package.toml --flatten"
 fi
 
 PACKAGE_LIST=($PACKAGES)

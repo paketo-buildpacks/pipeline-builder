@@ -105,7 +105,6 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 					},
 					{
 						Name: "Enable pack Experimental",
-						If:   fmt.Sprintf("${{ %t }}", offlinePackage.Platform.OS == PlatformWindows),
 						Run:  StatikString("/enable-pack-experimental.sh"),
 					},
 					{

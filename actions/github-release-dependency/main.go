@@ -107,7 +107,7 @@ func main() {
 			}
 		}
 
-		if rsp.NextPage == 0 {
+		if rsp.NextPage == 0 || rsp.NextPage > 10 {
 			break
 		}
 		opt.Page = rsp.NextPage
@@ -136,10 +136,9 @@ func main() {
 		panic(fmt.Errorf("unable to get latest version\n%w", err))
 	}
 	latestSource := actions.Outputs{}
-	if len(sources) != 0{
+	if len(sources) != 0 {
 		latestSource["source"] = sources[latestVersion.Original()]
 	}
-
 
 	url := versions[latestVersion.Original()]
 	outputs, err := actions.NewOutputs(url, latestVersion, latestSource)

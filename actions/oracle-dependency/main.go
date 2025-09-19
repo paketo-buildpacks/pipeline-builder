@@ -45,12 +45,13 @@ func main() {
 		arch = "aarch64" // cause Oracle needs it this way
 	}
 
-	var pattern *regexp.Regexp
+	var pattern, majorPattern *regexp.Regexp
 	var key string
 	var urlTemplate string
 	switch typeName {
 	case "jdk":
-		pattern = regexp.MustCompile(`^JDK Development Kit (\d+\.\d+\.\d+) downloads$`)
+		pattern = regexp.MustCompile(`^Java SE Development Kit (\d+\.\d+\.\d+) downloads$`)
+		majorPattern = regexp.MustCompile(`^Java SE Development Kit (\d+) downloads$`)
 		key = fmt.Sprintf("java%s", versionBranch)
 		urlTemplate = "https://download.oracle.com/java/%s/archive/jdk-%s_linux-%s_bin.tar.gz"
 	case "graalvm":
@@ -68,6 +69,9 @@ func main() {
 
 	c.OnHTML(fmt.Sprintf("h3[id=%s]", key), func(element *colly.HTMLElement) {
 		foundVersions := pattern.FindStringSubmatch(element.Text)
+		if foundVersions == nil {
+			foundVersions = majorPattern.FindStringSubmatch(element.Text)
+		}
 		if len(foundVersions) == 2 {
 			foundVersion := foundVersions[1] // there should only ever be one
 			versions[foundVersion] = fmt.Sprintf(urlTemplate, versionBranch, foundVersion, arch)

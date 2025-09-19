@@ -48,19 +48,13 @@ func main() {
 	var pattern, majorPattern *regexp.Regexp
 	var key string
 	var urlTemplate string
-	switch typeName {
-	case "jdk":
-		pattern = regexp.MustCompile(`^Java SE Development Kit (\d+\.\d+\.\d+) downloads$`)
-		majorPattern = regexp.MustCompile(`^Java SE Development Kit (\d+) downloads$`)
-		key = fmt.Sprintf("java%s", versionBranch)
-		urlTemplate = "https://download.oracle.com/java/%s/archive/jdk-%s_linux-%s_bin.tar.gz"
-	case "graalvm":
-		pattern = regexp.MustCompile(`^GraalVM for JDK (\d+\.\d+\.\d+) downloads$`)
-		key = fmt.Sprintf("graalvmjava%s", versionBranch)
-		urlTemplate = "https://download.oracle.com/graalvm/%s/archive/graalvm-jdk-%s_linux-%s_bin.tar.gz"
-	default:
-		panic(fmt.Errorf("unsupported type %s", typeName))
+	if typeName != "jdk" {
+		panic(fmt.Errorf("this action no longer supports anything else than \"jdk\"; for graalvm, please use the Foojay action with distribution graalvm instead"))
 	}
+	pattern = regexp.MustCompile(`^Java SE Development Kit (\d+\.\d+\.\d+) downloads$`)
+	majorPattern = regexp.MustCompile(`^Java SE Development Kit (\d+) downloads$`)
+	key = fmt.Sprintf("java%s", versionBranch)
+	urlTemplate = "https://download.oracle.com/java/%s/archive/jdk-%s_linux-%s_bin.tar.gz"
 
 	uri := "https://www.oracle.com/java/technologies/downloads"
 

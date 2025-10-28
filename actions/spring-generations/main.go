@@ -88,9 +88,8 @@ func main() {
 
 			for _, g := range raw.Embedded.Generations {
 				project.Generations = append(project.Generations, Generation{
-					Name:       g.Name,
-					OSS:        g.OSS,
-					Commercial: g.Commercial,
+					Name: g.Name,
+					OSS:  g.OSS,
 				})
 			}
 
@@ -142,9 +141,8 @@ type Project struct {
 }
 
 type Generation struct {
-	Name       string
-	OSS        string
-	Commercial string
+	Name string
+	OSS  string
 }
 
 type RawLink struct {
@@ -175,7 +173,6 @@ type RawGenerationsEmbedded struct {
 }
 
 type RawGeneration struct {
-	Name       string
-	OSS        string `json:"ossSupportEndDate"`
-	Commercial string `json:"commercialSupportEndDate"`
+	Name string
+	OSS  string `json:"ossSupportEndDate"`
 }

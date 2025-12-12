@@ -29,10 +29,10 @@ import (
 
 const (
 	CraneVersion            = "0.20.3"
-	GoVersion               = "1.24"
+	GoVersion               = "1.25"
 	JavaVersion             = "17"
-	PackVersion             = "0.36.4"
-	BuildpackActionsVersion = "5.8.9"
+	PackVersion             = "0.39.1"
+	BuildpackActionsVersion = "5.9.7"
 	RichGoVersion           = "0.3.10"
 	YJVersion               = "5.1.0"
 	Namespace               = "pb"

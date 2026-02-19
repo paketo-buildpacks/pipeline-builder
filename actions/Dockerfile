@@ -1,4 +1,4 @@
-FROM golang:1.24 as build-stage
+FROM golang:1.25 AS build-stage
 
 WORKDIR /src
 ENV GO111MODULE=on CGO_ENABLED=0

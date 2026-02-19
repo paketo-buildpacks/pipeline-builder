@@ -1,6 +1,6 @@
 module github.com/paketo-buildpacks/pipeline-builder
 
-go 1.25.0
+go 1.26
 
 require (
 	cloud.google.com/go/storage v1.60.0

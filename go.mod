@@ -11,7 +11,7 @@ require (
 	github.com/buildpacks/libcnb v1.30.4
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.20.7
+	github.com/google/go-containerregistry v0.21.0
 	github.com/google/go-github/v43 v43.0.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/onsi/gomega v1.39.1

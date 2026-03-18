@@ -11,7 +11,7 @@ require (
 	github.com/buildpacks/libcnb v1.30.4
 	github.com/disiqueira/gotree v1.0.0
 	github.com/gocolly/colly v1.2.0
-	github.com/google/go-containerregistry v0.21.2
+	github.com/google/go-containerregistry v0.21.3
 	github.com/google/go-github/v43 v43.0.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/onsi/gomega v1.39.1
@@ -106,4 +106,5 @@ require (
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20260311181403-84a4fc48630c // indirect
 	google.golang.org/grpc v1.79.2 // indirect
 	google.golang.org/protobuf v1.36.11 // indirect
+	gotest.tools/v3 v3.5.2 // indirect
 )

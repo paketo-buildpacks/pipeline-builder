@@ -113,7 +113,7 @@ func contributeBuildImage(descriptor Descriptor, image string, classifier string
 						},
 					},
 					{
-						Uses: "peter-evans/create-pull-request@v6",
+						Uses: "peter-evans/create-pull-request@v8",
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),
@@ -189,7 +189,7 @@ func contributeLifecycle(descriptor Descriptor) (Contribution, error) {
 						},
 					},
 					{
-						Uses: "peter-evans/create-pull-request@v6",
+						Uses: "peter-evans/create-pull-request@v8",
 						With: map[string]interface{}{
 							"token":  descriptor.GitHub.Token,
 							"author": fmt.Sprintf("%[1]s <%[1]s@users.noreply.github.com>", descriptor.GitHub.Username),

@@ -59,7 +59,7 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						},
 					},
 					{
-						Uses: "actions/checkout@v4",
+						Uses: "actions/checkout@v6",
 						With: map[string]interface{}{
 							"repository":  offlinePackage.Source,
 							"fetch-depth": 0,
@@ -76,12 +76,12 @@ func contributeOfflinePackage(descriptor Descriptor, offlinePackage OfflinePacka
 						},
 					},
 					{
-						Uses: "actions/setup-go@v5",
+						Uses: "actions/setup-go@v6",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
-						Uses: "actions/cache@v4",
+						Uses: "actions/cache@v5",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{
 							"path": strings.Join([]string{

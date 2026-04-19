@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2024 the original author or authors.
+ * Copyright 2018-2026 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ const (
 	CraneVersion            = "0.20.3"
 	GoVersion               = "1.26"
 	JavaVersion             = "17"
-	PackVersion             = "0.40.0"
-	BuildpackActionsVersion = "5.11.0"
+	PackVersion             = "0.40.2"
+	BuildpackActionsVersion = "5.12.0"
 	RichGoVersion           = "0.3.10"
 	YJVersion               = "5.1.0"
 	Namespace               = "pb"

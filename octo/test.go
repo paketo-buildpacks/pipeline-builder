@@ -80,10 +80,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/checkout@v4",
+					Uses: "actions/checkout@v6",
 				},
 				{
-					Uses: "actions/cache@v4",
+					Uses: "actions/cache@v5",
 					With: map[string]interface{}{
 						"path":         "${{ env.HOME }}/go/pkg/mod",
 						"key":          "${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}",
@@ -91,7 +91,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					},
 				},
 				{
-					Uses: "actions/setup-go@v5",
+					Uses: "actions/setup-go@v6",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 			},
@@ -138,7 +138,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					},
 				},
 				{
-					Uses: "actions/checkout@v4",
+					Uses: "actions/checkout@v6",
 				},
 				{
 					Id:   "version",
@@ -172,7 +172,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 			Steps: []actions.Step{
 				{
-					Uses: "actions/setup-go@v5",
+					Uses: "actions/setup-go@v6",
 					With: map[string]interface{}{"go-version": GoVersion},
 				},
 				{
@@ -190,10 +190,10 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Run:  StatikString("/enable-pack-experimental.sh"),
 				},
 				{
-					Uses: "actions/checkout@v4",
+					Uses: "actions/checkout@v6",
 				},
 				{
-					Uses: "actions/cache@v4",
+					Uses: "actions/cache@v5",
 					With: map[string]interface{}{
 						"path": strings.Join([]string{
 							"${{ env.HOME }}/.pack",
@@ -247,7 +247,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 			if len(integrationTestsWithMake) > 0 {
 				j.Steps = append(j.Steps, actions.Step{
 					Name: "Set up JDK",
-					Uses: "actions/setup-java@v4",
+					Uses: "actions/setup-java@v5",
 					With: map[string]interface{}{
 						"java-version": JavaVersion,
 						"distribution": "liberica",

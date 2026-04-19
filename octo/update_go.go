@@ -73,11 +73,11 @@ func ContributeUpdateGo(descriptor Descriptor) (*Contribution, error) {
 				RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 				Steps: []actions.Step{
 					{
-						Uses: "actions/setup-go@v5",
+						Uses: "actions/setup-go@v6",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},
 					{
-						Uses: "actions/checkout@v4",
+						Uses: "actions/checkout@v6",
 					},
 					{
 						Id:   "update-go",

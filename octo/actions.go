@@ -53,7 +53,7 @@ func ContributeActions(descriptor Descriptor) ([]Contribution, error) {
 					RunsOn: []actions.VirtualEnvironment{actions.UbuntuLatest},
 					Steps: []actions.Step{
 						{
-							Uses: "actions/checkout@v6",
+							Uses: "actions/checkout@v7",
 						},
 						{
 							Name: "Create Action",

@@ -58,7 +58,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						},
 					},
 					{
-						Uses: "actions/checkout@v6",
+						Uses: "actions/checkout@v7",
 						With: map[string]interface{}{
 							"repository":  republishImage.TargetRepo,
 							"fetch-depth": 0,
@@ -75,7 +75,7 @@ func contributeLitePackage(descriptor Descriptor, republishImage RepublishImage)
 						},
 					},
 					{
-						Uses: "actions/setup-go@v6",
+						Uses: "actions/setup-go@v7",
 						If:   "${{ ! steps.version.outputs.skip }}",
 						With: map[string]interface{}{"go-version": GoVersion},
 					},

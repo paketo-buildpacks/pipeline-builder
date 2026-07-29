@@ -50,14 +50,22 @@ func main() {
 	}
 
 	// curl https://api.bell-sw.com/v1/liberica/architectures
-	//  `["arm", "ppc", "sparc", "x86"]`
+	//  `["arm", "ppc", "riscv", "sparc", "x86"]`
 	arch, ok := inputs["arch"]
 	if !ok {
 		arch = "x86"
 	}
 
 	if arch == "arm64" {
-		arch = "arm" // cause Bellsoft needs it without the bitness
+		arch = "arm"
+	}
+
+	if arch == "ppc64le" {
+		arch = "ppc"
+	}
+
+	if arch == "s390x" {
+		arch = "sparc"
 	}
 
 	commonStaticParams := "&version-modifier=latest"

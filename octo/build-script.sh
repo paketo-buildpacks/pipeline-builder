@@ -6,25 +6,33 @@ GOMOD=$(head -1 go.mod | awk '{print $2}')
 {{- range $key, $value := .}}
 GOOS="linux" GOARCH="amd64" go build -ldflags='-s -w' -o "linux/amd64/{{ $key }}" "{{ $value }}"
 GOOS="linux" GOARCH="arm64" go build -ldflags='-s -w' -o "linux/arm64/{{ $key }}" "{{ $value }}"
+GOOS="linux" GOARCH="s390x" go build -ldflags='-s -w' -o "linux/s390x/{{ $key }}" "{{ $value }}"
+GOOS="linux" GOARCH="ppc64le" go build -ldflags='-s -w' -o "linux/ppc64le/{{ $key }}" "{{ $value }}"
 {{- end }}
 GOOS="linux" GOARCH="amd64" go build -ldflags='-s -w' -o linux/amd64/bin/main "$GOMOD/cmd/main"
 GOOS="linux" GOARCH="arm64" go build -ldflags='-s -w' -o linux/arm64/bin/main "$GOMOD/cmd/main"
+GOOS="linux" GOARCH="s390x" go build -ldflags='-s -w' -o linux/s390x/bin/main "$GOMOD/cmd/main"
+GOOS="linux" GOARCH="ppc64le" go build -ldflags='-s -w' -o linux/ppc64le/bin/main "$GOMOD/cmd/main"
 
 if [ "${STRIP:-false}" != "false" ]; then
   {{- range $key, $value := .}}
-  strip linux/amd64/{{ $key }} linux/arm64/{{ $key }}
+  strip linux/amd64/{{ $key }} linux/arm64/{{ $key }} linux/s390x/{{ $key }} linux/ppc64le/{{ $key }}
   {{- end }}
-  strip linux/amd64/bin/main linux/arm64/bin/main
+  strip linux/amd64/bin/main linux/arm64/bin/main linux/s390x/bin/main linux/ppc64le/bin/main
 fi
 
 if [ "${COMPRESS:-none}" != "none" ]; then
   {{- range $key, $value := .}}
-  $COMPRESS linux/amd64/{{ $key }} linux/arm64/{{ $key }}
+  $COMPRESS linux/amd64/{{ $key }} linux/arm64/{{ $key }} linux/s390x/{{ $key }} linux/ppc64le/{{ $key }}
   {{- end }}
-  $COMPRESS linux/amd64/bin/main linux/arm64/bin/main
+  $COMPRESS linux/amd64/bin/main linux/arm64/bin/main linux/s390x/bin/main linux/ppc64le/bin/main
 fi
 
 ln -fs main linux/amd64/bin/build
 ln -fs main linux/arm64/bin/build
+ln -fs main linux/s390x/bin/build
+ln -fs main linux/ppc64le/bin/build
 ln -fs main linux/amd64/bin/detect
 ln -fs main linux/arm64/bin/detect
+ln -fs main linux/s390x/bin/detect
+ln -fs main linux/ppc64le/bin/detect

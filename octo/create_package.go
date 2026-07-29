@@ -70,7 +70,7 @@ func ContributeCreatePackage(descriptor Descriptor) (*Contribution, error) {
 				Steps: []actions.Step{
 					{
 						Uses: "actions/setup-go@v7",
-						With: map[string]interface{}{"go-version": GoVersion},
+						With: map[string]interface{}{"go-version": GoVersion, "cache": false},
 					},
 					{
 						Name: "Install create-package",

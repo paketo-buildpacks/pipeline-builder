@@ -228,14 +228,23 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 
 			j.Steps = append(j.Steps,
 				actions.Step{
+					Name: "Disable containerd snapshotter",
+					Run: `echo '{"features": {"containerd-snapshotter": false}, "insecure-registries": ["localhost:5000", "127.0.0.1:5000"]}' | sudo tee /etc/docker/daemon.json
+sudo systemctl restart docker`,
+				},
+				actions.Step{
+					Name: "Start Local Registry",
+					Run:  StatikString("/start-local-registry.sh"),
+				},
+				actions.Step{
 					Id:   "package-buildpack",
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":         format,
-						"PACKAGES":       "ttl.sh/paketo-java-test-${{ steps.version.outputs.version }}",
-						"VERSION":        "1h",
-						"TTL_SH_PUBLISH": "true",
+						"FORMAT":           format,
+						"PACKAGES":         "localhost:5000/paketo-java-test-${{ steps.version.outputs.version }}",
+						"REGISTRY_PUBLISH": "true",
+						"VERSION":          "latest",
 					},
 				})
 
@@ -254,7 +263,7 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					},
 				})
 
-				integrationEnvVars["BP_UNDER_TEST"] = "${{ steps.package-buildpack.outputs.ttl-image-tag}}"
+				integrationEnvVars["BP_UNDER_TEST"] = "${{ steps.package-buildpack.outputs.image-tag}}"
 			}
 
 			j.Steps = append(j.Steps, actions.Step{
@@ -268,10 +277,9 @@ func ContributeTest(descriptor Descriptor) (*Contribution, error) {
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":         format,
-						"PACKAGES":       "test",
-						"VERSION":        "${{ steps.version.outputs.version }}",
-						"TTL_SH_PUBLISH": "false",
+						"FORMAT":   format,
+						"PACKAGES": "test",
+						"VERSION":  "${{ steps.version.outputs.version }}",
 					},
 				})
 		}

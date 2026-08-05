@@ -41,7 +41,7 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
       fi
     done
 else
-  if [ -n "$TTL_SH_PUBLISH" ] && [ "$TTL_SH_PUBLISH" = "true" ]; then
+  if [ -n "$REGISTRY_PUBLISH" ] && [ "$REGISTRY_PUBLISH" = "true" ]; then
     TAG="${PACKAGE}-$(mktemp -u XXXXX | awk '{print tolower($0)}'):${VERSION}"
     pack -v buildpack package "${TAG}" ${CONFIG} --format "${FORMAT}" --publish
   else
@@ -49,5 +49,5 @@ else
     pack -v buildpack package "${TAG}" ${CONFIG} --format "${FORMAT}"
   fi
 
-  echo "ttl-image-tag=${TAG:-}" >> "$GITHUB_OUTPUT"
+  echo "image-tag=${TAG:-}" >> "$GITHUB_OUTPUT"
 fi

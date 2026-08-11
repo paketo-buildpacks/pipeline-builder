@@ -277,9 +277,10 @@ sudo systemctl restart docker`,
 					Name: "Package Buildpack",
 					Run:  StatikString("/package-buildpack.sh"),
 					Env: map[string]string{
-						"FORMAT":   format,
-						"PACKAGES": "test",
-						"VERSION":  "${{ steps.version.outputs.version }}",
+						"FORMAT":           format,
+						"PACKAGES":         "test",
+						"REGISTRY_PUBLISH": "false",
+						"VERSION":          "${{ steps.version.outputs.version }}",
 					},
 				})
 		}

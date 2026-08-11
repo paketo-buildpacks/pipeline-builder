@@ -41,7 +41,7 @@ if [[ "${PUBLISH:-x}" == "true" ]]; then
       fi
     done
 else
-  if [ -n "$REGISTRY_PUBLISH" ] && [ "$REGISTRY_PUBLISH" = "true" ]; then
+  if [ "${REGISTRY_PUBLISH:-}" = "true" ]; then
     TAG="${PACKAGE}-$(mktemp -u XXXXX | awk '{print tolower($0)}'):${VERSION}"
     pack -v buildpack package "${TAG}" ${CONFIG} --format "${FORMAT}" --publish
   else

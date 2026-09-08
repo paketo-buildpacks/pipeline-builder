@@ -1,6 +1,6 @@
 module github.com/paketo-buildpacks/pipeline-builder
 
-go 1.26
+go 1.26.0
 
 require (
 	cloud.google.com/go/storage v1.65.0
@@ -22,7 +22,7 @@ require (
 	github.com/sclevine/spec v1.4.0
 	github.com/spf13/pflag v1.0.10
 	github.com/stretchr/testify v1.12.1
-	golang.org/x/oauth2 v0.36.0
+	golang.org/x/oauth2 v0.37.0
 	google.golang.org/api v0.293.0
 	gopkg.in/yaml.v3 v3.0.1
 )
